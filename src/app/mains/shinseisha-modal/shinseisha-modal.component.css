@@ -1,0 +1,49 @@
+/*
+::ng-deep .mat-dialog-container {
+  padding: 0;
+  background: #4682b4;
+}
+*/
+mat-dialog-content {
+  width: 600px;
+  min-height: 800px;
+}
+h4, h5 {
+  margin: 0;
+}
+.tojiru {
+  margin-left: 100px;
+}
+.kaishamei {
+  width: 250px;
+  margin-top:30px;
+  margin-left:100px;
+}
+.list {
+  width: 500px;
+  min-height: 400px;
+  max-height: 400px;
+  overflow: auto;
+}
+table {
+  width: 400px;
+}
+th, td {
+  font-size: x-small;
+}
+th {
+  font-weight: 900;
+}
+tr.mat-header-row {
+  height: 25px;
+}
+tr.mat-footer-row, tr.mat-row {
+  height: 30px;
+}
+.tr-row {
+  background-color: #EDE7F6;
+}
+.paginator {
+  width: 500px;
+  margin-top: 20px;
+}

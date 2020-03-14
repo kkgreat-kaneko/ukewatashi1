@@ -1,0 +1,26 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* トグルボタン幅と背景色 */
+.mat-button-toggle-label-content{ line-height: 0px !important; padding: 12px 10px 10px 10px !important }
+.mat-button-toggle {
+  border: solid 1px;
+  border-radius: 1.5px 1.5px/ 1.5px 1.5px;
+}
+.mat-button-toggle-checked {
+  /*background-color: mat-color($accent);
+  color: mat-color($accent, default-contrast);*/
+  /*background-color: #B39DDB;*/
+  background-color: #ffab91;
+  color: #F8F8FF;
+}
+.mat-select {
+  font-size: small;
+}
+/* チェックシート印刷ダイアログの専用クラス 背景色設定 */
+.myprint-dialog-panel .mat-dialog-container {
+  /*background: #78909c;*/
+  background: -webkit-linear-gradient(#29b6f6, #0277bd);
+  background: linear-gradient(#29b6f6, #0277bd);
+}

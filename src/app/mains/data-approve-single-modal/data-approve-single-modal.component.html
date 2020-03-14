@@ -1,0 +1,83 @@
+<mat-dialog-content class="contener">
+  <div class="" fxLayout="column">
+    <div class="section1" fxLayout="row">
+      <h3>承認内容確認</h3>
+      <div mat-dialog-actions class="buttons-1">
+        <button type="button" mat-raised-button color="warn" class="approve" (click)="approveKanri()">{{btnAppStr}}</button>
+      </div>
+      <div mat-dialog-actions class="buttons-2">
+        <button type="button" mat-raised-button color="accent" class="close" (click)="cancel()">閉じる</button>
+      </div>
+    </div>
+
+    <div class="app-data" fxLayout="row">
+      <div fxLayout="column">
+        <!--- Status  管理No --->
+        <span fxLayout="row">
+          <h4 class="label1">Status</h4>
+          <h4 class="vals1 set-border">{{data.status}}</h4>
+        </span>
+        <span fxLayout="row">
+          <h4 class="label1">管理No</h4>
+          <h4 class="vals2 set-border">{{data.id}}</h4>
+        </span>
+      </div>
+      <!--- 保険会社 生保分 証券番号 契約者名 --->
+      <div fxLayout="column">
+        <span fxLayout="row">
+          <h4 class="label2">保険会社</h4>
+          <h4 class="vals3 set-border">{{data.hokengaisha}}</h4>
+        </span>
+        <span fxLayout="row">
+          <h4 class="label2">生保分</h4>
+          <h4 class="vals3 set-border">{{data.seiho}}</h4>
+        </span>
+        <span fxLayout="row">
+          <h4 class="label2">証券番号</h4>
+          <h4 class="vals3 set-border">{{data.shoukenbango}}</h4>
+        </span>
+        <span fxLayout="row">
+          <h4 class="label2">契約者名</h4>
+          <h4 class="vals3 set-border">{{data.keiyakusha}}</h4>
+        </span>
+      </div>
+      <!--- 区分 書類枚数 書類 --->
+      <div fxLayout="column">
+        <span fxLayout="row">
+          <h4 class="label3">区分</h4>
+          <h4 class="vals4 set-border">{{data.kubun}}</h4>
+          <h4 class="label4">書類枚数</h4>
+          <h4 class="vals5 set-border">{{data.shoruiMaisu}}</h4>
+        </span>
+        <span fxLayout="row">
+          <h4 class="label3">書類</h4>
+          <h4 class="vals4 set-border">{{data.shorui1}}</h4>
+          <h4 class="vals4 set-border">{{data.shorui4}}</h4>
+          <h4 class="vals4 set-border">{{data.shorui7}}</h4>
+        </span>
+        <span fxLayout="row">
+          <h4 class="label3"></h4>
+          <h4 class="vals4 set-border">{{data.shorui2}}</h4>
+          <h4 class="vals4 set-border">{{data.shorui5}}</h4>
+          <h4 class="vals4 set-border">{{data.shorui8}}</h4>
+        </span>
+        <span fxLayout="row">
+          <h4 class="label3"></h4>
+          <h4 class="vals4 set-border">{{data.shorui3}}</h4>
+          <h4 class="vals4 set-border">{{data.shorui6}}</h4>
+          <h4 class="vals4 set-border">{{data.shorui9}}</h4>
+        </span>
+      </div>
+    </div>
+    <!--- 備考 不備書類 --->
+    <div fxLayout="row">
+      <span fxLayout="row">
+        <h4 class="label5">備考</h4>
+        <h4 class="vals6 set-border">{{data.bikou}}</h4>
+        <h4>不備書類</h4>
+        <h4 class="vals7 set-border">{{data.fubiShoruiIchiran}}</h4>
+      </span>
+    </div>
+
+  </div>
+</mat-dialog-content>

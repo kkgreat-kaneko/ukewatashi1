@@ -1,0 +1,675 @@
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog } from '@angular/material';
+import { ShinseishaModalComponent } from '../shinseisha-modal/shinseisha-modal.component';
+import { FormGroup, FormControl, FormBuilder, Validators} from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
+import { SelectionModel } from '@angular/cdk/collections';
+import { HokengaishaListService } from '../../service/hokengaisha-list.service';
+import { HokengaishaList } from '../../class/hokengaisha-list';
+import { HokengaishaService } from '../../service/hokengaisha.service';
+import { Hokengaisha } from '../../class/hokengaisha';
+import { Const } from '../../class/const';
+import { Tantousha } from '../../class/tantousha';
+import { KanriService } from '../../service/kanri.service';
+import { KanriTableService } from '../../service/kanri-table.service';
+import { Kanri } from '../../class/kanri';
+import { SeihoList } from '../../class/seiho-list';
+import { KubunService } from '../../service/kubun.service';
+import { Kubun } from '../../class/kubun';
+import { ShoruiService } from '../../service/shorui.service';
+import { Shorui } from '../../class/shorui';
+import { PopupAlertComponent } from '../../popup/popup-alert/popup-alert.component';
+import { SessionService } from '../../service/session.service';
+
+
+/*
+* 書類編集フォームモーダル data-create-modalコンポーネントと基本同じ。編集データのフォームセット箇所のみ
+* 考慮箇所：繰り返しボタン処理によるバリデーションチェックとして添付書類リストデータ有無のチェックをカスタム
+* 設定箇所が複数なので冗長している。
+*/
+@Component({
+  selector: 'app-data-edit-modal',
+  templateUrl: './data-edit-modal.component.html',
+  styleUrls: ['./data-edit-modal.component.css']
+})
+export class DataEditModalComponent implements OnInit {
+  message: string;                                          // エラーメッセージ
+  hokengaishaList: HokengaishaList[];                       // 保険会社選択リスト用
+  hokenTantouList: Hokengaisha[];                           // 保険会社担当者選択リスト用
+  seihoList: SeihoList[];                                   // 生保分選択リスト用
+  kubunList: Kubun[];                                       // 区分リスト用
+  dlvryList = [                                             // 受渡リスト用初期化（受渡、郵送)
+    { label: Const.DLVRY_HANDING, value: Const.DLVRY_HANDING },
+    { label: Const.DLVRY_MAIL, value: Const.DLVRY_MAIL},
+  ];
+  dlvrySelected = Const.DLVRY_HANDING;                      // 受渡方法セレクト初期値
+  shoruiUmeChecked = false;                                 // 添付書類有無チェック判定用
+  kubunInputDisable = false;                                // 区分手入力判定用
+  kubunDisable = false;                                     // 区分選択判定用
+
+  formGroup: FormGroup;                                     // フォームグループ、以下フォームコントロール初期化
+  keiyakusha = new FormControl('', { validators: [Validators.required] });                                // 契約者フォーム
+  hokengaisha = new FormControl('', { validators: [Validators.required] });                               // 保険会社フォーム
+  kubunInput = new FormControl({value: '', disabled: false}, { validators: [Validators.required] });      // 区分手入力フォーム
+  kubun = new FormControl({value: '', disabled: false}, { validators: [Validators.required] });           // 区分フォーム
+  hokenTantou = new FormControl('');                        // 保険担当者フォーム
+  seiho = new FormControl('');                              // 生保分フォーム
+  shoukenbango = new FormControl('');                       // 証券番号フォーム
+  dlvry = new FormControl(Const.DLVRY_HANDING);             // 受渡方法フォーム
+  shoruiMaisu = new FormControl('');                        // 受渡枚数フォーム
+  bikou = new FormControl('');                              // 備考フォーム
+  shoruiUmu = new FormControl('');                          // 書類有無フォーム
+  tenyuryoku = new FormControl('');                         // 添付書類手入力フォーム
+
+  displayColumns = ['shorui'];                              // 添付書類選択データテーブル列要素 htmlのヘッダー名表示設定無し
+  shoruiSource: MatTableDataSource<Shorui>;                 // 添付書類選択用データテーブル
+  shoruiSourceSelected: MatTableDataSource<Shorui>;         // 添付書類選択用データテーブル
+  fromShoruiList: Shorui[];                                 // 添付書類選択用データソース
+  toShoruiList: Shorui[];                                   // 添付書類選択後用データソース
+  shoruiListValid = true;                                   // 編集完了ボタンdisabled用条件の１つ、添付書類有無チェック
+
+
+  /*
+  *  添付書類選択用テーブルチェックボックス選択コレクションオブジェクト
+  *  選択状態自体を管理する
+  */
+  selection = new SelectionModel<Shorui>(false, []);
+  /*
+  * セレクション Changeイベント登録、Ovservalオブジェクト作成
+  *  チェックボックス状態が変更になった時、イベントがObserval発行
+  *  ngOninit処理でsubscribe
+  */
+  private cbEmmiter = this.selection.onChange.asObservable();
+  selectedShorui: Shorui;
+
+  constructor(private dialog: MatDialogRef<DataEditModalComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: Kanri,
+              private shinseishaDialog: MatDialog,
+              private hokengaishaListService: HokengaishaListService,
+              private hokengaishaService: HokengaishaService,
+              private fb: FormBuilder,
+              private kubunService: KubunService,
+              private shoruiService: ShoruiService,
+              private kanriService: KanriService,
+              private kanriTableService: KanriTableService,
+              private popupAlertDialog: MatDialog,
+              private sessionService: SessionService,
+  ) { }
+
+  /*
+  * ログインユーザー情報取得
+  * 書類データ登録初期値セット
+  * フォーム選択用データをマスターより取得処理（添付書類については編集登録ではselectedKanri()内でセットしている)
+  * フォームグループの初期化
+  * 書類選択用テーブルイベント登録
+  */
+  ngOnInit() {
+    this.data = this.kanriTableService.getSelected();         // 選択書類データ初期セット
+    this.setFormGroup();                                      // フォームをFormGroupに登録
+    this.getHokengaishaList();                                // 保険会社リスト初期化
+    this.getKubunList();                                      // 区分リスト初期化
+    this.toShoruiList = [];                                   // 添付書類決定リスト用データ初期化
+    /*
+    *  checkBoxのselected契機で申請者テーブル選択データ保持serviceに選択されたselectItemを登録
+    *  ShinseishaTableServiceが呼び出しから利用される
+    */
+    this.cbEmmiter.subscribe(cb => {
+      if (cb.source.selected.length > 0) {
+        this.selectedShorui = cb.source.selected[0];
+      } else {
+        // this.selectedShorui = null;
+      }
+    });
+    /*
+    * 編集データのフォームへのセット処理
+    * 添付書類の編集データセットは、添付選択リスト初期化を内部で実行時にセットしている
+    */
+    this.selectedKanriSet();
+  }
+  /*
+  * フォームグループセット処理
+  *
+  */
+  public setFormGroup() {
+    this.formGroup = this.fb.group({                          // フォームグループ初期化
+      keiyakusha: this.keiyakusha,                            // 契約者名フォーム
+      hokengaisha: this.hokengaisha,                          // 保険会社フォーム
+      hokenTantou: this.hokenTantou,                          // 保険担当者フォーム
+      seiho: this.seiho,                                      // 生保フォーム
+      shoukenbango: this.shoukenbango,                        // 証券番号フォーム
+      kubunInput: this.kubunInput,                            // 区分手入力フォーム
+      kubun: this.kubun,                                      // 区分フォーム
+      dlvry: this.dlvry,                                      // 受渡方法フォーム
+      shoruiMaisu: this.shoruiMaisu,                          // 書類枚数フォーム
+      bikou: this.bikou,                                      // 備考フォーム
+      shoruiUmu: this.shoruiUmu,                              // 書類有無フォーム
+      tenyuryoku: this.tenyuryoku,                            // 書類手入力フォーム
+    });
+  }
+  /*
+  *  保険会社セレクト用データ取得
+  *  全保険会社検索をバックエンドと通信
+  */
+  public getHokengaishaList() {
+    this.hokengaishaListService.getAllList()
+    .then(res => {
+      this.hokengaishaList = res;
+    })
+    .catch(err => {
+      console.log(`login fail: ${err}`);
+      this.message = 'データの取得に失敗しました。';
+    })
+    .then(() => {
+      // anything finally method
+    });
+  }
+
+  /*
+  * 保険担当者選択リスト処理
+  * 保険会社選択紐付け処理
+  * 保険担当者、生保分のセレクトを変更 テーブルhokengaishaからカラムhokengaisha,seiho検索
+  */
+  public getHokenTantouList() {
+    this.hokenTantou.reset();
+    const hokengaisha = new Hokengaisha();
+    hokengaisha.hokengaisha = this.formGroup.value.hokengaisha;
+    this.hokengaishaService.getHokenTantouList(hokengaisha)
+    .then(res => {
+      this.hokenTantouList = res;
+    })
+    .catch(err => {
+      console.log(`login fail: ${err}`);
+      this.message = 'データの取得に失敗しました。';
+    })
+    .then(() => {
+      // anything finally method
+    });
+
+    /* 生保分セレクト用データ取得
+    *  保険会社を選択した値をキーに生保会社検索をバックエンドと通信
+    *  保険会社の選択必要。保険会社担当者と連動。
+    */
+    this.seiho.reset();
+    const seiho = new SeihoList();
+    seiho.hokengaisha = this.formGroup.value.hokengaisha;
+    this.hokengaishaService.getSeihoList(seiho)
+    .then(res => {
+      this.seihoList = res;
+    })
+    .catch(err => {
+      console.log(`login fail: ${err}`);
+      this.message = 'データの取得に失敗しました。';
+    })
+    .then(() => {
+      // anything finally method
+    });
+  }
+
+  /*
+  *  区分セレクト用データ取得
+  *  全区分検索をバックエンドと通信
+  *  区分フォームセットはこのファンクション内で行う
+  *  非同期処理の為、バックエンドからのデータ取得処理内で
+  *  区分手入力と区分マスタの比較を行い、一致がない場合は
+  *  手入力フォームへセット、一致は区分選択フォームへセットする
+  */
+  public getKubunList() {
+    this.kubunService.getAllList()
+    .then(res => {
+      this.kubunList = res;
+      this.kubunList.forEach( obj => {
+        if (obj.kubun === this.data.kubun) {
+          this.kubun.setValue(this.data.kubun);             // 区分フォームへセット
+          this.kubunInput.disable();                        // 区分手入力フォーマット無効
+          this.kubunInputDisable = true;                    // 区分手入力フォーマット背景色グレーアウト
+        }
+      });
+      if (this.kubun.value === '') {
+        this.kubunInput.setValue(this.data.kubun);          // 区分手入力フォームへセット
+        this.kubun.disable();                               // 区分フォーマット無効
+        this.kubunDisable = true;                           // 区分フォーマット背景色グレーアウト
+      }
+    })
+    .catch(err => {
+      console.log(`login fail: ${err}`);
+      this.message = 'データの取得に失敗しました。';
+    })
+    .then(() => {
+      // anything finally method
+    });
+  }
+
+  /*
+  *  添付書類選択用用データ取得
+  *  全書類検索をバックエンドと通信 Promise処理により同期を取り、
+  *  編集登録用データセットをthen句内にてresetShouruiList関数を実行している
+  *  この処理がないと同期が取れず、リスト初期化できない
+  */
+  public getShoruiList(shoruies: string[] = null) {
+    this.shoruiService.getAllList()
+    .then(res => {
+      this.fromShoruiList = res;
+      if (shoruies) {                         // 添付書類が有りの場合、引数デフォルトNULL
+        for (const shorui of shoruies) {
+          this.resetShoruiList(shorui);
+        }
+      }
+      this.shoruiSource = new MatTableDataSource<Shorui>(this.fromShoruiList);
+      this.shoruiSourceSelected = new MatTableDataSource<Shorui>(this.toShoruiList);
+    })
+    .catch(err => {
+      console.log(`login fail: ${err}`);
+      this.message = 'データの取得に失敗しました。';
+    })
+    .then(() => {
+      /* 上のthen内に移動
+      if (shoruies) {                         // 添付書類が有りの場合、引数デフォルトNULL
+        for (const shorui of shoruies) {
+          this.resetShoruiList(shorui);
+        }
+      }
+      */
+    });
+  }
+
+  /*
+  * 添付書類リストFROM
+  * クリック処理
+  * Toリストへの追加と削除処理
+  */
+  // 添付書類選択リスト
+  public fromShoruiListRecreate(shorui: Shorui) {
+    // 添付書類可能数上限９件まで
+    if (this.toShoruiList.length > 8 ) {
+      this.alertOverNumShorui();
+      return 0;
+    }
+    const tempFromShoruiList: Shorui[] = [];
+
+    this.fromShoruiList.forEach(obj => {
+      let flg = true;
+
+      Object.keys(obj).forEach(key => {
+        if (key === 'id' && obj[key] === shorui.id) {
+          this.toShoruiList.push(obj);
+          flg = false;
+        }
+      });
+
+      if (flg) {
+        tempFromShoruiList.push(obj);
+      }
+    });
+    this.fromShoruiList = tempFromShoruiList;
+    this.shoruiSource = new MatTableDataSource<Shorui>(this.fromShoruiList);
+    this.shoruiSourceSelected = new MatTableDataSource<Shorui>(this.toShoruiList);
+  }
+  // 添付する書類リスト
+  public toShoruiListRecreate(shorui: Shorui) {
+    const tempToShoruiList: Shorui[] = [];
+
+    this.toShoruiList.forEach(obj => {
+      let flg = true;
+      Object.keys(obj).forEach(key => {
+        if (key === 'id' && obj[key] === shorui.id) {
+          if (shorui.id !== -1) { // 手入力添付書類は選択リストに入れず削除
+            this.fromShoruiList.push(obj);
+          }
+          flg = false;
+        }
+      });
+      if (flg) {
+        tempToShoruiList.push(obj);
+      }
+    });
+    this.toShoruiList = tempToShoruiList;
+    this.shoruiSource = new MatTableDataSource<Shorui>(this.fromShoruiList);
+    this.shoruiSourceSelected = new MatTableDataSource<Shorui>(this.toShoruiList);
+  }
+  /*
+  * 添付書類リスト ダブルクリックイベント処理
+  * どちらかリストへ移動
+  */
+  dblSelectFromShorui(shorui: Shorui) {
+    if (this.shoruiUmeChecked) {
+      return 0;
+    }
+    this.selection.toggle(shorui);
+    this.fromShoruiListRecreate(this.selectedShorui);
+    // 転記ボタンdisabled判定用
+    if (typeof this.toShoruiList === 'undefined') {
+      this.shoruiListValid = true;
+    } else {
+      if (!Object.keys(this.toShoruiList).length) {
+        this.shoruiListValid = true;
+      } else {
+        this.shoruiListValid = false;
+      }
+    }
+  }
+
+  dblSelectToShorui(shorui: Shorui) {
+    if (this.shoruiUmeChecked) {
+      return 0;
+    }
+    this.selection.toggle(shorui);
+    this.toShoruiListRecreate(this.selectedShorui);
+    // 転記ボタンdisabled判定用
+    if (typeof this.toShoruiList === 'undefined') {
+      this.shoruiListValid = true;
+    } else {
+      if (!Object.keys(this.toShoruiList).length) {
+        this.shoruiListValid = true;
+      } else {
+        this.shoruiListValid = false;
+      }
+    }
+  }
+  /*
+  * 添付書類数オーバー時、メッセージ
+  */
+  alertOverNumShorui() {
+    const msg = {
+      title: '添付書類上限数について',
+      message: '添付書類は、上限９件まで可能です。'
+    };
+
+    const dialogRef = this.popupAlertDialog.open(PopupAlertComponent, {
+      data: msg,
+      disableClose: true,
+    });
+    // ダイアログ終了後処理
+    dialogRef.afterClosed()
+    .subscribe(
+      data => {
+        // nullデータ戻りチェック必須（無いとプログラムエラー)
+        if (data) {
+        }
+      },
+      error => {
+        console.log('error');
+      }
+    );
+  }
+
+  /*
+  *  転記ボタン処理 data固定値はngInitでセット済み
+  *  申請者情報は申請者選択ダイアログの戻り処理でセット済み
+  *  フォームの値をセット
+  */
+  update() {
+    // 自動登録項目
+    this.data.saishuHenshubi = this.sessionService.getToday();  // 最終編集日
+    // 入力項目の値セット
+    // 必須項目
+    this.data.hokengaisha = this.formGroup.value.hokengaisha;   // 保険会社
+    if (this.kubun.enabled) {
+      this.data.kubun = this.formGroup.value.kubun;              // 区分
+    } else {
+      this.data.kubun = this.formGroup.value.kubunInput;         // 区分手入力
+    }
+    this.data.keiyakusha = this.formGroup.value.keiyakusha;     // 契約者名
+    // 任意入力項目
+    if (!this.formGroup.value.hokenTantou) {                    // 初期値(ブランク):NULL登録防止--->検索時の不具合防止策
+      this.data.hokenTantou = '';
+    } else {
+      this.data.hokenTantou = this.formGroup.value.hokenTantou; // 保険担当者
+    }
+    if (this.formGroup.value.seiho) {                           // 生保分会社
+      this.data.seihobun = Const.SEIHO_YES;
+      this.data.seiho = this.formGroup.value.seiho;
+    } else {
+      this.data.seihobun = Const.SEIHO_NO;
+      this.data.seiho = '';
+    }
+    this.data.dlvry = this.formGroup.value.dlvry;               // 受渡方法
+    this.data.shoukenbango = this.formGroup.value.shoukenbango; // 証券番号
+    this.data.shoruiMaisu = this.formGroup.value.shoruiMaisu;   // 書類枚数
+    this.data.bikou = this.formGroup.value.bikou;               // 備考
+
+    if (this.formGroup.value.shoruiUmu) {                       // 注意：checkBox値とデータが逆、CheckBox:0/書類データ：1 添付有り
+      this.data.shoruiUmu = Const.SHORUI_NO;                    // 書類無し カラムshorui1-10まで空データにリセット
+      let i = 1;
+      let keyName: string;
+      this.toShoruiList.forEach(obj => {
+        keyName = 'shorui' + i;
+        this.data[keyName] = '';
+        i++;
+      });
+    } else {
+      this.data.shoruiUmu = Const.SHORUI_YES;                   // 書類有り toShoruiList配列データをカラムshorui1-10にセットする
+      let i = 1;
+      let keyName: string;
+      this.toShoruiList.forEach(obj => {
+        keyName = 'shorui' + i;
+        this.data[keyName] = obj.shorui;
+        i++;
+      });
+
+    }
+    // DB編集更新処理
+    this.kanriService.updateKanri(this.data)
+    .then(res => {
+      // 結果確認用
+      // console.log(res);
+    })
+    .catch(err => {
+      console.log(`login fail: ${err}`);
+      this.message = 'データの取得に失敗しました。';
+    })
+    .then(() => {
+      // anything finally method
+    });
+
+    this.dialog.close(this.data);
+  }
+
+  /*
+  * ダイアログキャンセルボタン処理
+  */
+  cancel() {
+    this.dialog.close();
+  }
+
+  /*
+  * 申請者変更用ボタンより、ダイアログオープン処理
+  * ShinseishaModalComponent開く
+  * ダイアログ戻り処理 申請者の変更処理
+  */
+  public selectShinseisha() {
+    const dialogRef = this.shinseishaDialog.open(ShinseishaModalComponent, {
+      data: Tantousha,
+      disableClose: true,
+    });
+    // ダイアログ終了後処理
+    dialogRef.afterClosed()
+    .subscribe(
+      data => {
+        // nullデータ戻りチェック必須（無いとプログラムエラー)
+        if (data.userId) {
+          this.data.shinseishaUserId = data.userId;    // 申請者ID変更
+          this.data.shinseisha = data.shimei;          // 申請者氏変更
+          this.data.shinseishaKaisha = data.kaisha;    // 申請者会社
+          this.data.shinseishaTeam = data.busho;       // 申請者チーム部署
+        }
+      },
+      error => {
+        console.log('error');
+      }
+    );
+  }
+
+  /*
+  * 手入力添付書類追加ボタン
+  *
+  */
+  public addShoruiList() {
+    // 先頭(^)に続く空白(\s)」と「末尾($)の空白(\s)」を空文字('')で置替、空文字は処理せずreturn
+    if (this.formGroup.value.tenyuryoku.replace(/^\s+|\s+$/g, '')) {
+      // 添付書類可能数上限９件まで
+      if (this.toShoruiList.length > 8 ) {
+        this.alertOverNumShorui();
+        return 0;
+      }
+      const inputShorui = new Shorui();
+      inputShorui.id = -1; // 手入力用ID -1
+      inputShorui.shorui = this.formGroup.value.tenyuryoku;
+      this.toShoruiList.push(inputShorui);
+      this.shoruiSource = new MatTableDataSource<Shorui>(this.fromShoruiList);
+      this.shoruiSourceSelected = new MatTableDataSource<Shorui>(this.toShoruiList);
+      // 転記ボタンdisabled解除
+      this.shoruiListValid = false;
+    }
+  }
+
+  /*
+  * 添付書類リストの状態チェックしリストdisabledを解除orセットする
+  * 添付書類有り/無しチェック選択によって分岐
+  * 無し-->disable解除、有り--->書類選択ある無しによってdisabledを設定
+  */
+  public checkShoruiUme() {
+    if (!this.formGroup.value.shoruiUmu) {  // 添付書類無し *checkboxとデータの値が逆 form有り=0/データ上=1
+      this.shoruiUmeChecked = true;         // 書類リストdisabledセット
+      this.shoruiListValid = false;         // 転記ボタンdisabled解除
+    } else {                                // 添付書類有り
+      this.shoruiUmeChecked = false;        // 書類リストdisabled解除
+      // 転記ボタンdisabled判定用
+      if (typeof this.toShoruiList === 'undefined') {
+        this.shoruiListValid = true;
+      } else {
+        if (!Object.keys(this.toShoruiList).length) {
+          this.shoruiListValid = true;
+        } else {
+          this.shoruiListValid = false;
+        }
+      }
+    }
+  }
+
+
+
+  /*
+  * 添付書類データセット処理
+  * 選択リストと添付書類リストの２リストを変更する
+  * 書類マスタIDを書類データ上保持していないので、書類名でしか判別不能
+  * 手入力書類の判別有り
+  */
+  public resetShoruiList(shorui: string) {
+    const tempFromShoruiList: Shorui[] = [];
+    let tenyuryoku = true;                            // 手入力書類判別フラグ
+    this.fromShoruiList.forEach(obj => {
+      let flg = true;                                 // 引数書類名との一致判別フラグ
+      Object.keys(obj).forEach(key => {
+        if (key === 'shorui' && obj[key] === shorui) {// マスタに存在する書類のみ追加
+          this.toShoruiList.push(obj);
+          flg = false;                                // 引数書類名との一致 fromリスト追加しない
+          tenyuryoku = false;                         // 手入力書類ではない
+        }
+      });
+      if (flg) {                                      // 引数書類と一致しないリストは Tempリストへ追加する
+        tempFromShoruiList.push(obj);
+      }
+    });
+    if (tenyuryoku) {                                 // 添付書類が手入力の時、手入力用IDにてShoruiモデル作成し追加
+      const tenyuryokuShorui = new Shorui();
+      tenyuryokuShorui.id = -1;
+      tenyuryokuShorui.shorui = shorui;
+      this.toShoruiList.push(tenyuryokuShorui);
+    }
+    this.fromShoruiList = tempFromShoruiList;         // Tempリストを代入してFromリスト再作成
+  }
+
+  /*
+  *  選択レコードの書類データをフォームにセットする処理
+  *
+  */
+  public selectedKanriSet() {
+    // 選択レコードの書類データ取得
+    // const selectedKanri: Kanri = this.kanriTableService.getSelected();
+    /*
+    * フォーム入力項目の値をセットしていく
+    */
+    this.hokengaisha.setValue(this.data.hokengaisha);      // 保険会社
+    this.getHokenTantouList();
+    this.hokenTantou.setValue(this.data.hokenTantou);      // 保険会社担当者
+    this.seiho.setValue(this.data.seiho);                  // 生保分会社
+    this.keiyakusha.setValue(this.data.keiyakusha);        // 契約者名
+    
+//
+
+    //this.kubun.setValue(this.data.kubun);                  // 区分
+
+//
+    this.shoukenbango.setValue(this.data.shoukenbango);    // 証券番号
+    this.dlvry.setValue(this.data.dlvry);                  // 受渡方法
+    this.dlvrySelected = this.data.dlvry;
+    this.shoruiMaisu.setValue(this.data.shoruiMaisu);      // 書類枚数
+    this.bikou.setValue(this.data.bikou);                  // 備考
+    /*
+    * 添付書類リストのセット処理
+    * 添付書類選択リスト初期化(マスタデータ)と同時に編集データの添付書類をセット
+    * 非同期通信の為、選択リスト初期化時内でのPromise処理が必要
+    */
+    this.toShoruiList = [];
+    const tempShoruies: string[] = [];
+    let i = 1;
+    let keyName: string;
+    while (i < 10) {
+      keyName = 'shorui' + i;
+      if (this.data[keyName]) {
+        tempShoruies.push(this.data[keyName]);               // 添付書類1〜９を配列に格納 システム上添付書類最大9件
+      }
+      i++;
+    }
+    if (tempShoruies.length < 1) {                               // 添付書類有り無し分岐処理
+      this.getShoruiList();                                      // 添付書類無し-->fromリスト全マスタセット
+    } else {
+      this.getShoruiList(tempShoruies);                          // 添付書類有り-->fromリスト添付除外してtoリストにもセット
+    }
+    // 一旦削除 this.shoruiSource = new MatTableDataSource<Shorui>(this.fromShoruiList);
+    // 一旦削除 this.shoruiSourceSelected = new MatTableDataSource<Shorui>(this.toShoruiList);
+    /*
+    * 添付書類チェック状態セット
+    * 添付書類リストのdisabled状態と転記ボタンのdisabled状態のセット
+    * 上段の添付書類リストのセット後に処理する必要あり
+    */
+    this.shoruiUmu.setValue(!this.data.shoruiUmu);        // 書類有無 有り1/無し０チェックボックス値が逆
+
+    if (!this.shoruiUmu.value) {                              // 書類がある時
+      this.shoruiUmeChecked = false;                          // 書類有無チェック状態からの書類リストdisabledセット
+      this.shoruiListValid = false;                           // 転記ボタンdisabled解除(初期値false)
+    } else {                                                  // 書類無しチェックの時
+      this.shoruiUmeChecked = true;                           // 書類有無チェック状態からの書類リストdisabled解除
+      this.shoruiListValid = false;                           // 転記ボタンdisabled解除(初期値false)
+    }
+
+  }
+
+  /*
+  *  区分手入力と区分の状態（入力or選択)によってどちらかをdisabled:trueに変更する
+  *  どちらか一方のみの入力を許可
+  */
+ public changeKubun(element: HTMLElement) {
+  if ( element.getAttribute('formControlName') === 'kubun' ) {
+    if ( this.formGroup.value.kubun !== '' ) {
+      this.kubunInput.disable();
+      this.kubunInputDisable = true;
+      this.kubunDisable = false;
+    } else {
+      this.kubunInput.enable();
+      this.kubunInputDisable = false;
+    }
+  } else if ( element.getAttribute('formControlName') === 'kubunInput' ) {
+    if ( this.formGroup.value.kubunInput !== '' ) {
+      this.kubun.disable();
+      this.kubunDisable = true;
+      this.kubunInputDisable = false;
+    } else {
+      this.kubun.enable();
+      this.kubunDisable = false;
+    }
+  }
+}
+
+}

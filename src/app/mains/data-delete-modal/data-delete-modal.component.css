@@ -1,0 +1,44 @@
+mat-dialog-content {
+  width: 550px;
+  height: 400px;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+.tantousha-kanri-panel {
+  margin-top: 30px;
+}
+.tantousha-label h5, .tantousha h5, .kanri-no-label h5 {
+  margin: 3px 3px 3px 3px;
+}
+.kanri-no h5 {
+  margin: 5px 3px 3px 3px;
+}
+.tantousha, .kanri-no{
+  display: block;
+  margin-left: 30px;
+  background-color: #EDE7F6;
+}
+.tantousha {
+  width: 150px;
+}
+.kanri-no-label {
+  margin-left: 50px;
+}
+.kanri-no {
+  width: 100px;
+}
+.tojiru {
+  margin-left: 350px;
+  height: 25px;
+  width: 80px;
+  line-height: 1px;
+  font-weight: bold;
+}
+.jikkou {
+  margin-left: 80px;
+  width: 100px;
+  font-weight: bold;
+}
+.sakujyoriyu {
+  width: 350px;
+}

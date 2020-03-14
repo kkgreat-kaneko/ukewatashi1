@@ -1,0 +1,370 @@
+.container {
+  width: auto;
+  height: 100%;
+  min-height: 740px;
+  margin-left: auto;
+  margin-right: auto;
+  /*background: -webkit-linear-gradient(to right, #4682b4, #3a7bd5);*/ /* Chrome 10-25, Safari 5.1-6 */
+  /*background: linear-gradient(to right, #4682b4, #3a7bd5);*/ /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: -webkit-linear-gradient(to right, #00a9f4, #0277bd);
+  background: linear-gradient(to right, #00a9f4, #0277bd);
+  padding: 10px;
+}
+.main {
+  width: 1120px;
+  height: 100%;
+  min-height: 660px;
+  /*min-height: 580px;*/
+  /*max-height: 750px;*/
+  margin-top: 0;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0;
+  /*background: -webkit-linear-gradient(to right, #4682b4, #3a7bd5);*/ /* Chrome 10-25, Safari 5.1-6 */
+  /*background: linear-gradient(to right, #4682b4, #3a7bd5);*/ /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+  /*border: solid 1px #aaaaaa;
+  box-sizing: border-box;*/
+}
+/* 上部システム名 担当者表示部 */
+.title{
+  margin-bottom: 1px;
+}
+.title H3 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 50px;
+  color: #002f6c;
+}
+.title H4 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left:30px;
+  margin-right: 30px;
+}
+.title H5 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  color: #002f6c;
+}
+.tantou {
+  width: 150px;
+  color: white;
+  /*background-color: #7E57C2;*/
+  background-color: #006064;
+  text-align: center;
+  border: solid 1px;
+  border-radius: 5px 5px;
+}
+.kaisha {
+  width: 200px;
+  color: white;
+  /*background-color: #7E57C2;*/
+  background-color: #006064;
+  text-align: center;
+  border: solid 1px;
+  border-radius: 5px 5px;
+}
+/*ステータス絞込みパネル*/
+input {
+  font-size: small;
+}
+select {
+  font-size: small;
+}
+mat-form-field {
+  width: 100px;
+  padding-left: 10px;
+  line-height: 1;
+}
+.set-panel {
+  width: 1100px;
+  margin-top: 0px;
+  margin-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  background: #FFFFFF;
+  border: solid 1px;
+  border-radius: 5px 5px;
+}
+.status-select, .status-app-select, .select-details{
+  margin: 5px;
+  padding: 5px;
+  border: solid 2px;
+  border-color: #e74c3c;
+  border-radius: 5px 5px;
+}
+.select-details {
+  border-color: #673AB7;
+}
+.kaisha-select {
+  margin: 5 5 5 5;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+.status-select H5, .status-app-select H5 {
+  margin-top: 0;
+}
+.mat-radio-button {
+  transform: scale(0.7); /* ラジオボタン大きさ */
+}
+.mat-radio-margin {
+  margin-bottom: 0px;
+}
+.radio-col { /*ラジオボタン並び縦 */
+  display: flex;
+  flex-direction: column;
+  margin-left:10px;
+}
+.radio-col label {
+  font-size: small;
+  padding-left: 5px;
+}
+.kanri-no-limit label{
+  display: block;
+  float: left;
+  width: 60px;
+  padding-top: 10px;
+  text-align:left;
+  font-size: small;
+}
+.limit ::ng-deep .mat-form-field-wrapper {
+	height: 30px;
+	padding-bottom: 5px;
+}
+.limit ::ng-deep .mat-form-field-infix {
+  border-top: 0;
+}
+.limit ::ng-deep .mat-form-field-underline {
+	bottom: 8px;
+}
+/* Status絞込み部*/
+.status-app-select h5 {
+  margin-top: 1px;
+  margin-bottom: 1px;
+  margin-right: 20px;
+}
+/* 会社選択ボタン、確認書印刷ボタン、メンテナンスボタン、終了ボタン */
+.kaisha-select mat-button-toggle{
+	height: 35px;
+  width: 120px;
+  line-height: 35px;
+}
+.print-confirm-btn, .maintenance-btn{
+  margin-top: 5px;
+  height: 30px;
+  line-height: 1px;
+}
+.print-confirm-btn {
+  margin-left: 15px;
+}
+.maintenance-btn {
+  margin-left: 10px;
+}
+.logout-btn {
+  width: 75px;
+  height: 30px;
+  margin-top: 5px;
+  margin-left: 20px;
+  padding: 0 0 0 3px;
+  background: #e0f2f1;
+  font-size: 12px;
+  line-height: 1px;
+}
+/* 検索条件を選択部 */
+.select-details h6 {
+  margin: 0;
+}
+.select-detail label{
+  display: block;
+  float: left;
+  width: 60px;
+  padding-top: 10px;
+  text-align:right;
+  font-size: small;
+}
+.select-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 30px;
+  margin-right: 10px;
+}
+/* 検索実行ボタン１つの時の中央寄せ
+.select-exec {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 30px;
+  margin-right: 10px;
+}
+*/
+.select-exec button {
+  padding-left: 30px;
+  padding-right: 30px;
+  background: #ffab91;
+}
+.select-clear button {
+  margin-top: 20px;
+  padding-left: 37.5px;
+  padding-right: 37.5px;
+  background: #e0f2f1;
+}
+/* ボタンパネル部 */
+.buttons-panel {
+  margin-left: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.buttons-panel button {
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+.curd-button {
+  height: 30px;
+  line-height: 1px;
+}
+.curd-btn-color {
+  background: #e0f2f1;
+}
+/* 削除閲覧ボタンアクティブ時背景色　その他チェックシート印刷・確認書印刷・メンテナンスボタン背景色 */
+.active-btn {
+	background: #fff176;
+}
+.non-active-btn {
+	background: #e0f2f1;
+}
+/* チェックシート印刷 大枠囲い込み部分 */
+.print-section {
+  height: 40px;
+  margin-left: 20px;
+  margin-top: 4px;
+  margin-bottom: 0px;
+  padding-top: 3px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 4px;
+  border: solid 1px;
+  border-radius: 5px 5px;
+  background: silver;
+}
+.print-kanri-label {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 10px;
+  font-weight: normal;
+}
+.print-kanri-no {
+  width: 65px;
+}
+.print-btn {
+  margin-top:1px;
+  margin-bottom: 0px;
+}
+/* チェックシート管理No.以降 Input高さ調整 */
+.print-kanri-no ::ng-deep .mat-form-field-wrapper {
+	height: 30px;
+	padding-bottom: 5px;
+}
+.print-kanri-no ::ng-deep .mat-form-field-infix {
+  border-top: 0;
+}
+.print-kanri-no ::ng-deep .mat-form-field-underline {
+	bottom: 8px;
+}
+.pwd-change-btn{
+  margin-left: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.pwd-change-btn button {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  color: #ff4081;
+}
+/* DataTable CSS */
+.list-container {
+  min-height: 300px;
+  padding: 1px;
+  background: #FFFFFF;
+  border: solid 1px;
+  border-radius: 5px 5px;
+}
+.list {
+  min-height: 325px;
+  /*max-height: 400px;*/
+  max-height: 325px;
+  width: 1095px;
+  overflow: auto;
+}
+table {
+  width: 2800px;
+}
+th, td {
+  font-size: x-small;
+}
+th {
+  font-weight: 900;
+}
+tr.mat-header-row {
+  height: 25px;
+}
+tr.mat-footer-row, tr.mat-row {
+  height: 30px;
+}
+.tr-row {
+  background-color: #EDE7F6;
+}
+.paginator {
+  width: 1095px;
+  margin: 0px;
+}
+.footer {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  padding: 5px 10px 5px 30px;
+  background: #FFFFFF;
+  border: solid 1px;
+  border-radius: 5px 5px;
+}
+.footer-text h5 {
+  margin: 0px;
+  font-weight: normal;
+}
+/* 空白用クラス */
+.mgl-10{
+  margin-left : 10px;
+}
+.mgl-20{
+  margin-left : 20px;
+}
+.mgl-30{
+  margin-left : 30px;
+}
+.mgr-10{
+  margin-right: 10px;
+}
+.mgr-20{
+  margin-right: 20px;
+}
+.mgr-30{
+  margin-right: 30px;
+}
+/* 文字太用クラス */
+.txt-bold {
+  font-weight: bold;
+}
+/* 文字色用クラス */
+.color-red {
+  color: red;
+}

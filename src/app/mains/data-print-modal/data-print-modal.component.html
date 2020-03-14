@@ -1,0 +1,142 @@
+<mat-dialog-content class="contener">
+  <div class="" fxLayout="column">
+    <div class="title" fxLayout="row">
+      <h3>チェックシート印刷画面</h3>
+    </div>
+    <!-- ヘッダー 印刷ボタン 表示送り 閉じる -->
+
+    <div class="section1" fxLayout="row">
+
+      <div class="" fxLayout="column" fxLayoutGap="15px">
+        <div class="" fxLayout="row">
+          <h4 class="align">JLX担当者</h4>
+          <h4 fxFlexOffset="10px" class="bk-color sec1-1">{{printHeader.tantousha}}</h4>
+        </div>
+        <div class="" fxLayout="row">
+          <h4 class="align">受け渡し方法</h4>
+          <h4 fxFlexOffset="10px" class="bk-color sec1-2">{{printHeader.dlvry}}</h4>
+        </div>
+      </div>
+
+      <div class="" fxLayout="column" fxLayoutGap="15px" fxFlexOffset="20px">
+        <div class="" fxLayout="row">
+          <h4 class="align">保険会社</h4>
+          <h4 fxFlexOffset="10px" class="bk-color sec2-1">{{printHeader.hokengaisha}}</h4>
+        </div>
+        <div class="" fxLayout="row">
+          <h4 class="align">保険会社ご担当</h4>
+          <h4 fxFlexOffset="10px"  class="bk-color sec2-2">{{printHeader.hokenTantou}}</h4>
+        </div>
+      </div>
+
+      <div class="" fxLayout="column" fxFlexOffset="50px" fxLayoutGap="20px">
+        <div class="">
+          <button type="button" mat-raised-button class="print-btn" (click)="printAll()">全件印刷</button>
+        </div>
+        <div class="">
+          <button type="button" mat-raised-button class="print-btn" (click)="printSelect()">個別印刷</button>
+        </div>
+      </div>
+
+      <div class="" fxLayout="row" fxFlexOffset="20px">
+        <div>
+          <!--<button type="button" mat-raised-button color="primry" class="arrow-btn" (click)="backPage()">左矢印</button>-->
+          <button mat-raised-button color="primry" class="arrow-btn" (click)="backPage()">
+            <mat-icon>skip_previous</mat-icon>
+          </button>
+        </div>
+        <div fxFlexOffset="10px">
+          <button type="button" mat-raised-button color="primry" class="arrow-btn" (click)="forwardPage()">
+            <mat-icon>skip_next</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="" fxFlexOffset="40px">
+        <div mat-dialog-actions class="">
+          <button type="button" mat-raised-button class="close" (click)="cancel()">閉じる</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!--- 印刷データフィールド部　繰り返し出力 -->
+    <div class="print-data-container">
+    <ng-container *ngFor="let data of printData">
+    <div class="print-field">
+
+      <div class="app-data" fxLayout="row">
+        <div fxLayout="column">
+          <!--- Status  管理No --->
+          <span fxLayout="row">
+            <h4 class="label1">Status</h4>
+            <h4 class="vals1 set-border">{{data.status}}</h4>
+          </span>
+          <span fxLayout="row">
+            <h4 class="label1">管理No</h4>
+            <h4 class="vals2 set-border">{{data.id}}</h4>
+          </span>
+        </div>
+        <!--- 保険会社 生保分 証券番号 契約者名 --->
+        <div fxLayout="column">
+          <span fxLayout="row">
+            <h4 class="label2">保険会社</h4>
+            <h4 class="vals3 set-border">{{data.hokengaisha}}</h4>
+          </span>
+          <span fxLayout="row">
+            <h4 class="label2">生保分</h4>
+            <h4 class="vals3 set-border">{{data.seiho}}</h4>
+          </span>
+          <span fxLayout="row">
+            <h4 class="label2">証券番号</h4>
+            <h4 class="vals3 set-border">{{data.shoukenbango}}</h4>
+          </span>
+          <span fxLayout="row">
+            <h4 class="label2">契約者名</h4>
+            <h4 class="vals3 set-border">{{data.keiyakusha}}</h4>
+          </span>
+        </div>
+        <!--- 区分 書類枚数 書類 --->
+        <div fxLayout="column">
+          <span fxLayout="row">
+            <h4 class="label3">区分</h4>
+            <h4 class="vals4 set-border">{{data.kubun}}</h4>
+            <h4 class="label4">書類枚数</h4>
+            <h4 class="vals5 set-border">{{data.shoruiMaisu}}</h4>
+          </span>
+          <span fxLayout="row">
+            <h4 class="label3">書類</h4>
+            <h4 class="vals4 set-border">{{data.shorui1}}</h4>
+            <h4 class="vals4 set-border">{{data.shorui2}}</h4>
+            <h4 class="vals4 set-border">{{data.shorui3}}</h4>
+          </span>
+          <span fxLayout="row">
+            <h4 class="label3"></h4>
+            <h4 class="vals4 set-border">{{data.shorui4}}</h4>
+            <h4 class="vals4 set-border">{{data.shorui5}}</h4>
+            <h4 class="vals4 set-border">{{data.shorui6}}</h4>
+          </span>
+          <span fxLayout="row">
+            <h4 class="label3"></h4>
+            <h4 class="vals4 set-border">{{data.shorui7}}</h4>
+            <h4 class="vals4 set-border">{{data.shorui8}}</h4>
+            <h4 class="vals4 set-border">{{data.shorui9}}</h4>
+          </span>
+        </div>
+      </div>
+      <!--- 備考 不備書類 --->
+      <div fxLayout="row">
+        <span fxLayout="row">
+          <h4 class="label5">備考</h4>
+          <h4 class="vals6 set-border">{{data.bikou}}</h4>
+          <h4>不備書類</h4>
+          <h4 class="vals7 set-border">{{data.fubiShoruiIchiran}}</h4>
+        </span>
+      </div>
+
+    </div>
+    </ng-container>
+    </div>
+
+  </div>
+</mat-dialog-content>

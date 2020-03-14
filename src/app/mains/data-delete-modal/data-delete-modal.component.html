@@ -1,0 +1,51 @@
+<mat-dialog-content [formGroup]="formGroup">
+  <div class="" fxLayout="column">
+    <div class="" fxLayout="row">
+      <section>
+        <h3>削除確認画面</h3>
+      </section>
+      <section mat-dialog-actions class="">
+        <button type="button" mat-raised-button color="accent" class="tojiru" (click)="cancel()">閉じる</button>
+      </section>
+    </div>
+    <div>
+      <h4>
+        削除しようとしているデータが、Status 3(書類不備)
+        のとき削除理由を入力しなければ削除を実行できません。
+      </h4>
+    </div>
+    <div class="" fxLayout="row">
+      <section class="">
+        <mat-form-field class="sakujyoriyu">
+          <mat-label>削除理由</mat-label>
+          <textarea matInput formControlName="sakujyoriyu"
+                  cdkTextareaAutosize
+                  cdkAutosizeMinRows="6"
+                  cdkAutosizeMaxRows="6"
+                  placeholder="削除理由を入力してください"
+                  [readonly]="sakujyoriyuReadOnly"></textarea>
+        </mat-form-field>
+      </section>
+      <section mat-dialog-actions class="">
+        <button type="button" mat-raised-button color="accent" class="jikkou"
+                  [disabled]="!formGroup.valid && buttonDisabled"
+                  (click)="deleteKanri()">実行</button>
+      </section>
+    </div>
+    <div class="tantousha-kanri-panel" fxLayout="row">
+      <section class="tantousha-label">
+        <h5>担当者</h5>
+      </section>
+      <section class="tantousha">
+        <h5 >{{data.tantousha}}</h5>
+      </section>
+      <section class="kanri-no-label">
+        <h5>管理No</h5>
+      </section>
+      <section class="kanri-no">
+        <h5>{{data.id}}</h5>
+      </section>
+    </div>
+  </div>
+
+</mat-dialog-content>

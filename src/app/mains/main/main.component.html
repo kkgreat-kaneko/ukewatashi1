@@ -1,0 +1,362 @@
+
+<div class="container">
+  <div class="main" fxLayout="column">
+
+    <div class="title" fxLayout="row">
+      <div>
+        <h3>受け渡し準備画面</h3>
+      </div>
+      <div>
+        <h5>担当者</h5>
+      </div>
+      <div>
+        <h4 class="tantou">{{loginUser.shimei}}</h4>
+      </div>
+      <div>
+        <h5>会社名</h5>
+      </div>
+      <div>
+        <h4 class="kaisha">{{loginUser.kaisha}}</h4>
+      </div>
+    </div>
+    <!-- 検索条件部 -->
+    <form [formGroup]="statusFormGroup">
+    <div class="set-panel" fxLayout="row">
+      <!----------------Status絞込み選択部と承認Status選択部 縦組みSTART------------------------------------------------------------>
+      <div class="" fxLayout="column">
+        <!----------------Status絞込み選択部START------------------------------------------------------------>
+        <div class="status-select" fxLayout="row">
+          <div class="">
+            <h5>Status絞込み</h5>
+          </div>
+          <div class="radio-col">
+            <mat-radio-group class="" name="status" formControlName="status" (change)="switchGetList()">
+              <mat-radio-button value="1">全件</mat-radio-button>
+            </mat-radio-group>
+            <div class="kanri-no-limit">
+              <label>管理No.</label>
+              <mat-form-field class="limit" appearance="legacy">
+                <input type="number" matInput matType="number" placeholder="" value="" formControlName="beforeKanriNo" (change)="switchGetList()">
+              </mat-form-field>
+              <span style="font-size:small">以前</span>
+            </div>
+            <div class="kanri-no-limit">
+              <label>表示件数</label>
+              <mat-form-field class="limit">
+                <select matNativeControl formControlName="limit" (change)="switchGetList()">
+                  <option value="1000">1000</option>
+                  <option value="2000">2000</option>
+                  <option value="5000">5000</option>
+                  <option value="10000">10000</option>
+                </select>
+              </mat-form-field>
+            </div>
+
+          </div>
+          <div class="radio-col">
+            <mat-radio-group class="radio-col" name="status" formControlName="status" (change)="switchGetList()">
+              <!--<mat-radio-button class="mat-radio-margin" value="1">全件</mat-radio-button>-->
+              <mat-radio-button class="mat-radio-margin" value="2">郵送</mat-radio-button>
+              <mat-radio-button class="mat-radio-margin" value="3">確認完了分</mat-radio-button>
+              <mat-radio-button class="mat-radio-margin" value="4">未確認すべて</mat-radio-button>
+              <mat-radio-button class="" value="5">書類不備</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <!----------------Status絞込み選択部END 承認ステータス選択部START---------------------------------------->
+        <div class="status-app-select" fxLayout="row">
+          <h5> 承認ステータス絞込み </h5>
+          <mat-radio-group class="" name="statusApp" formControlName="statusApp" (change)="switchGetList()">
+            <mat-radio-button class="" value="1">未承認</mat-radio-button>
+            <mat-radio-button class="" value="2">承認済み</mat-radio-button>
+            <mat-radio-button class="" value="3">すべて</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+      <!----------------Status絞込み選択部と承認Status選択部 縦組みEND----------------------------------------------------------->
+      <!----------------JLX JLXHS等ボタン選択部と検索条件項目部 縦組みSTART------------------------------------------------------->
+      <div class="" fxLayout="column">
+        <div class="kaisha-select" fxLayout="row">
+          <mat-button-toggle-group formControlName="shinseishaKaisha" multiple="true" (change)="switchGetList()">
+                <mat-button-toggle [value]="jlx" aria-label="Text align center">JLX</mat-button-toggle>
+                <mat-button-toggle [value]="jlxhs" aria-label="Text align center">JLXHS</mat-button-toggle>
+          </mat-button-toggle-group>
+          <div class="">
+            <button type="button" mat-raised-button class="print-confirm-btn active-btn">確認書印刷</button>
+          </div>
+          <div class="">
+            <button type="button" mat-raised-button class="maintenance-btn active-btn">メンテナンス</button>
+          </div>
+          <div class="">
+            <button type="button" mat-raised-button class="logout-btn" (click)="logout()">ログアウト</button>
+          </div>
+        </div>
+        <!--------------検索条件項目入力部--------------------------------------------------------------------->
+        <div class="select-details" fxLayout="row">
+          <div class="">
+            <h6> 検索条件を選択　</h6>
+          </div>
+          <div class="" fxLayout="column">
+            <!---------検索項目１ ------>
+            <div class="select-detail">
+              <label>項目</label>
+              <mat-form-field class="limit">
+                <select matNativeControl formControlName="detail1Item">
+                  <option value=""></option>
+                  <option [value]="detail.key" *ngFor="let detail of selectDetails | keyvalue">{{detail.value}}</option>
+                </select>
+              </mat-form-field>
+            </div>
+            <!---------検索項目2 ------>
+            <div class="select-detail">
+              <label>項目</label>
+              <mat-form-field class="limit">
+                <select matNativeControl formControlName="detail2Item">
+                  <option value=""></option>
+                  <option [value]="detail.key" *ngFor="let detail of selectDetails | keyvalue">{{detail.value}}</option>
+                </select>
+              </mat-form-field>
+            </div>
+            <!---------検索項目3 ------>
+            <div class="select-detail">
+              <label>項目</label>
+              <mat-form-field class="limit">
+                <select matNativeControl formControlName="detail3Item">
+                  <option value=""></option>
+                  <option [value]="detail.key" *ngFor="let detail of selectDetails | keyvalue">{{detail.value}}</option>
+                </select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="" fxLayout="column">
+            <!------検索項目１検索値----->
+            <div class="select-detail">
+              <label>値</label>
+              <mat-form-field class="limit" appearance="legacy">
+                <input type="text" matInput matType="text" formControlName="detail1Value" placeholder="" value="">
+              </mat-form-field>
+            </div>
+            <!------検索項目2検索値----->
+            <div class="select-detail">
+              <label>値</label>
+              <mat-form-field class="limit" appearance="legacy">
+                <input type="text" matInput matType="text" formControlName="detail2Value" placeholder="" value="">
+              </mat-form-field>
+            </div>
+            <!------検索項目3検索値----->
+            <div class="select-detail">
+              <label>値</label>
+              <mat-form-field class="limit" appearance="legacy">
+                <input type="text" matInput matType="text" formControlName="detail3Value" placeholder="" value="">
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="select-buttons" fxLayout="column">
+            <div class="select-exec">
+              <button type="button" mat-raised-button color="" (click)="searchDetails()">検索実行</button>
+            </div>
+
+            <div class="select-clear">
+              <button type="button" mat-raised-button color="" (click)="clearDetails()">クリア</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <!----------------JLX JLXHS等ボタン選択部と検索条件項目部 縦組みEND------------------------------------------------------->
+    </div>
+    <!------------------条件絞込み検索条件パネルEND   ボタンパネル START----------------------------------------------------------------------------->
+    <div class="" fxLayout="row">
+      <div class="buttons-panel">
+        <button type="button" mat-raised-button class="curd-button curd-btn-color" (click)="createKanri()" [disabled]="deletedKanriViewMode">新規</button>
+      </div>
+      <div class="buttons-panel">
+        <button type="button" mat-raised-button class="curd-button curd-btn-color" (click)="editKanri()" [disabled]="deletedKanriViewMode">編集</button>
+      </div>
+      <div class="buttons-panel">
+        <button type="button" mat-raised-button class="curd-button curd-btn-color" (click)="deleteKanri()" [disabled]="deletedKanriViewMode">削除</button>
+      </div>
+      <div class="buttons-panel">
+        <!--<button type="button" mat-raised-button class="curd-button " [color]="deletedKanriViewColor" (click)="showDeletedKanri()">削除データ閲覧</button>-->
+        <button type="button" mat-raised-button class="curd-button " [ngClass]="btnColorClass" (click)="showDeletedKanri()">削除データ閲覧</button>
+      </div>
+      <div class="buttons-panel">
+        <button type="button" mat-raised-button class="curd-button curd-btn-color" [disabled]="deletedKanriViewMode" (click)="approveKanri()">承認</button>
+      </div>
+      <div class="print-section" fxLayout="row">
+        <button type="button" mat-raised-button class="curd-button print-btn active-btn" [disabled]="deletedKanriViewMode" (click)="checkSheetPrint()">チェックシート印刷</button>
+        <h5 class="print-kanri-label">管理No.</h5>
+        <mat-form-field class="print-kanri-no" appearance="legacy">
+          <input type="number" matInput matType="number" formControlName="printKanriId" placeholder="">
+        </mat-form-field>
+        <h5 class="print-kanri-label">以降</h5>
+      </div>
+      <div class="pwd-change-btn">
+        <button type="button" mat-raised-button class="curd-button curd-btn-color" [disabled]="deletedKanriViewMode">パスワード変更</button>
+      </div>
+    </div>
+    <!------------------ ボタンパネル END  データテーブル部START ------------------------------------------------------------------->
+    <!------------------ 書類データリスト チェックボックスselectionイベントエミッター使用 selection作成時の引数によって複数選択可能設定 ------->
+    <div class="list-container">
+      <div class="list">
+        <table mat-table [dataSource]="dataSource" matSort>
+          <!-- チェックボックス -->
+          <ng-container matColumnDef="select">
+            <!--<th mat-header-cell *matHeaderCellDef mat-sort-header ></th>-->
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element">
+              <mat-checkbox (click)="$event.stopPropagation()"
+                            (change)="selection.toggle(element)"
+                            [checked]="selection.isSelected(element)"
+              >
+              </mat-checkbox>
+            </td>
+          </ng-container>
+          <!--列：Status -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>status</th>
+            <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+          </ng-container>
+          <!--列：承認 -->
+          <ng-container matColumnDef="statusApp">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>承認</th>
+            <td mat-cell *matCellDef="let element"> {{element.statusApp === statusAppOk ? '済' : '未'}} </td>
+          </ng-container>
+          <!--列：管理No. -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>管理No</th>
+            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+          </ng-container>
+          <!--列：入力担当者 -->
+          <ng-container matColumnDef="tantousha">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>入力担当者</th>
+            <td mat-cell *matCellDef="let element"> {{element.tantousha}} </td>
+          </ng-container>
+          <!--列：申請者 -->
+          <ng-container matColumnDef="shinseisha">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>申請者</th>
+            <td mat-cell *matCellDef="let element"> {{element.shinseisha}} </td>
+          </ng-container>
+          <!--列：作成日 -->
+          <ng-container matColumnDef="sakuseibi">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>作成日</th>
+            <td mat-cell *matCellDef="let element"> {{element.sakuseibi}} </td>
+          </ng-container>
+          <!--列：方法 -->
+          <ng-container matColumnDef="dlvry">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>方法</th>
+            <td mat-cell *matCellDef="let element"> {{element.dlvry}} </td>
+          </ng-container>
+          <!--列：保険会社 -->
+          <ng-container matColumnDef="hokengaisha">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>保険会社</th>
+            <td mat-cell *matCellDef="let element"> {{element.hokengaisha}} </td>
+          </ng-container>
+          <!--列：生保分 -->
+          <ng-container matColumnDef="seihobun">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>生保分</th>
+            <td mat-cell *matCellDef="let element"> {{element.seihobun}} </td>
+          </ng-container>
+          <!--列：保険担当者 -->
+          <ng-container matColumnDef="hokenTantou">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>保険担当者</th>
+            <td mat-cell *matCellDef="let element"> {{element.hokenTantou}} </td>
+          </ng-container>
+          <!--列：証券番号 -->
+          <ng-container matColumnDef="shoukenbango">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>証券番号</th>
+            <td mat-cell *matCellDef="let element"> {{element.shoukenbango}} </td>
+          </ng-container>
+          <!--列：契約者名 -->
+          <ng-container matColumnDef="keiyakusha">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>契約者名</th>
+            <td mat-cell *matCellDef="let element"> {{element.keiyakusha}} </td>
+          </ng-container>
+          <!--列：区分 -->
+          <ng-container matColumnDef="kubun">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>区分</th>
+            <td mat-cell *matCellDef="let element"> {{element.kubun}} </td>
+          </ng-container>
+          <!--列：書類枚数 -->
+          <ng-container matColumnDef="shoruiMaisu">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>書類枚数</th>
+            <td mat-cell *matCellDef="let element"> {{element.shoruiMaisu}} </td>
+          </ng-container>
+          <!--列：備考 -->
+          <ng-container matColumnDef="bikou">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>備考</th>
+            <td mat-cell *matCellDef="let element"> {{element.bikou}} </td>
+          </ng-container>
+          <!--列：保険会社備考 -->
+          <ng-container matColumnDef="hokenBikou">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>保険会社備考</th>
+            <td mat-cell *matCellDef="let element"> {{element.hokenBikou}} </td>
+          </ng-container>
+          <!--列：最終編集日 -->
+          <ng-container matColumnDef="saishuHenshubi">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>最終編集日</th>
+            <td mat-cell *matCellDef="let element"> {{element.saishuHenshubi}} </td>
+          </ng-container>
+          <!--列：保険会社確認者 -->
+          <ng-container matColumnDef="kakuninsha">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>保険会社確認者</th>
+            <td mat-cell *matCellDef="let element"> {{element.kakuninsha}} </td>
+          </ng-container>
+          <!--列：確認日 -->
+          <ng-container matColumnDef="kakuninbi">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>確認日</th>
+            <td mat-cell *matCellDef="let element"> {{element.kakuninbi}} </td>
+          </ng-container>
+          <!--列：承認者 -->
+          <ng-container matColumnDef="shouninsha">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>承認者</th>
+            <td mat-cell *matCellDef="let element"> {{element.shouninsha}} </td>
+          </ng-container>
+          <!--列：承認日 -->
+          <ng-container matColumnDef="shouninbi">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>承認日</th>
+            <td mat-cell *matCellDef="let element"> {{element.shouninbi}} </td>
+          </ng-container>
+          <!--列：承認戻し者 -->
+          <ng-container matColumnDef="mishouninsha">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>承認戻し者</th>
+            <td mat-cell *matCellDef="let element"> {{element.mishouninsha}} </td>
+          </ng-container>
+          <!--列：承認戻し日 -->
+          <ng-container matColumnDef="mishouninbi">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>承認戻し日</th>
+            <td mat-cell *matCellDef="let element"> {{element.mishouninbi}} </td>
+          </ng-container>
+          <!--列：削除者 -->
+          <ng-container matColumnDef="sakujyosha">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>削除者</th>
+            <td mat-cell *matCellDef="let element"> {{element.sakujyosha}} </td>
+          </ng-container>
+          <!--列：削除理由 -->
+          <ng-container matColumnDef="sakujyoriyu">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>削除理由</th>
+            <td mat-cell *matCellDef="let element"> {{element.sakujyoriyu}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let element; columns: displayColumns;"
+            [class.tr-row]="selection.isSelected(element)"
+            (click)="selection.toggle(element)">
+          </tr>
+        </table>
+      </div>
+      <div class="paginator">
+        <mat-paginator [pageSizeOptions]="[10, 20, 30, 40, 50, 100]" showFirstLastButtons></mat-paginator>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer-text">
+        <h5>書類の受渡状況は<span class="txt-bold">Status No</span>で確認できます。編集が可能な対象は<span class="txt-bold">Status</span><span class="mgl-20 mgr-10 txt-bold color-red">０,３</span>の案件だけです。<br/>
+            書類受渡前＝<span class="mgl-20 mgr-10 color-red txt-bold">０</span>保険会社側書類確認済・確認書印刷前＝<span class="mgl-20 mgr-10 color-red txt-bold">１</span>書類不備＝<span class="mgl-20 mgr-10 color-red txt-bold">３
+            </span>保険会社側確認書印刷完了＝<span class="mgl-20 mgr-10 color-red txt-bold">２</span>郵送＝<span class="mgl-20 mgr-10 color-red txt-bold">−１</span>
+        </h5>
+      </div>
+    </div>
+    </form>
+  </div>
+</div>

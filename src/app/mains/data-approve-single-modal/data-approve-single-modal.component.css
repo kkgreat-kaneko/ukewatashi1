@@ -1,0 +1,74 @@
+h3, h4 {
+  margin: 0;
+}
+h4{
+  margin-left: 10px;
+  margin-bottom: 8px;
+}
+.contener {
+  padding-left:  15px;
+  padding-right: 15px;
+}
+/* ヘッダー部 タイトル＋ボタン箇所*/
+.section1 {
+  height: 60px;
+}
+/* 各ラベル */
+.label1 {
+  width: 60px;
+}
+.label2, .label4 {
+  width: 70px;
+}
+.label3 {
+  width: 40px;
+}
+.label5 {
+  width: 70px;
+  margin-left: 190px;
+}
+/* 各データ箇所囲線と文字スタイル*/
+.set-border {
+  border: inset 1px;
+  font-weight: normal;
+  font-size: 14px;
+}
+/* ダイアログボタンアクション部 承認ボタン 閉じるボタン*/
+.buttons-1 {
+  margin-left: 750px;
+  padding: 0px;
+}
+.buttons-2 {
+  margin-left: 50px;
+  padding: 0px;
+}
+.mat-dialog-actions {
+  align-items: flex-start;
+}
+.approve {
+  width: 200px;
+}
+.close {
+}
+/* 各データ部幅 */
+.vals1 {
+  width: 20px;
+}
+.vals2 {
+  width: 100px;
+}
+.vals3 {
+  width: 250px;
+}
+.vals4 {
+  width: 200px;
+}
+.vals5 {
+  width: 50px;
+}
+.vals6 {
+  width: 500px;
+}
+.vals7 {
+  width: 350px;
+}

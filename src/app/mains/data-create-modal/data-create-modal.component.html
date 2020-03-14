@@ -1,0 +1,218 @@
+<!-- <div class="container">
+  <div class="panel"> -->
+    <mat-dialog-content [formGroup]="formGroup">
+    <div class="" fxLayout="column">
+      <!---１段目入力フォーム段落 --->
+      <div class="row1" fxLayout="row">
+        <div class="">
+          <h3>入力フォーム</h3>
+        </div>
+        <div class="form-left">
+          <button type="button" mat-raised-button color="primary" (click)="reuseKanri()">繰り返し</button>
+        </div>
+        <div class="" fxLayout="column">
+          <div class="" fxLayout="row">
+            <div class="tantousha-label">
+              入力担当者
+            </div>
+            <div class="id-label">
+              <label>{{data.tantoushaUserId}}</label>
+            </div>
+            <div class="shimei-label">
+              <label>{{data.tantousha}}</label>
+            </div>
+          </div>
+          <!-- 申請者 -->
+          <div class="" fxLayout="row">
+            <div class="form-left">
+              <button type="button" mat-raised-button color="" class="shinseisha" (click)="selectShinseisha()">申請者</button>
+            </div>
+            <div class="id-label">
+              <label>{{data.shinseishaUserId}}</label>
+            </div>
+            <div class="shimei-label">
+              <label>{{data.shinseisha}}</label>
+            </div>
+          </div>
+        </div>
+        <!-- 転記＆閉じる -->
+        <div mat-dialog-actions class="">
+          <button type="button" mat-raised-button color="warn" class="tenki" [disabled]="formGroup.invalid || shoruiListValid" (click)="create()">転記</button>
+          <button type="button" mat-raised-button color="accent" class="tojiru" (click)="cancel()">閉じる</button>
+        </div>
+      </div>
+      <!---2段目作成日フォーム段落 --->
+      <div class="row2" fxLayout="row">
+        <div class="" fxLayout="column">
+          <div class="">
+            作成日
+          </div>
+          <div class="sakuseibi">
+            <label>{{data.sakuseibi}}</label>
+          </div>
+        </div>
+        <div class="" fxLayout="column">
+          <!---------保険会社セレクト--------->
+          <div class="form-left">
+            <mat-form-field class="hokenkaisha">
+              <mat-label>*保険会社</mat-label>
+              <select matNativeControl formControlName="hokengaisha" placeholder="保険会社" (change)="getHokenTantouList()">
+                <option value="" selected></option>
+                <option [value]="hokengaisha.hokengaisha" *ngFor="let hokengaisha of hokengaishaList">{{hokengaisha.hokengaisha}}</option>
+              </select>
+            </mat-form-field>
+          </div>
+          <!-- 保険担当者セレクト -->
+          <div class="form-left">
+            <mat-form-field class="">
+              <mat-label>保険会社担当者</mat-label>
+              <select matNativeControl formControlName="hokenTantou" placeholder="保険会社担当者">
+                <option value="" selected></option>
+                <option [value]="hokenTantou.kakuninsha" *ngFor="let hokenTantou of hokenTantouList">{{hokenTantou.kakuninsha}}</option>
+              </select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="" fxLayout="column">
+          <!-- 生保分 -->
+          <div class="form-left">
+            <mat-form-field class="">
+              <mat-label>生保分</mat-label>
+              <select matNativeControl formControlName="seiho" placeholder="生保分">
+                <option value="" selected></option>
+                <option [value]="seiho.seiho" *ngFor="let seiho of seihoList">{{seiho.seiho}}</option>
+              </select>
+            </mat-form-field>
+          </div>
+          <!-- 区分手入力---->
+          <div class="">
+            <mat-form-field class="kubun-input" appearance="legacy">
+              <mat-label>*区分手入力</mat-label>
+              <input type="text" matInput placeholder="" formControlName="kubunInput" #kubunInput (change)="changeKubun(kubunInput)"
+              [ngStyle]="kubunInputDisable && {'background-color': 'lightgrey'}">
+            </mat-form-field>
+          </div>
+        </div>
+        <!-- 添付書類手入力 -->
+        <div class="" fxLayout="column">
+          <div class="tenyuryoku">
+            <mat-form-field class="tenyuryoku" appearance="legacy">
+              <mat-label>添付書類手入力</mat-label>
+              <input type="text" matInput placeholder="" value="" formControlName="tenyuryoku">
+            </mat-form-field>
+          </div>
+          <div class="">
+            <button type="button" mat-raised-button color="accent" class="tuika" (click)="addShoruiList()">追加</button>
+          </div>
+        </div>
+      </div>
+
+      <!---3段目証券番号フォーム段落 --->
+      <div class="row3" fxLayout="row">
+        <div class="" fxLayout="column">
+          <!---証券番号--->
+          <div class="">
+            <mat-form-field class="shoukenbango" appearance="legacy">
+              <mat-label>証券番号</mat-label>
+              <input type="text" matInput placeholder="" value="" formControlName="shoukenbango">
+            </mat-form-field>
+          </div>
+          <!---受渡方法--->
+          <div class="">
+            <mat-form-field class="dlvry">
+              <mat-label>受渡方法</mat-label>
+              <select matNativeControl formControlName="dlvry" placeholder="受渡方法">
+                <option [value]="dlvr.value" *ngFor="let dlvr of dlvryList" [selected]="dlvr.value === dlvrySelected">{{dlvr.label}}</option>
+              </select>
+            </mat-form-field>
+          </div>
+          <!---受渡枚数--->
+          <div class="">
+            <mat-form-field class="shoruiMaisu" appearance="legacy" >
+              <mat-label>受渡枚数</mat-label>
+              <input type="number" matInput placeholder="" value="" formControlName="shoruiMaisu"
+                      min="0" max="999"
+                >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="" fxLayout="column">
+          <div class="" fxLayout="row">
+            <!----契約者入力---->
+            <div class="form-left">
+              <mat-form-field class="keiyakusha" appearance="legacy">
+                <mat-label>*契約者名</mat-label>
+                <input type="text" matInput placeholder="" value="" formControlName="keiyakusha">
+              </mat-form-field>
+            </div>
+            <!--区分-->
+            <div class="form-left">
+              <mat-form-field class="">
+                <mat-label>*区分</mat-label>
+                <select matNativeControl formControlName="kubun" placeholder="区分" #kubun (change)="changeKubun(kubun)"
+                [ngStyle]="kubunDisable && {'background-color': 'lightgrey'}">
+                  <option value="" selected></option>
+                  <option [value]="kubun.kubun" *ngFor="let kubun of kubunList">{{kubun.kubun}}</option>
+                </select>
+              </mat-form-field>
+            </div>
+          </div>
+          <!----備考---->
+          <div class="form-left">
+            <mat-form-field class="biko">
+              <textarea matInput formControlName="bikou"
+                      cdkTextareaAutosize
+                      cdkAutosizeMinRows="3"
+                      cdkAutosizeMaxRows="6"
+                      placeholder="備考"></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="" fxLayout="column">
+          <div class="" fxLayout="row">
+            <!-- 添付書類選択リスト -->
+            <div class="shorui-list form-left">
+              <table mat-table [dataSource]="shoruiSource">
+                <!---列 書類 --->
+                <ng-container matColumnDef="shorui">
+                  <th mat-header-cell *matHeaderCellDef>添付書類選択リスト</th>
+                  <td mat-cell *matCellDef="let element"> {{element.shorui}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let element; columns: displayColumns;"
+                                [class.tr-row]="selection.isSelected(element)"
+                                (click)="selection.toggle(element)"
+                                (dblclick)="dblSelectFromShorui(element)"
+                                [ngStyle]="shoruiUmeChecked && {'background-color': 'lightgrey'}">
+                </tr>
+              </table>
+            </div>
+            <!-- 添付書類選択後リスト -->
+            <div class="shorui-list form-left">
+              <table mat-table [dataSource]="shoruiSourceSelected">
+                <!---列 書類 --->
+                <ng-container matColumnDef="shorui">
+                  <th mat-header-cell *matHeaderCellDef>*添付書類</th>
+                  <td mat-cell *matCellDef="let element"> {{element.shorui}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let element; columns: displayColumns;"
+                              [class.tr-row]="selection.isSelected(element)"
+                              (click)="selection.toggle(element)"
+                              (dblclick)="dblSelectToShorui(element)"
+                              [ngStyle]="shoruiUmeChecked && {'background-color': 'lightgrey'}">
+                </tr>
+              </table>
+            </div>
+          </div>
+          <div class="shorui-umu">
+            <mat-checkbox class="" formControlName="shoruiUmu" (click)="checkShoruiUme()">添付書類なし</mat-checkbox>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    </mat-dialog-content>

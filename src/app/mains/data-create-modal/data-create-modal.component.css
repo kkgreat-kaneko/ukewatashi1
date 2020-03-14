@@ -1,0 +1,109 @@
+
+mat-dialog-content {
+  /*width: 1000px;*/
+  min-width: 1000px;
+  max-width: 1200px;
+  min-height: 450px;
+  /*margin-top: 50px;
+  margin-bottom: 50px;
+  padding-top: 10px;*/
+}
+h3,h4 {
+  margin: 1px;
+}
+.row1, .row3 {
+  margin-bottom: 20px;
+}
+.form-left {
+  margin-left: 20px;
+}
+/* 1段目パーツ */
+.sakuseibi, .shoukenbango{
+  width: 100px;
+}
+.tantousha-label {
+  margin-left: 20px;
+  width: 80px;
+}
+.id-label {
+  margin-left: 30px;
+  width: 100px;
+}
+.shimei-label {
+  margin-left: 20px;
+  width: 200px;
+}
+.shinseisha {
+  height: 25px;
+  width: 80px;
+  line-height: 1px;
+  font-weight: bold;
+}
+.tenki {
+  margin-left: 10px;
+  width: 180px;
+}
+.tojiru {
+  margin-left: 50px;
+}
+/* 2段目パーツ */
+.hokenkaisha {
+  width: 250px;
+}
+.kubun-input {
+  margin-left: 20px;
+}
+.tenyuryoku {
+  width: 180px;
+  margin-left: 100px;
+}
+.tuika {
+  margin-left: 250px;
+}
+/*  3段目パーツ */
+.keiyakusha {
+  width: 250px;
+}
+.dlvry {
+  width: 55px;
+  font-size: 14px;
+}
+.shoruiMaisu {
+  width: 55px;
+  font-size: 13px;
+}
+.biko{
+  width: 450px;
+}
+/*添付書類テーブル*/
+.shorui-list {
+  display: block;
+  height: 200px;
+  width: 160px;
+  overflow: auto;
+  border: 1px solid;
+
+}
+/* 書類有無*/
+.shorui-umu {
+  padding-top: 10px;
+  padding-left: 220px;
+}
+table {
+  width: 150px;
+}
+th, td {
+  font-size: x-small;
+}
+th {
+  font-weight: 900;
+}
+tr.mat-header-row {
+  height: 25px;
+}
+tr.mat-footer-row, tr.mat-row {
+  height: 30px;
+}
+.tr-row {
+  background-color: #EDE7F6;
+}
