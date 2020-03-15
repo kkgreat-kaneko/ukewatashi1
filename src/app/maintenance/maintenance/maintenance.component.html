@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="panel" fxLayout="column">
+
+        <!------１段目----------------------->
+        <div class="sec-1" fxLayout="row">
+            <h4>メンテナンス画面</h4>
+            <section mat-dialog-actions class="">
+                <button type="button" mat-raised-button color="" class="close-btn"
+                        (click)="close()">閉じる</button>
+            </section>
+        </div>
+
+        <!-------2段目------------------------>
+        <div class="sec-2" fxLayout="row">
+            <!---管理者ボタン群--------------->
+            <div class="kanri" fxLayout="column">
+                <h4>管理者用</h4>
+                <button type="button" mat-raised-button color="" class="">担当者データ</button>
+                <button type="button" mat-raised-button color="" class="">保険会社データ</button>
+                <button type="button" mat-raised-button color="" class="">保険会社リスト</button>
+                <button type="button" mat-raised-button color="" class="">区分リスト</button>
+                <button type="button" mat-raised-button color="" class="">書類リスト</button>
+            </div>
+
+            <!---表示順変更ボタン群--------------->
+            <div class="list-change" fxLayout="column">
+                <h4>表示順変更</h4>
+                <button type="button" mat-raised-button color="" class="" (click)="showHokengaishaOrder()">保険会社リスト</button>
+                <button type="button" mat-raised-button color="" class="">区分リスト</button>
+                <button type="button" mat-raised-button color="" class="">書類リスト</button>
+            </div>
+        </div>
+
+    </div>
+</div>

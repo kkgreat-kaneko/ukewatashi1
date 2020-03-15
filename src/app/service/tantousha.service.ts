@@ -35,5 +35,40 @@ export class TantoushaService {
     return this.res;
   }
 
+  /*
+  *  ログイン担当者データ
+  */
+  public async getLoginTantousha(): Promise<Tantousha> {
+    const headers = this.session.setTkHeaders();
+    const id = sessionStorage.getItem('userId');
+    this.res = await this.http.get( Const.WWW_ROOT + 'tantousha/getbyid/' + id, {headers: headers})
+    .toPromise();
+    return this.res;
+  }
+
+
+
+  /*
+  *  担当者IDより1件検索
+  *
+  */
+  public async getByID(id: string): Promise<Tantousha> {
+    const headers = this.session.setTkHeaders();
+    this.res = await this.http.get( Const.WWW_ROOT + 'tantousha/getbyid/' + id, {headers: headers})
+    .toPromise();
+    return this.res;
+  }
+
+  /*
+  *  担当者更新 1件
+  *
+  */
+  public async update(tantousha: Tantousha): Promise<Tantousha> {
+    const headers = this.session.setTkHeaders();
+    this.res = await this.http.post( Const.WWW_ROOT + 'tantousha/update/', tantousha, {headers: headers})
+    .toPromise();
+    return this.res;
+  }
+
 
 }

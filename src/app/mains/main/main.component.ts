@@ -2,7 +2,7 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import {MatSort} from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -201,6 +201,7 @@ export class MainComponent implements OnInit {
       data: this.dialogKanri,                       // モーダルコンポーネントにInjectするデータ 戻り処理ないがインスタンス渡し必要
       disableClose: true,                           // モーダル外クリック時モーダル画面を閉じる機能無効
       restoreFocus: false,                          // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
+      autoFocus: false,                             // ダイアログ開いた時の自動フォーカス無効
     });
     // ダイアログ終了後処理
     dialogRef.afterClosed()
@@ -263,6 +264,7 @@ export class MainComponent implements OnInit {
       data: this.dialogKanri,                                     // モーダルコンポーネントにInjectするデータ 戻り処理ないがインスタンス渡し必要
       disableClose: true,                                         // モーダル外クリック時モーダル画面を閉じる機能無効
       restoreFocus: false,                                        // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
+      autoFocus: false,                                           // ダイアログ開いた時の自動フォーカス無効
     });
     // ダイアログ終了後処理
     dialogRef.afterClosed()
@@ -300,6 +302,7 @@ export class MainComponent implements OnInit {
         data: this.dialogKanri,         // モーダルコンポーネントにInjectするデータ 戻り処理ないがインスタンス渡し必要
         disableClose: true,             // モーダル外クリック時画面を閉じる機能無効
         restoreFocus: false,            // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
+        autoFocus: false,               // ダイアログ開いた時の自動フォーカス無効
       });
       // ダイアログ終了後処理
       dialogRef.afterClosed()
@@ -332,6 +335,7 @@ export class MainComponent implements OnInit {
       data: msg,
       disableClose: true,
       restoreFocus: false,                  // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
+      // autoFocus: false,                     // ダイアログ開いた時の自動フォーカス無効
     });
     // ダイアログ終了後処理
     dialogRef.afterClosed()
@@ -440,8 +444,11 @@ export class MainComponent implements OnInit {
       };
       const dialogRef = this.dialog.open(DataApproveMultiModalComponent, {
         data: appKanriesMulti,          // モーダルコンポーネントにInjectするデータ 戻り処理ないがインスタンス渡し必要
+        height: '200px',
+        maxHeight: '200px',
         disableClose: true,             // モーダル外クリック時モーダル画面を閉じる機能無効
         restoreFocus: false,            // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
+        autoFocus: false,               // ダイアログ開いた時の自動フォーカス無効
       });
       // ダイアログ終了後処理
       dialogRef.afterClosed()
@@ -466,6 +473,7 @@ export class MainComponent implements OnInit {
       width: '1250px',
       maxWidth: '1300px',                 //  最大幅がデフォルト設定あるので、変更必要
       restoreFocus: false,                // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
+      autoFocus: false,                   // ダイアログ開いた時の自動フォーカス無効
     });
     // ダイアログ終了後処理 リスト再表示
     dialogRef.afterClosed()
@@ -669,11 +677,25 @@ export class MainComponent implements OnInit {
   get detail3Item() { return this.statusFormGroup.get('detail3Item'); }
   get detail3Value() { return this.statusFormGroup.get('detail3Value'); }
 
+  /*
+  *  ログアウトボタン
+  *  ルートパスへ移動（ログイン画面)
+  */
   public logout() {
     this.router.navigate(['/']);
   }
+
+  /*
+  *  メンテナンスボタン
+  *  メンテナンスコンポーネント開く
+  */
+  public showMaintenance() {
+    this.router.navigate(['/maintenance']);
+  }
+
 }
 
+/* --------------------------------------------------------------------------------- */
 /*
 *  POPUPダイアログメッセージ用インターフェイス
 */

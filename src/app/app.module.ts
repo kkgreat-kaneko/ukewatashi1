@@ -3,6 +3,7 @@ import { NgModule, LOCALE_ID } from '@angular/core';
 import { CoreModule } from './core/core.module';
 import { MainsModule } from './mains/mains.module';
 import { PopupModule } from './popup/popup.module';
+import { MaintenanceModule } from './maintenance/maintenance.module';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -20,6 +21,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CoreModule,
     MainsModule,
     PopupModule,
+    MaintenanceModule,
   ],
   providers: [{provide: LOCALE_ID, useValue: 'ja-JP'}],
   bootstrap: [AppComponent]

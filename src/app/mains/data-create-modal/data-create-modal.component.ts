@@ -12,6 +12,7 @@ import { HokengaishaService } from '../../service/hokengaisha.service';
 import { Hokengaisha } from '../../class/hokengaisha';
 // import { SessionService } from '../../service/session.service';
 import { Const } from '../../class/const';
+import { TantoushaService } from '../../service/tantousha.service';
 import { Tantousha } from '../../class/tantousha';
 import { KanriService } from '../../service/kanri.service';
 import { Kanri } from '../../class/kanri';
@@ -35,6 +36,7 @@ import { PopupAlertComponent } from '../../popup/popup-alert/popup-alert.compone
 })
 export class DataCreateModalComponent implements OnInit {
   message: string;                                          // エラーメッセージ
+  loginUser: Tantousha;                                     // ログイン担当者情報
   hokengaishaList: HokengaishaList[];                       // 保険会社選択リスト用
   hokenTantouList: Hokengaisha[];                           // 保険会社担当者選択リスト用
   seihoList: SeihoList[];                                   // 生保分選択リスト用
@@ -86,6 +88,7 @@ export class DataCreateModalComponent implements OnInit {
   constructor(private dialog: MatDialogRef<DataCreateModalComponent>,
               @Inject(MAT_DIALOG_DATA) public data: Kanri,
               private shinseishaDialog: MatDialog,
+              private tantosushaService: TantoushaService,
               private hokengaishaListService: HokengaishaListService,
               private hokengaishaService: HokengaishaService,
               private fb: FormBuilder,
@@ -105,7 +108,8 @@ export class DataCreateModalComponent implements OnInit {
   ngOnInit() {
     this.data = this.kanriService.createInitData(this.data);  // 書類管理データ固定初期化
 
-    this.getHokengaishaList();                                // 保険会社リスト初期化
+    //this.getHokengaishaList();
+    this.getLoginTantousha();                                 // 保険会社リスト初期化
     this.getKubunList();                                      // 区分リスト初期化
     this.getShoruiList();                                     // 添付書類選択リスト初期化
     this.toShoruiList = [];                                   // 添付書類決定リスト用データ初期化
@@ -138,13 +142,34 @@ export class DataCreateModalComponent implements OnInit {
   }
 
   /*
+  *  ログイン担当者情報取得ファンクション
+  *  担当者固有情報：保険会社表示順、をセット
+  */
+  public getLoginTantousha() {
+    let tantousha: Tantousha;
+    this.tantosushaService.getLoginTantousha()
+    .then(res => {
+      this.loginUser = res;
+      this.getHokengaishaList();
+    })
+    .catch(err => {
+      console.log(`login fail: ${err}`);
+      this.message = 'データの取得に失敗しました。';
+    })
+    .then(() => {
+      // anything finally method
+    });
+  }
+
+  /*
   *  保険会社セレクト用データ取得
   *  全保険会社検索をバックエンドと通信
   */
   public getHokengaishaList() {
     this.hokengaishaListService.getAllList()
     .then(res => {
-      this.hokengaishaList = res;
+      const order = this.formatHokengaishaOrder(this.loginUser.hokengaishaOrder);
+      this.hokengaishaList = this.changeHokengaishaOrder(res, order);
     })
     .catch(err => {
       console.log(`login fail: ${err}`);
@@ -621,6 +646,30 @@ export class DataCreateModalComponent implements OnInit {
         this.kubunDisable = false;
       }
     }
+  }
+
+  /*
+  * カンマ区切りID並び順文字列データを数字配列に変換
+  */
+  formatHokengaishaOrder(hokengaishaOrder: string): number[] {
+    const arr = hokengaishaOrder.split(',');
+    return arr.map( sid => parseInt(sid, 10) );
+  }
+
+  /*
+  *  保険会社並び順変更処理ファンクション
+  *  担当者が保持している並びに変更
+  */
+  changeHokengaishaOrder(list: HokengaishaList[], order: number[]): HokengaishaList[] {
+    const hokengaishaList: HokengaishaList[] = [];
+    for ( let num of order ) {
+      for ( let hokengaisha of list ) {
+        if ( num === hokengaisha.id ) {
+          hokengaishaList.push(hokengaisha);
+        }
+      }
+    }
+    return hokengaishaList;
   }
 
 }
