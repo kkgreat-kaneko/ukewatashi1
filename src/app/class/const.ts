@@ -7,8 +7,8 @@ export class Const {
   //バックエンド接続URL
   //開発機
   static readonly WWW_ROOT: string = 'http://192.168.1.11:8080/Ukewatashi/ws/';
+  //開発機kkgreat.testのhosts設定PCのみアクセス化
   //static readonly WWW_ROOT: string = 'https://kkgreat.test:8181/Ukewatashi/ws/'; 
-  // kkgreat.testのhosts設定PCのみアクセス化
   //検証機
   //static readonly WWW_ROOT: string = 'http://153.127.8.105:8080/Ukewatashi/ws/';
   //static readonly WWW_ROOT: string = 'https://kkgreat-help.com:8181/Ukewatashi/ws/';
