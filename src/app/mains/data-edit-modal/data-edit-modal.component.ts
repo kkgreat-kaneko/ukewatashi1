@@ -246,13 +246,16 @@ export class DataEditModalComponent implements OnInit {
   *  編集登録用データセットをthen句内にてresetShouruiList関数を実行している
   *  この処理がないと同期が取れず、リスト初期化できない
   */
-  public getShoruiList(shoruies: string[] = null) {
+  public getShoruiList(shoruies: tmpShorui[] = null) {
     this.shoruiService.getAllList()
     .then(res => {
       this.fromShoruiList = res;
-      if (shoruies) {                         // 添付書類が有りの場合、引数デフォルトNULL
+      this.fromShoruiList.forEach(obj => {
+        obj.okng = 0;                         // 選択書類Fromリストの各書類不備情報を初期化
+      });
+      if (shoruies) {                         // 添付書類が有りの場合、選択用FromリストとToリストの作成処理へ(selectedKanriSetがトリガー、引数なしデフォルトNULL)
         for (const shorui of shoruies) {
-          this.resetShoruiList(shorui);
+          this.resetShoruiList2(shorui);
         }
       }
       this.shoruiSource = new MatTableDataSource<Shorui>(this.fromShoruiList);
@@ -263,13 +266,7 @@ export class DataEditModalComponent implements OnInit {
       this.message = 'データの取得に失敗しました。';
     })
     .then(() => {
-      /* 上のthen内に移動
-      if (shoruies) {                         // 添付書類が有りの場合、引数デフォルトNULL
-        for (const shorui of shoruies) {
-          this.resetShoruiList(shorui);
-        }
-      }
-      */
+      // anything finally method
     });
   }
 
@@ -305,6 +302,11 @@ export class DataEditModalComponent implements OnInit {
     this.shoruiSource = new MatTableDataSource<Shorui>(this.fromShoruiList);
     this.shoruiSourceSelected = new MatTableDataSource<Shorui>(this.toShoruiList);
   }
+  /*
+  * 添付書類リストTo
+  * クリック処理
+  * Fromリストへの追加と削除処理 移動時にshoruiクラスにセットされている不備情報を初期化okng:0
+  */
   // 添付する書類リスト
   public toShoruiListRecreate(shorui: Shorui) {
     const tempToShoruiList: Shorui[] = [];
@@ -313,7 +315,8 @@ export class DataEditModalComponent implements OnInit {
       let flg = true;
       Object.keys(obj).forEach(key => {
         if (key === 'id' && obj[key] === shorui.id) {
-          if (shorui.id !== -1) { // 手入力添付書類は選択リストに入れず削除
+          if (shorui.id !== -1) {   // 手入力添付書類は選択リストに入れず削除
+            obj.okng = 0;           // ToリストからFromに戻す時セットされている不備情報を初期化
             this.fromShoruiList.push(obj);
           }
           flg = false;
@@ -432,21 +435,35 @@ export class DataEditModalComponent implements OnInit {
       this.data.shoruiUmu = Const.SHORUI_NO;                    // 書類無し カラムshorui1-10まで空データにリセット
       let i = 1;
       let keyName: string;
-      this.toShoruiList.forEach(obj => {
+      let okngName: string;
+
+      while(i < 10) {                                           // 添付書類1~9削除更新処理 System上最大9件＊テーブルカラムは10まであるが未使用
         keyName = 'shorui' + i;
+        okngName = 'okng' + i;
         this.data[keyName] = '';
+        this.data[okngName] = 0;
         i++;
-      });
+      }
     } else {
-      this.data.shoruiUmu = Const.SHORUI_YES;                   // 書類有り toShoruiList配列データをカラムshorui1-10にセットする
+      this.data.shoruiUmu = Const.SHORUI_YES;                   // 書類有り toShoruiList配列データをカラムshorui1-9にセットする horui1~9は並び替えられる
       let i = 1;
       let keyName: string;
-      this.toShoruiList.forEach(obj => {
+      let okngName: string;
+      this.toShoruiList.forEach(obj => {                        // 添付書類を更新データにセット　書類名-->shorui1~9 不備情報-->okng1~9
         keyName = 'shorui' + i;
-        this.data[keyName] = obj.shorui;
+        okngName = 'okng' + i;
+        this.data[keyName] = obj.shorui;                        // 書類名は新規でない時、不備情報とセットでToリストにセットされている　カラムshorui1~9は並び替えされる
+        this.data[okngName] = obj.okng;                         // 不備情報は新規でない時、選択レコード情報から書類名とペアでToリストにセットされている(selectedKanriSetでセット)
         i++;
       });
-
+      // 選択レコードの後続添付書類を初期化更新　削除した時の残データをレコードから削除する為
+      while(i < 10) {
+        keyName = 'shorui' + i;
+        okngName = 'okng' + i;
+        this.data[keyName] = '';
+        this.data[okngName] = 0;
+        i++;
+      }
     }
     // DB編集更新処理
     this.kanriService.updateKanri(this.data)
@@ -555,30 +572,32 @@ export class DataEditModalComponent implements OnInit {
   * 書類マスタIDを書類データ上保持していないので、書類名でしか判別不能
   * 手入力書類の判別有り
   */
-  public resetShoruiList(shorui: string) {
-    const tempFromShoruiList: Shorui[] = [];
-    let tenyuryoku = true;                            // 手入力書類判別フラグ
-    this.fromShoruiList.forEach(obj => {
-      let flg = true;                                 // 引数書類名との一致判別フラグ
-      Object.keys(obj).forEach(key => {
-        if (key === 'shorui' && obj[key] === shorui) {// マスタに存在する書類のみ追加
-          this.toShoruiList.push(obj);
-          flg = false;                                // 引数書類名との一致 fromリスト追加しない
-          tenyuryoku = false;                         // 手入力書類ではない
-        }
-      });
-      if (flg) {                                      // 引数書類と一致しないリストは Tempリストへ追加する
-        tempFromShoruiList.push(obj);
+ public resetShoruiList2(tmpS: tmpShorui) {
+  const tempFromShoruiList: Shorui[] = [];
+  let tenyuryoku = true;                            // 手入力書類判別フラグ
+  this.fromShoruiList.forEach(obj => {
+    let flg = true;                                 // 引数書類名との一致判別フラグ
+    Object.keys(obj).forEach(key => {
+      if (key === 'shorui' && obj[key] === tmpS.shorui) { // マスタに存在する書類のみ追加
+        obj.okng = tmpS.okng;                       // 添付書類データ内に不備情報okngをセット、ペアで保持
+        this.toShoruiList.push(obj);
+        flg = false;                                // 引数書類名との一致 fromリスト追加しない　選択された添付書類リストとなる
+        tenyuryoku = false;                         // 手入力書類ではない　手入力添付書類はマスタ書類と別に下段で追加処理あり
       }
     });
-    if (tenyuryoku) {                                 // 添付書類が手入力の時、手入力用IDにてShoruiモデル作成し追加
-      const tenyuryokuShorui = new Shorui();
-      tenyuryokuShorui.id = -1;
-      tenyuryokuShorui.shorui = shorui;
-      this.toShoruiList.push(tenyuryokuShorui);
+    if (flg) {                                      // 引数書類と一致しないリストは Tempリストへ追加する　書類選択用リストとなる
+      tempFromShoruiList.push(obj);
     }
-    this.fromShoruiList = tempFromShoruiList;         // Tempリストを代入してFromリスト再作成
+  });
+  if (tenyuryoku) {                                 // 添付書類が手入力の時、手入力用IDにてShoruiモデル作成し追加
+    const tenyuryokuShorui = new Shorui();
+    tenyuryokuShorui.id = -1;                       // 手入力用ID:-1 すべて同じ 選択添付書類用リストからクリックイベントで削除する時、書類選択リスト(fromリスト)に戻さない用に判別する為
+    tenyuryokuShorui.shorui = tmpS.shorui;          // 手入力書類名
+    tenyuryokuShorui.okng = tmpS.okng;              // 手入力書類の不備情報をセット　ペアで保持
+    this.toShoruiList.push(tenyuryokuShorui);
   }
+  this.fromShoruiList = tempFromShoruiList;         // Tempリストを代入してFromリスト再作成
+}
 
   /*
   *  選択レコードの書類データをフォームにセットする処理
@@ -612,36 +631,48 @@ export class DataEditModalComponent implements OnInit {
     * 非同期通信の為、選択リスト初期化時内でのPromise処理が必要
     */
     this.toShoruiList = [];
-    const tempShoruies: string[] = [];
+
+    /*選択された管理レコードの書類shorui1~9と書類不備okng1~9をセットにして保持する為の変数*/
+    const tempShoruies2: tmpShorui[] = [];
+    let tempShorui2 = {
+      shorui : '',
+      okng : 0
+    }
+    /*選択された管理レコードのshorui1~9とokng1~9をセットにした添付書類データをセット*/
     let i = 1;
     let keyName: string;
+    let okngName: string;
     while (i < 10) {
       keyName = 'shorui' + i;
+      okngName = 'okng' + i;
       if (this.data[keyName]) {
-        tempShoruies.push(this.data[keyName]);               // 添付書類1〜９を配列に格納 システム上添付書類最大9件
+        /* 書類1~9をデータがあれば順番にセット */
+        tempShorui2 = {
+          shorui : this.data[keyName],
+          okng : this.data[okngName]
+        }
+        tempShoruies2.push(tempShorui2);
       }
       i++;
     }
-    if (tempShoruies.length < 1) {                               // 添付書類有り無し分岐処理
-      this.getShoruiList();                                      // 添付書類無し-->fromリスト全マスタセット
-    } else {
-      this.getShoruiList(tempShoruies);                          // 添付書類有り-->fromリスト添付除外してtoリストにもセット
+    if (tempShoruies2.length < 1) {                               // 添付書類有り無し分岐処理
+      this.getShoruiList();                                       // 添付書類無し-->fromリストに書類名と書類不備okng-->0初期化
+    } else {                
+      this.getShoruiList(tempShoruies2);                          // 添付書類有り-->fromリストから除外してtoリストにセット書類不備情報をレコードからセット
     }
-    // 一旦削除 this.shoruiSource = new MatTableDataSource<Shorui>(this.fromShoruiList);
-    // 一旦削除 this.shoruiSourceSelected = new MatTableDataSource<Shorui>(this.toShoruiList);
     /*
     * 添付書類チェック状態セット
     * 添付書類リストのdisabled状態と転記ボタンのdisabled状態のセット
     * 上段の添付書類リストのセット後に処理する必要あり
     */
-    this.shoruiUmu.setValue(!this.data.shoruiUmu);        // 書類有無 有り1/無し０チェックボックス値が逆
+    this.shoruiUmu.setValue(!this.data.shoruiUmu);                // 書類有無 有り1/無し０チェックボックス値が逆
 
-    if (!this.shoruiUmu.value) {                              // 書類がある時
-      this.shoruiUmeChecked = false;                          // 書類有無チェック状態からの書類リストdisabledセット
-      this.shoruiListValid = false;                           // 転記ボタンdisabled解除(初期値false)
-    } else {                                                  // 書類無しチェックの時
-      this.shoruiUmeChecked = true;                           // 書類有無チェック状態からの書類リストdisabled解除
-      this.shoruiListValid = false;                           // 転記ボタンdisabled解除(初期値false)
+    if (!this.shoruiUmu.value) {                                  // 書類がある時
+      this.shoruiUmeChecked = false;                              // 書類有無チェック状態からの書類リストdisabledセット
+      this.shoruiListValid = false;                               // 転記ボタンdisabled解除(初期値false)
+    } else {                                                      // 書類無しチェックの時
+      this.shoruiUmeChecked = true;                               // 書類有無チェック状態からの書類リストdisabled解除
+      this.shoruiListValid = false;                               // 転記ボタンdisabled解除(初期値false)
     }
 
   }
@@ -650,26 +681,39 @@ export class DataEditModalComponent implements OnInit {
   *  区分手入力と区分の状態（入力or選択)によってどちらかをdisabled:trueに変更する
   *  どちらか一方のみの入力を許可
   */
- public changeKubun(element: HTMLElement) {
-  if ( element.getAttribute('formControlName') === 'kubun' ) {
-    if ( this.formGroup.value.kubun !== '' ) {
-      this.kubunInput.disable();
-      this.kubunInputDisable = true;
-      this.kubunDisable = false;
-    } else {
-      this.kubunInput.enable();
-      this.kubunInputDisable = false;
-    }
-  } else if ( element.getAttribute('formControlName') === 'kubunInput' ) {
-    if ( this.formGroup.value.kubunInput !== '' ) {
-      this.kubun.disable();
-      this.kubunDisable = true;
-      this.kubunInputDisable = false;
-    } else {
-      this.kubun.enable();
-      this.kubunDisable = false;
+  public changeKubun(element: HTMLElement) {
+    if ( element.getAttribute('formControlName') === 'kubun' ) {
+      if ( this.formGroup.value.kubun !== '' ) {
+        this.kubunInput.disable();
+        this.kubunInputDisable = true;
+        this.kubunDisable = false;
+      } else {
+        this.kubunInput.enable();
+        this.kubunInputDisable = false;
+      }
+    } else if ( element.getAttribute('formControlName') === 'kubunInput' ) {
+      if ( this.formGroup.value.kubunInput !== '' ) {
+        this.kubun.disable();
+        this.kubunDisable = true;
+        this.kubunInputDisable = false;
+      } else {
+        this.kubun.enable();
+        this.kubunDisable = false;
+      }
     }
   }
+
 }
 
+/* --------------------------------------------------------------------------------- */
+/*
+*  添付書類選択リスト(From,To)用インターフェイス
+*  Kanriテーブルレコードの添付書類shorui1~9と書類不備フラグokng1~9を
+*  ペアにして選択リストにセットする。
+*  編集時に添付書類を削除追加した時、shorui1~9は並び替えが発生する(前システム仕様でも同じ)
+*  並び替えが発生しても書類と不備情報が保持されるようにペアで保持
+*/
+export interface tmpShorui {
+  shorui: string;                 // 書類名
+  okng: number;                   // 書類不備フラグ
 }
