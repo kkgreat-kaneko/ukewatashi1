@@ -75,15 +75,25 @@
       </div>
       <!----------------Status絞込み選択部と承認Status選択部 縦組みEND----------------------------------------------------------->
       <!----------------JLX JLXHS等ボタン選択部と検索条件項目部 縦組みSTART------------------------------------------------------->
+      <!----------------権限レベルによりJLX/JLXHSボタン、確認印刷ボタン、所属員データの表示/非表示制御--------------------------------->
       <div class="" fxLayout="column">
         <div class="kaisha-select" fxLayout="row">
-          <mat-button-toggle-group formControlName="shinseishaKaisha" multiple="true" (change)="switchGetList()">
-                <mat-button-toggle [value]="jlx" aria-label="Text align center">JLX</mat-button-toggle>
-                <mat-button-toggle [value]="jlxhs" aria-label="Text align center">JLXHS</mat-button-toggle>
+          <mat-button-toggle-group *ngIf="loginUser.kengen === admin ; else hiddenJlxJlxhs" 
+            formControlName="shinseishaKaisha" multiple="true" (change)="switchGetList()">
+            <mat-button-toggle [value]="jlx" aria-label="Text align center">JLX</mat-button-toggle>
+            <mat-button-toggle [value]="jlxhs" aria-label="Text align center">JLXHS</mat-button-toggle>
           </mat-button-toggle-group>
-          <div class="">
+          <ng-template #hiddenJlxJlxhs>
+            <div class="hidden-jlx-jlxhs"></div>
+          </ng-template>
+          <div class="" *ngIf="loginUser.kengen === admin">
             <button type="button" mat-raised-button class="print-confirm-btn active-btn">確認書印刷</button>
           </div>
+          <div class="" *ngIf="loginUser.kengen === manager">
+            <button type="button" mat-raised-button class="print-confirm-btn"
+            [ngClass]="bushoBtnColorClass" (click)="showBushoData()">所属員データ</button>
+          </div>
+          <div class="hidden-confirm-print" *ngIf="loginUser.kengen === normal"></div>
           <div class="">
             <button type="button" mat-raised-button class="maintenance-btn active-btn" (click)="showMaintenance()">メンテナンス</button>
           </div>
@@ -168,13 +178,13 @@
     <!------------------条件絞込み検索条件パネルEND   ボタンパネル START----------------------------------------------------------------------------->
     <div class="" fxLayout="row">
       <div class="buttons-panel">
-        <button type="button" mat-raised-button class="curd-button curd-btn-color" (click)="createKanri()" [disabled]="deletedKanriViewMode">新規</button>
+        <button type="button" mat-raised-button class="curd-button curd-btn-color" (click)="createKanri()" [disabled]="deletedKanriViewMode || bushoDataViewMode">新規</button>
       </div>
       <div class="buttons-panel">
-        <button type="button" mat-raised-button class="curd-button curd-btn-color" (click)="editKanri()" [disabled]="deletedKanriViewMode">編集</button>
+        <button type="button" mat-raised-button class="curd-button curd-btn-color" (click)="editKanri()" [disabled]="deletedKanriViewMode || bushoDataViewMode">編集</button>
       </div>
       <div class="buttons-panel">
-        <button type="button" mat-raised-button class="curd-button curd-btn-color" (click)="deleteKanri()" [disabled]="deletedKanriViewMode">削除</button>
+        <button type="button" mat-raised-button class="curd-button curd-btn-color" (click)="deleteKanri()" [disabled]="deletedKanriViewMode || bushoDataViewMode">削除</button>
       </div>
       <div class="buttons-panel">
         <!--<button type="button" mat-raised-button class="curd-button " [color]="deletedKanriViewColor" (click)="showDeletedKanri()">削除データ閲覧</button>-->
@@ -184,7 +194,7 @@
         <button type="button" mat-raised-button class="curd-button curd-btn-color" [disabled]="deletedKanriViewMode" (click)="approveKanri()">承認</button>
       </div>
       <div class="print-section" fxLayout="row">
-        <button type="button" mat-raised-button class="curd-button print-btn active-btn" [disabled]="deletedKanriViewMode" (click)="checkSheetPrint()">チェックシート印刷</button>
+        <button type="button" mat-raised-button class="curd-button print-btn active-btn" [disabled]="deletedKanriViewMode || bushoDataViewMode" (click)="checkSheetPrint()">チェックシート印刷</button>
         <h5 class="print-kanri-label">管理No.</h5>
         <mat-form-field class="print-kanri-no" appearance="legacy">
           <input type="number" matInput matType="number" formControlName="printKanriId" placeholder="">
@@ -192,7 +202,7 @@
         <h5 class="print-kanri-label">以降</h5>
       </div>
       <div class="pwd-change-btn">
-        <button type="button" mat-raised-button class="curd-button curd-btn-color" [disabled]="deletedKanriViewMode">パスワード変更</button>
+        <button type="button" mat-raised-button class="curd-button curd-btn-color" [disabled]="deletedKanriViewMode || bushoDataViewMode">パスワード変更</button>
       </div>
     </div>
     <!------------------ ボタンパネル END  データテーブル部START ------------------------------------------------------------------->

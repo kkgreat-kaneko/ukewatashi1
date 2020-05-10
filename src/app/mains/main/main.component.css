@@ -177,6 +177,17 @@ mat-form-field {
   font-size: 12px;
   line-height: 1px;
 }
+/* 権限レベル非表示時レイアウト調整 */
+.hidden-jlx-jlxhs {
+  display: block;
+  width: 244px;
+  height: 37px;
+}
+.hidden-confirm-print {
+  display: block;
+  width: 117px;
+  height: 37px;
+}
 /* 検索条件を選択部 */
 .select-details h6 {
   margin: 0;

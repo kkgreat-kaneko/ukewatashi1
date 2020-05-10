@@ -28,8 +28,12 @@ import { DataPrintModalComponent } from '../data-print-modal/data-print-modal.co
   styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
-  message: string;              // 未使用 エラーメッセージ用
-  loginUser = new Tantousha();  // ログインユーザー情報用
+  message: string;                // 未使用 エラーメッセージ用
+  loginUser = new Tantousha();    // ログインユーザー情報用
+  admin = Const.KENGEN_ALL;       // 権限レベル
+  manager = Const.KENGEN_MANAGER;
+  normal = Const.KENGEN_NORMAL;
+
   displayColumns = [            // データテーブル列要素指定
     'select', 'status', 'statusApp', 'id', 'tantousha', 'shinseisha', 'sakuseibi', 'dlvry',
     'hokengaisha', 'seihobun', 'hokenTantou', 'shoukenbango', 'keiyakusha', 'kubun',
@@ -44,15 +48,18 @@ export class MainComponent implements OnInit {
   *  データテーブルチェックボックス選択コレクションオブジェクト
   *  選択状態自体を管理する
   *  第1引数--->true: 複数選択可、false: 単一選択 切替可能
-  *  複数選択可能とする
+  *  複数選択可能とする ngOnInit内で権限別に初期化---> 管理者・所属長：複数選択可、一般：単一選択
   */
-  selection = new SelectionModel<Kanri>(true, []);
+  // selection = new SelectionModel<Kanri>(true, []);
+  selection: any;
   /*
   * セレクション Changeイベント登録、Ovservalオブジェクト作成
   *  チェックボックス状態が変更になった時、イベントがObserval発行
+  *  selection
   *  ngOninit処理でsubscribe
   */
-  private cbEmmiter = this.selection.onChange.asObservable();
+  // private cbEmmiter = this.selection.onChange.asObservable();
+  private cbEmmiter: any;
   // 新規編集用管理データ格納用
   dialogKanri: Kanri;
   // Status絞込み、承認Status絞込み、条件検索フォーム関連
@@ -61,16 +68,20 @@ export class MainComponent implements OnInit {
   jlx = Const.JLX_HOKEN;
   jlxhs = Const.JLX_HS_HOKEN;
   selectDetails = Const.SELECT_DETAILS;
-  // filterValues: DetailsFilter[] = [];
   filterValues: any;                      // 書類検索条件用フィルター変数
 
   statusAppOk = Const.APP_STATUS_OK;      // HTML承認ステータス表示変換用 「済/未」表示変換
 
   /*
+  * 所属員データ閲覧用
+  */
+ bushoDataViewMode = false;
+ bushoBtnColorClass: any;                 // CSS STYLE用変数　選択・未選択状態を表示
+
+  /*
   * 削除データ閲覧用
   */
   deletedKanriViewMode = false;
-  // deletedKanriViewColor = 'white';
   btnColorClass: any;
 
   checkSheetData: Kanri[];                   // チェックシート印刷データ用
@@ -88,7 +99,17 @@ export class MainComponent implements OnInit {
   */
   ngOnInit() {
     this.loginUser = this.sessionService.setLoginUser();
-    // console.log(this.loginUser);
+    /*verify test*/ // console.log(this.loginUser);
+    /*
+    * 一覧の複数選択と単一選択可能を権限別に設定、選択時changeイベント登録
+    */
+    if (this.loginUser.kengen === Const.KENGEN_NORMAL) {
+      this.selection = new SelectionModel<Kanri>(false, []);
+    } else {
+      this.selection = new SelectionModel<Kanri>(true, []);
+    }
+    this.cbEmmiter = this.selection.onChange.asObservable();
+
     this.statusFormGroup = new FormGroup({
       status: new FormControl('4'),
       beforeKanriNo: new FormControl(''),
@@ -121,6 +142,14 @@ export class MainComponent implements OnInit {
         this.kanriTableService.deSelectedAll();
       }
     });
+
+    /*
+    * 所属員データ閲覧ボタン背景色動的変更用NgClass初期化
+    */
+   this.bushoBtnColorClass = {
+    'active-btn': false,
+    'non-active-btn': true,
+    };
 
     /*
     * 削除データ閲覧ボタン背景色動的変更用NgClass初期化
@@ -352,6 +381,20 @@ export class MainComponent implements OnInit {
   }
 
   /*
+  * 所属員データ閲覧ボタン
+  * 閲覧モードによって新規編集削除承認ボタンdisabled状態、通常書類データリスト再表示や
+  * 書類データ一覧の条件切替（通常閲覧検索、所属員データ閲覧検索）を行う
+  * bushoDataViewMode = true 閲覧モードONの時、getBushoKanriList()を呼び出し
+  * OFFの時、通常リストgetList()呼び出し
+  */
+ public showBushoData() {
+  this.bushoDataViewMode = !this.bushoDataViewMode;                                     // 所属員データ閲覧モードセット
+  this.bushoBtnColorClass['active-btn'] = !this.bushoBtnColorClass['active-btn'];
+  this.bushoBtnColorClass['non-active-btn'] = !this.bushoBtnColorClass['non-active-btn'];
+  this.switchGetList();　// 所属員データor本人データ 通常データと削除データの切り替え
+}
+
+  /*
   * 削除データ閲覧ボタン
   * 閲覧モードによって新規編集削除承認ボタンdisabled状態、通常書類データリスト再表示や
   * 検索絞込みの条件切替（通常閲覧検索、削除閲覧検索）を行う
@@ -524,7 +567,7 @@ export class MainComponent implements OnInit {
         .subscribe(
           data => {
             if (data) {
-              this.getList();                                       // 書類一覧更新表示
+              this.getList();                          // 書類一覧更新表示
             }
         },
         error => {
@@ -590,15 +633,15 @@ export class MainComponent implements OnInit {
   }
 
   /*
-  *  Status絞込み 承認Status絞込み JLX/JLXHSボタンの選択値をセット
+  *  Status絞込み 承認Status絞込み JLX/JLXHSボタン 所属員データボタンの選択値をセット
   */
   private setKanri() {
     this.kanri = new Kanri();
-    this.kanri.userId = sessionStorage.getItem('userId');         // UserID
-    this.kanri.kengen = Number(sessionStorage.getItem('kengen')); // 権限
-    this.kanri.status = this.statusFormGroup.value.status;        // status
-    this.kanri.limit = this.statusFormGroup.value.limit;          // 表示件数
-    this.kanri.statusApp = this.statusFormGroup.value.statusApp;  // 承認Status
+    this.kanri.userId = sessionStorage.getItem('userId');                   // UserID
+    this.kanri.kengen = Number(sessionStorage.getItem('kengen'));           // 権限
+    this.kanri.status = this.statusFormGroup.value.status;                  // status
+    this.kanri.limit = this.statusFormGroup.value.limit;                    // 表示件数
+    this.kanri.statusApp = this.statusFormGroup.value.statusApp;            // 承認Status
     // 管理No以前
     if (this.statusFormGroup.value.beforeKanriNo) {
       this.kanri.beforeId = this.statusFormGroup.value.beforeKanriNo;
@@ -606,6 +649,12 @@ export class MainComponent implements OnInit {
     // 会社選択 JLX/JLXHSボタン選択値を配列でセット (どちらか１つ選択もしくは２つとも選択)
     if (this.statusFormGroup.value.shinseishaKaisha) {
       this.kanri.sKaisha = this.statusFormGroup.value.shinseishaKaisha;
+    }
+    // 所属員データ選択 選択未選択モードより判別（所属長のみボタン表示あり)
+    if (this.bushoDataViewMode) {
+      this.kanri.tantoushaKaisha = sessionStorage.getItem('kaisha');        // 会社
+      this.kanri.tantoushaTeam = sessionStorage.getItem('busho');           // 部署
+      this.kanri.sBusho = this.bushoDataViewMode;
     }
   }
 

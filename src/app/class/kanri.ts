@@ -64,7 +64,8 @@ export class Kanri {
   limit: number;              // バックエンドへ検索条件用プロパティ
   userId: string;             // バックエンドへ検索条件用プロパティ
   kengen: number;             // バックエンドへ検索条件用プロパティ
-  sKaisha: string[];          // バックエンドへ検索条件用プロパティ
+  sKaisha: string[];          // バックエンドへ検索条件用プロパティ　JLX/JLXHS
+  sBusho: boolean;            // バックエンドへ検索条件用プロパティ　所属員データ
   beforeId: number;           // バックエンドへ検索条件用プロパティ
   kubunInput: string;         // 繰り返しボタン処理で使用するデータ　区分手入力フォーム反映用
 }
