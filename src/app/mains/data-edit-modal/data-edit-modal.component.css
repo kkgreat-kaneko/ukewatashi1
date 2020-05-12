@@ -28,19 +28,29 @@ h3,h4 {
   margin-left: 30px;
   width: 60px;
 }
+.header-margin {
+  margin-top: 5px;
+}
+.header-label {
+  background-color: #e0f2f1;
+  border-radius: 5px 5px;
+}
 .kanri-status-no {
-
+  width: 70px;
+  padding: 3px;
 }
 .tantousha-label {
   margin-left: 20px;
   width: 80px;
+  text-align: center;
 }
 .id-label {
-  margin-left: 20px;
+  margin-left: 10px;
   width: 95px;
+  padding: 3px;
 }
 .shimei-label {
-  margin-left: 20px;
+  margin-left: 10px;
   width: 190px;
 }
 .shinseisha {
@@ -82,8 +92,31 @@ h3,h4 {
   width: 55px;
   font-size: 13px;
 }
-.biko{
+.biko {
   width: 450px;
+}
+.hoken-bikou {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+.hoken-bikou-title {
+  width: 100px;
+}
+.hoken-bikou-data {
+  width: 550px;
+  height: 30px;
+  background-color: #e0f2f1;
+}
+.fubi-shorui {
+  font-size: 14px;
+}
+.fubi-shorui-title {
+  width: 100px;
+}
+.fubi-shorui-data {
+  width: 550px;
+  height: 30px;
+  background-color: #e0f2f1;
 }
 /*添付書類テーブル*/
 .shorui-list {

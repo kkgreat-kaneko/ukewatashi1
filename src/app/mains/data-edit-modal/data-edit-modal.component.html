@@ -9,46 +9,46 @@
         </div>
         <!-- 管理No  Status -->
         <div class="" fxLayout="column">
-          <div class="" fxLayout="row">
+          <div class="header-margin" fxLayout="row">
             <div class="kanri-status-label">
               管理No
             </div>
-            <div class="kanri-status-no">
-              <label>{{data.id}}</label>
+            <div class="kanri-status-no header-label">
+              {{data.id}}
             </div>
           </div>
-          <div class="" fxLayout="row">
+          <div class="header-margin" fxLayout="row">
             <div class="kanri-status-label">
               Status
             </div>
-            <div class="kanri-status-no">
-              <label>{{data.status}}</label>
+            <div class="kanri-status-no header-label">
+              {{data.status}}
             </div>
           </div>
         </div>
         <!-- 入力担当者 申請者 -->
-        <div class="" fxLayout="column">
+        <div class="header-margin" fxLayout="column">
           <div class="" fxLayout="row">
             <div class="tantousha-label">
-              入力担当者
+              担当者
             </div>
-            <div class="id-label">
-              <label>{{data.tantoushaUserId}}</label>
+            <div class="id-label header-label">
+              {{data.tantoushaUserId}}
             </div>
-            <div class="shimei-label">
-              <label>{{data.tantousha}}</label>
+            <div class="shimei-label header-label">
+              {{data.tantousha}}
             </div>
           </div>
           <!-- 申請者 -->
-          <div class="" fxLayout="row">
+          <div class="header-margin" fxLayout="row">
             <div class="form-left">
               <button type="button" mat-raised-button color="" class="shinseisha" (click)="selectShinseisha()">申請者</button>
             </div>
-            <div class="id-label">
-              <label>{{data.shinseishaUserId}}</label>
+            <div class="id-label header-label">
+              {{data.shinseishaUserId}}
             </div>
-            <div class="shimei-label">
-              <label>{{data.shinseisha}}</label>
+            <div class="shimei-label header-label">
+              {{data.shinseisha}}
             </div>
           </div>
         </div>
@@ -126,65 +126,89 @@
 
       <!---3段目証券番号フォーム段落 --->
       <div class="row3" fxLayout="row">
-        <div class="" fxLayout="column">
-          <!---証券番号--->
-          <div class="">
-            <mat-form-field class="shoukenbango" appearance="legacy">
-              <mat-label>証券番号</mat-label>
-              <input type="text" matInput placeholder="" formControlName="shoukenbango">
-            </mat-form-field>
-          </div>
-          <!---受渡方法--->
-          <div class="">
-            <mat-form-field class="dlvry">
-              <mat-label>受渡方法</mat-label>
-              <select matNativeControl formControlName="dlvry" placeholder="受渡方法">
-                <option [value]="dlvr.value" *ngFor="let dlvr of dlvryList" [selected]="dlvr.value === dlvrySelected">{{dlvr.label}}</option>
-              </select>
-            </mat-form-field>
-          </div>
-          <!---受渡枚数--->
-          <div class="">
-            <mat-form-field class="shoruiMaisu" appearance="legacy" >
-              <mat-label>受渡枚数</mat-label>
-              <input type="number" matInput placeholder="" formControlName="shoruiMaisu"
-                      min="0" max="999"
-                >
-            </mat-form-field>
-          </div>
-        </div>
+        <!--証券番号契約者名区分　保険会社備考不備書類-->
         <div class="" fxLayout="column">
           <div class="" fxLayout="row">
-            <!----契約者入力---->
-            <div class="form-left">
-              <mat-form-field class="keiyakusha" appearance="legacy">
-                <mat-label>*契約者名</mat-label>
-                <input type="text" matInput placeholder=""  formControlName="keiyakusha">
-              </mat-form-field>
+            <!--1列目-->
+            <div class="" fxLayout="column">
+              <!---証券番号--->
+              <div class="">
+                <mat-form-field class="shoukenbango" appearance="legacy">
+                  <mat-label>証券番号</mat-label>
+                  <input type="text" matInput placeholder="" formControlName="shoukenbango">
+                </mat-form-field>
+              </div>
+              <!---受渡方法--->
+              <div class="">
+                <mat-form-field class="dlvry">
+                  <mat-label>受渡方法</mat-label>
+                  <select matNativeControl formControlName="dlvry" placeholder="受渡方法">
+                    <option [value]="dlvr.value" *ngFor="let dlvr of dlvryList" [selected]="dlvr.value === dlvrySelected">{{dlvr.label}}</option>
+                  </select>
+                </mat-form-field>
+              </div>
+              <!---受渡枚数--->
+              <div class="">
+                <mat-form-field class="shoruiMaisu" appearance="legacy" >
+                  <mat-label>受渡枚数</mat-label>
+                  <input type="number" matInput placeholder="" formControlName="shoruiMaisu"
+                          min="0" max="999"
+                    >
+                </mat-form-field>
+              </div>
             </div>
-            <!--区分-->
-            <div class="form-left">
-              <mat-form-field class="">
-                <mat-label>*区分</mat-label>
-                <select matNativeControl formControlName="kubun" placeholder="区分" #kubun (change)="changeKubun(kubun)"
-                [ngStyle]="kubunDisable && {'background-color': 'lightgrey'}">
-                  <option value="" selected></option>
-                  <option [value]="kubun.kubun" *ngFor="let kubun of kubunList">{{kubun.kubun}}</option>
-                </select>
-              </mat-form-field>
+            <!--2列目-->
+            <div class="" fxLayout="column">
+              <div class="" fxLayout="row">
+                <!----契約者入力---->
+                <div class="form-left">
+                  <mat-form-field class="keiyakusha" appearance="legacy">
+                    <mat-label>*契約者名</mat-label>
+                    <input type="text" matInput placeholder=""  formControlName="keiyakusha">
+                  </mat-form-field>
+                </div>
+                <!--区分-->
+                <div class="form-left">
+                  <mat-form-field class="">
+                    <mat-label>*区分</mat-label>
+                    <select matNativeControl formControlName="kubun" placeholder="区分" #kubun (change)="changeKubun(kubun)"
+                    [ngStyle]="kubunDisable && {'background-color': 'lightgrey'}">
+                      <option value="" selected></option>
+                      <option [value]="kubun.kubun" *ngFor="let kubun of kubunList">{{kubun.kubun}}</option>
+                    </select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <!----備考---->
+              <div class="form-left">
+                <mat-form-field class="biko">
+                  <textarea matInput formControlName="bikou"
+                          cdkTextareaAutosize
+                          cdkAutosizeMinRows="3"
+                          cdkAutosizeMaxRows="6"
+                          placeholder="備考"></textarea>
+                </mat-form-field>
+              </div>
             </div>
           </div>
-          <!----備考---->
-          <div class="form-left">
-            <mat-form-field class="biko">
-              <textarea matInput formControlName="bikou"
-                      cdkTextareaAutosize
-                      cdkAutosizeMinRows="3"
-                      cdkAutosizeMaxRows="6"
-                      placeholder="備考"></textarea>
-            </mat-form-field>
+          <div class="hoken-bikou" fxLayout="row">
+            <div class="hoken-bikou-title">
+              保険会社備考
+            </div>
+            <div class="hoken-bikou-data">
+              {{data.hokenBikou}}
+            </div>
+          </div>
+          <div class="fubi-shorui" fxLayout="row">
+            <div class="fubi-shorui-title">
+              不備書類
+            </div>
+            <div class="fubi-shorui-data">
+              {{data.fubiShoruiIchiran}}
+            </div>
           </div>
         </div>
+
         <div class="" fxLayout="column">
           <div class="" fxLayout="row">
             <!-- 添付書類選択リスト -->

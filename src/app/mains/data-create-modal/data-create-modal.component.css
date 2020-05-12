@@ -21,16 +21,24 @@ h3,h4 {
 .sakuseibi, .shoukenbango{
   width: 100px;
 }
+.header-margin {
+  margin-top: 5px;
+}
+.header-label {
+  background-color: #e0f2f1;
+  border-radius: 5px 5px;
+}
 .tantousha-label {
   margin-left: 20px;
   width: 80px;
 }
 .id-label {
-  margin-left: 30px;
+  margin-left: 10px;
   width: 100px;
+  padding: 3px;
 }
 .shimei-label {
-  margin-left: 20px;
+  margin-left: 10px;
   width: 200px;
 }
 .shinseisha {
@@ -40,7 +48,7 @@ h3,h4 {
   font-weight: bold;
 }
 .tenki {
-  margin-left: 10px;
+  margin-left: 50px;
   width: 180px;
 }
 .tojiru {

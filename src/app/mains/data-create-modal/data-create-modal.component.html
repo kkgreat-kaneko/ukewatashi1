@@ -11,27 +11,27 @@
           <button type="button" mat-raised-button color="primary" (click)="reuseKanri()">繰り返し</button>
         </div>
         <div class="" fxLayout="column">
-          <div class="" fxLayout="row">
+          <div class="header-margin" fxLayout="row">
             <div class="tantousha-label">
               入力担当者
             </div>
-            <div class="id-label">
-              <label>{{data.tantoushaUserId}}</label>
+            <div class="id-label header-label">
+              {{data.tantoushaUserId}}
             </div>
-            <div class="shimei-label">
-              <label>{{data.tantousha}}</label>
+            <div class="shimei-label header-label">
+              {{data.tantousha}}
             </div>
           </div>
           <!-- 申請者 -->
-          <div class="" fxLayout="row">
+          <div class="header-margin" fxLayout="row">
             <div class="form-left">
               <button type="button" mat-raised-button color="" class="shinseisha" (click)="selectShinseisha()">申請者</button>
             </div>
-            <div class="id-label">
-              <label>{{data.shinseishaUserId}}</label>
+            <div class="id-label header-label">
+              {{data.shinseishaUserId}}
             </div>
-            <div class="shimei-label">
-              <label>{{data.shinseisha}}</label>
+            <div class="shimei-label header-label">
+              {{data.shinseisha}}
             </div>
           </div>
         </div>
