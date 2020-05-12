@@ -70,6 +70,7 @@ export class DataCreateModalComponent implements OnInit {
   fromShoruiList: Shorui[];                                 // 添付書類選択用データソース
   toShoruiList: Shorui[];                                   // 添付書類選択後用データソース
   shoruiListValid = true;
+  reuseKanriData: Kanri;
 
 
   /*
@@ -107,6 +108,7 @@ export class DataCreateModalComponent implements OnInit {
   */
   ngOnInit() {
     this.data = this.kanriService.createInitData(this.data);  // 書類管理データ固定初期化
+    this.reuseKanriData = this.kanriService.getReuseKanri();  // 繰り返し用データセット
 
     //this.getHokengaishaList();
     this.getLoginTantousha();                                 // 保険会社リスト初期化
@@ -533,23 +535,21 @@ export class DataCreateModalComponent implements OnInit {
   * 再セットする項目仕様 保険会社・保険会社担当者・区分・受渡方法・添付書類と有無 のみ。他はセットしない。
   */
   public reuseKanri() {
-    // 繰り返し用データセットある時のみ
-    const reuseKanri: Kanri = this.kanriService.getReuseKanri();
-
-    if (reuseKanri) {
-      this.hokengaisha.setValue(reuseKanri.hokengaisha);      // 保険会社
+    // 繰り返し用データセットある時のみ繰り返しボタンEnable
+    if (this.reuseKanriData) {
+      this.hokengaisha.setValue(this.reuseKanriData.hokengaisha);      // 保険会社
       this.getHokenTantouList();
-      this.hokenTantou.setValue(reuseKanri.hokenTantou);      // 保険会社担当者
-      if (reuseKanri.kubunInput) {
-        this.kubunInput.setValue(reuseKanri.kubunInput);      // 区分手入力
+      this.hokenTantou.setValue(this.reuseKanriData.hokenTantou);      // 保険会社担当者
+      if (this.reuseKanriData.kubunInput) {
+        this.kubunInput.setValue(this.reuseKanriData.kubunInput);      // 区分手入力
         this.kubun.disable();                                 // 区分無効
         this.kubunDisable = true;                             // 区分グレーアウト
       } else {
-        this.kubun.setValue(reuseKanri.kubun);                // 区分
+        this.kubun.setValue(this.reuseKanriData.kubun);                // 区分
         this.kubunInput.disable();                            // 区分手入力無効
         this.kubunInputDisable = true;                        // 区分手入力グレーアウト
       }
-      this.dlvry.setValue(reuseKanri.dlvry);                  // 受渡方法
+      this.dlvry.setValue(this.reuseKanriData.dlvry);                  // 受渡方法
       /*
       * 添付書類リストのセット処理
       */
@@ -558,8 +558,8 @@ export class DataCreateModalComponent implements OnInit {
       let keyName: string;
       while (i < 10) {
         keyName = 'shorui' + i;
-        if (reuseKanri[keyName]) {
-          this.reuseShoruiList(reuseKanri[keyName]);
+        if (this.reuseKanriData[keyName]) {
+          this.reuseShoruiList(this.reuseKanriData[keyName]);
         }
         i++;
       }
@@ -570,8 +570,8 @@ export class DataCreateModalComponent implements OnInit {
       * 添付書類リストのdisabled状態と転記ボタンのdisabled状態のセット
       * 上段の添付書類リストのセット後に処理する必要あり
       */
-      this.shoruiUmu.setValue(!reuseKanri.shoruiUmu);         // 書類有無 有り1/無し０チェックボックス値が逆
-      if (!reuseKanri.shoruiUmu) {
+      this.shoruiUmu.setValue(!this.reuseKanriData.shoruiUmu);         // 書類有無 有り1/無し０チェックボックス値が逆
+      if (!this.reuseKanriData.shoruiUmu) {
         this.shoruiUmeChecked = true;                         // 書類有無チェック状態からの書類リストdisabledセット
         this.shoruiListValid = false;                         // 転記ボタンdisabled解除
       } else {
