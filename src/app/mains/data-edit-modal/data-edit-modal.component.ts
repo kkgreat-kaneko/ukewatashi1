@@ -20,6 +20,7 @@ import { Kubun } from '../../class/kubun';
 import { ShoruiService } from '../../service/shorui.service';
 import { Shorui } from '../../class/shorui';
 import { PopupAlertComponent } from '../../popup/popup-alert/popup-alert.component';
+import { PopupAlertYesNoComponent } from '../../popup/popup-alert-yes-no/popup-alert-yes-no.component';
 import { SessionService } from '../../service/session.service';
 
 
@@ -35,6 +36,7 @@ import { SessionService } from '../../service/session.service';
 })
 export class DataEditModalComponent implements OnInit {
   message: string;                                          // エラーメッセージ
+  shinseishaData: Kanri;                                    // Viewセット用一時申請者情報
   hokengaishaList: HokengaishaList[];                       // 保険会社選択リスト用
   hokenTantouList: Hokengaisha[];                           // 保険会社担当者選択リスト用
   seihoList: SeihoList[];                                   // 生保分選択リスト用
@@ -68,6 +70,7 @@ export class DataEditModalComponent implements OnInit {
   fromShoruiList: Shorui[];                                 // 添付書類選択用データソース
   toShoruiList: Shorui[];                                   // 添付書類選択後用データソース
   shoruiListValid = true;                                   // 編集完了ボタンdisabled用条件の１つ、添付書類有無チェック
+  shoruiEdited = false;                                     // 編集フォーム更新有無判別フラグ　閉じるボタンメッセージ使用
 
 
   /*
@@ -105,11 +108,16 @@ export class DataEditModalComponent implements OnInit {
   * 書類選択用テーブルイベント登録
   */
   ngOnInit() {
-    this.data = this.kanriTableService.getSelected();         // 選択書類データ初期セット
-    this.setFormGroup();                                      // フォームをFormGroupに登録
-    this.getHokengaishaList();                                // 保険会社リスト初期化
-    this.getKubunList();                                      // 区分リスト初期化
-    this.toShoruiList = [];                                   // 添付書類決定リスト用データ初期化
+    this.data = this.kanriTableService.getSelected();                     // 選択書類データ初期セット
+    this.shinseishaData = new Kanri();                                    // 一時申請者データ HTML側とupdate時に更新データと同期用
+    this.shinseishaData.shinseishaUserId = this.data.shinseishaUserId;    // 一時申請者ID初期化
+    this.shinseishaData.shinseisha = this.data.shinseisha;                // 一時申請者氏初期化
+    this.shinseishaData.shinseishaKaisha = this.data.shinseishaKaisha;    // 一時申請者会社初期化
+    this.shinseishaData.shinseishaTeam = this.data.shinseishaTeam;        // 一時申請者チーム部署初期化
+    this.setFormGroup();                                                  // フォームをFormGroupに登録
+    this.getHokengaishaList();                                            // 保険会社リスト初期化
+    this.getKubunList();                                                  // 区分リスト初期化
+    this.toShoruiList = [];                                               // 添付書類決定リスト用データ初期化
     /*
     *  checkBoxのselected契機で申請者テーブル選択データ保持serviceに選択されたselectItemを登録
     *  ShinseishaTableServiceが呼び出しから利用される
@@ -340,7 +348,7 @@ export class DataEditModalComponent implements OnInit {
     }
     this.selection.toggle(shorui);
     this.fromShoruiListRecreate(this.selectedShorui);
-    // 転記ボタンdisabled判定用
+    // 転記ボタンdisabled判定用 undefined--->配列初期化されてない状態=未選択の時 length=0はリストから削除された配列状態の２パターンがある
     if (typeof this.toShoruiList === 'undefined') {
       this.shoruiListValid = true;
     } else {
@@ -350,6 +358,8 @@ export class DataEditModalComponent implements OnInit {
         this.shoruiListValid = false;
       }
     }
+    // 書類変更フラグをセット 閉じるボタン警告メッセージ出力用
+    this.shoruiEdited = true;
   }
 
   dblSelectToShorui(shorui: Shorui) {
@@ -358,7 +368,7 @@ export class DataEditModalComponent implements OnInit {
     }
     this.selection.toggle(shorui);
     this.toShoruiListRecreate(this.selectedShorui);
-    // 転記ボタンdisabled判定用
+    // 転記ボタンdisabled判定用 undefined--->配列初期化されてない状態=未選択の時 length=0はリストから削除された配列状態の２パターンがある
     if (typeof this.toShoruiList === 'undefined') {
       this.shoruiListValid = true;
     } else {
@@ -368,6 +378,8 @@ export class DataEditModalComponent implements OnInit {
         this.shoruiListValid = false;
       }
     }
+    // 書類変更フラグをセット 閉じるボタン警告メッセージ出力用
+    this.shoruiEdited = true;
   }
   /*
   * 添付書類数オーバー時、メッセージ
@@ -398,12 +410,18 @@ export class DataEditModalComponent implements OnInit {
 
   /*
   *  転記ボタン処理 data固定値はngInitでセット済み
-  *  申請者情報は申請者選択ダイアログの戻り処理でセット済み
+  *  申請者情報は変更選択されている場合、一時データchangeShinseihaに申請者選択ダイアログの戻り処理でセットされているので
+  *  ここで確定する(更新確定前にthis.dataにセットするとmain画面の一覧データとリンクしているのでが変更されてしまう。)
   *  フォームの値をセット
   */
   update() {
     // 自動登録項目
     this.data.saishuHenshubi = this.sessionService.getToday();  // 最終編集日
+    // 申請者 View用一時データshinseishaDataと同期
+    this.data.shinseishaUserId = this.shinseishaData.shinseishaUserId;    // 申請者ID変更
+    this.data.shinseisha = this.shinseishaData.shinseisha;                // 申請者氏変更
+    this.data.shinseishaKaisha = this.shinseishaData.shinseishaKaisha;    // 申請者会社
+    this.data.shinseishaTeam = this.shinseishaData.shinseishaTeam;        // 申請者チーム部署
     // 入力項目の値セット
     // 必須項目
     this.data.hokengaisha = this.formGroup.value.hokengaisha;   // 保険会社
@@ -484,15 +502,67 @@ export class DataEditModalComponent implements OnInit {
 
   /*
   * ダイアログキャンセルボタン処理
+  * データ変更有無shoruiEditedを判別して警告メッセージを出力
+  * フォームはdirtyプロパティ=true更新、よりshoruiEditedセット
+  * 申請者変更はフォームではないのでselectShinseisha関数内でshoruiEditedをtrueにセット
   */
   cancel() {
-    this.dialog.close();
+    //　各フォーム更新有無(添付手入力フォームは除く) 更新有り(フォーム変更した場合)shoruiEditedフラグにセット
+    let x = false;    // 意味なしゴミ変数 三項演算子のfalseダミー用
+    this.keiyakusha.dirty ? this.shoruiEdited = true : x = true;
+    this.hokengaisha.dirty ? this.shoruiEdited = true : x = true;
+    this.kubunInput.dirty ? this.shoruiEdited = true : x = true;
+    this.kubun.dirty ? this.shoruiEdited = true : x = true;
+    this.hokenTantou.dirty ? this.shoruiEdited = true : x = true;
+    this.seiho.dirty ? this.shoruiEdited = true : x = true;
+    this.shoukenbango.dirty ? this.shoruiEdited = true : x = true;
+    this.dlvry.dirty ? this.shoruiEdited = true : x = true;
+    this.shoruiMaisu.dirty ? this.shoruiEdited = true : x = true;
+    this.bikou.dirty ? this.shoruiEdited = true : x = true;
+    this.shoruiUmu.dirty ? this.shoruiEdited = true : x = true;
+
+    if (this.shoruiEdited) {
+      this.alertShoruiEdited();
+    } else {
+      this.dialog.close();
+    }
   }
+  /*
+  * 閉じるボタン時、データ変更した時閉じて良いか警告メッセージ出力
+  * はい=閉じる、いいえ=閉じないで画面戻る
+  */
+ alertShoruiEdited() {
+  const msg = {
+    title: '',
+    message: '変更がありますが、終了してよいですか？'
+  };
+
+  const dialogRef = this.popupAlertDialog.open(PopupAlertYesNoComponent, {
+    data: msg,
+    disableClose: true,
+  });
+  // ダイアログ終了後処理
+  dialogRef.afterClosed()
+  .subscribe(
+    data => {
+      // nullデータ戻りチェック必須（無いとプログラムエラー)
+      if (data) {
+        return 0;
+      } else {
+        this.dialog.close();
+      }
+    },
+    error => {
+      console.log('error');
+    }
+  );
+}
 
   /*
   * 申請者変更用ボタンより、ダイアログオープン処理
   * ShinseishaModalComponent開く
   * ダイアログ戻り処理 申請者の変更処理
+  * update()内データ変更セットする(shinseishaData一時保管変数)
   */
   public selectShinseisha() {
     const dialogRef = this.shinseishaDialog.open(ShinseishaModalComponent, {
@@ -505,10 +575,17 @@ export class DataEditModalComponent implements OnInit {
       data => {
         // nullデータ戻りチェック必須（無いとプログラムエラー)
         if (data.userId) {
+          /*
           this.data.shinseishaUserId = data.userId;    // 申請者ID変更
           this.data.shinseisha = data.shimei;          // 申請者氏変更
           this.data.shinseishaKaisha = data.kaisha;    // 申請者会社
           this.data.shinseishaTeam = data.busho;       // 申請者チーム部署
+          */
+          this.shinseishaData.shinseishaUserId = data.userId;     // 申請者ID変更
+          this.shinseishaData.shinseisha = data.shimei;           // 申請者氏変更
+          this.shinseishaData.shinseishaKaisha = data.kaisha;     // 申請者会社
+          this.shinseishaData.shinseishaTeam = data.busho;        // 申請者チーム部署
+          this.shoruiEdited = true;                               // フォーム更新有無フラグ閉じるボタンメッセージで使用
         }
       },
       error => {
@@ -537,6 +614,8 @@ export class DataEditModalComponent implements OnInit {
       this.shoruiSourceSelected = new MatTableDataSource<Shorui>(this.toShoruiList);
       // 転記ボタンdisabled解除
       this.shoruiListValid = false;
+      // 書類変更フラグをセット 閉じるボタン警告メッセージ用
+      this.shoruiEdited = true;
     }
   }
 

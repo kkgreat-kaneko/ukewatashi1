@@ -1,0 +1,8 @@
+<h4 mat-dialog-title>{{data.title}}</h4>
+<div mat-dialog-content>
+  <p>{{data.message}}</p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="ok()" cdkFocusInitial>はい</button>
+  <button mat-button (click)="no()" cdkFocusInitial>いいえ</button>
+</div>

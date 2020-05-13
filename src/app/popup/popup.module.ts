@@ -11,11 +11,12 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialogModule } from '@angular/material';
 import { PopupAlertComponent } from './popup-alert/popup-alert.component';
+import { PopupAlertYesNoComponent } from './popup-alert-yes-no/popup-alert-yes-no.component';
 
 
 
 @NgModule({
-  declarations: [PopupAlertComponent],
+  declarations: [PopupAlertComponent, PopupAlertYesNoComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -32,10 +33,10 @@ import { PopupAlertComponent } from './popup-alert/popup-alert.component';
     MatDialogModule,
   ],
   entryComponents: [
-    PopupAlertComponent,
+    PopupAlertComponent, PopupAlertYesNoComponent
   ],
   exports: [
-    PopupAlertComponent,
+    PopupAlertComponent, PopupAlertYesNoComponent
   ]
 })
 export class PopupModule { }
