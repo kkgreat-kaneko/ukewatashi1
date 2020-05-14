@@ -299,15 +299,16 @@ export class DataCreateModalComponent implements OnInit {
 
     this.toShoruiList.forEach(obj => {
       let flg = true;
-      Object.keys(obj).forEach(key => {
-        if (key === 'id' && obj[key] === shorui.id) {
-          if (shorui.id !== -1) { // 手入力添付書類は選択リストに入れず削除
-            this.fromShoruiList.push(obj);
-          }
+      if (obj.id === shorui.id) {
+        if (shorui.id !== -1) {                     // マスタ書類の時、Fromリストに戻す
+          obj.okng = 0;                             // ToリストからFromに戻す時セットされている不備情報を初期化
+          this.fromShoruiList.push(obj);
+          flg = false; 
+        } else if (obj.shorui === shorui.shorui) {  // 手入力添付書類はFromリストに戻さず削除 共通id-1では判別できないので書類名で判別、書類名は重複無し
           flg = false;
-        }
-      });
-      if (flg) {
+        } 
+      }
+      if (flg) {                                    // ダブルクリック書類にヒットしなければToリスト用一時データに追加
         tempToShoruiList.push(obj);
       }
     });
@@ -361,6 +362,33 @@ export class DataCreateModalComponent implements OnInit {
     const msg = {
       title: '添付書類上限数について',
       message: '添付書類は、上限９件まで可能です。'
+    };
+
+    const dialogRef = this.popupAlertDialog.open(PopupAlertComponent, {
+      data: msg,
+      disableClose: true,
+    });
+    // ダイアログ終了後処理
+    dialogRef.afterClosed()
+    .subscribe(
+      data => {
+        // nullデータ戻りチェック必須（無いとプログラムエラー)
+        if (data) {
+        }
+      },
+      error => {
+        console.log('error');
+      }
+    );
+  }
+
+  /*
+  * 添付手入力書類で同じ名前が既に存在している時、メッセージ
+  */
+  alertNgNameShorui() {
+    const msg = {
+      title: '',
+      message: '既に存在します。'
     };
 
     const dialogRef = this.popupAlertDialog.open(PopupAlertComponent, {
@@ -482,19 +510,37 @@ export class DataCreateModalComponent implements OnInit {
 
   /*
   * 手入力添付書類追加ボタン
-  *
+  * 手入力書類IDは共通-1とする
+  * 同じ書類名の追加は不可。
   */
   public addShoruiList() {
     // 先頭(^)に続く空白(\s)」と「末尾($)の空白(\s)」を空文字('')で置替、空文字は処理せずreturn
-    if (this.formGroup.value.tenyuryoku.replace(/^\s+|\s+$/g, '')) {
+    let tenyuryokuShorui = this.formGroup.value.tenyuryoku.replace(/^\s+|\s+$/g, '');
+    if (tenyuryokuShorui) {
       // 添付書類可能数上限9まで
       if (this.toShoruiList.length > 8 ) {
         this.alertOverNumShorui();
         return 0;
       }
+      // 添付書類リスト内に同じ書類名あるか検索しあれば処理中断メッセージ出力
+      // forEachはreturnでは抜けられない-->すべて操作される。フラグで判別してメッセージ処理する
+      let chkNgName = false;
+      this.toShoruiList.forEach(obj => {
+        Object.keys(obj).forEach(key => {
+          if (key === 'shorui' && obj[key] === tenyuryokuShorui) {
+            chkNgName = true;
+          }
+        });
+      });
+      // 同じ書類名だめメッセージ
+      if (chkNgName) {
+        this.alertNgNameShorui();
+        return 0;
+      }
+
       const inputShorui = new Shorui();
       inputShorui.id = -1; // 手入力用ID -1
-      inputShorui.shorui = this.formGroup.value.tenyuryoku;
+      inputShorui.shorui = tenyuryokuShorui;
       this.toShoruiList.push(inputShorui);
       this.shoruiSource = new MatTableDataSource<Shorui>(this.fromShoruiList);
       this.shoruiSourceSelected = new MatTableDataSource<Shorui>(this.toShoruiList);

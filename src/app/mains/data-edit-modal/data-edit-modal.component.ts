@@ -109,7 +109,7 @@ export class DataEditModalComponent implements OnInit {
   */
   ngOnInit() {
     this.data = this.kanriTableService.getSelected();                     // 選択書類データ初期セット
-    this.shinseishaData = new Kanri();                                    // 一時申請者データ HTML側とupdate時に更新データと同期用
+    this.shinseishaData = new Kanri();                                    // 一時申請者データ HTMLビュー使用とupdate時に更新データへ同期用
     this.shinseishaData.shinseishaUserId = this.data.shinseishaUserId;    // 一時申請者ID初期化
     this.shinseishaData.shinseisha = this.data.shinseisha;                // 一時申請者氏初期化
     this.shinseishaData.shinseishaKaisha = this.data.shinseishaKaisha;    // 一時申請者会社初期化
@@ -320,17 +320,17 @@ export class DataEditModalComponent implements OnInit {
     const tempToShoruiList: Shorui[] = [];
 
     this.toShoruiList.forEach(obj => {
-      let flg = true;
-      Object.keys(obj).forEach(key => {
-        if (key === 'id' && obj[key] === shorui.id) {
-          if (shorui.id !== -1) {   // 手入力添付書類は選択リストに入れず削除
-            obj.okng = 0;           // ToリストからFromに戻す時セットされている不備情報を初期化
-            this.fromShoruiList.push(obj);
-          }
+      let flg = true;                               // ForEachはreturnで抜けられない。フラグを使用する
+      if (obj.id === shorui.id) {
+        if (shorui.id !== -1) {                     // マスタ書類の時、Fromリストに戻す
+          obj.okng = 0;                             // ToリストからFromに戻す時セットされている不備情報を初期化
+          this.fromShoruiList.push(obj);
+          flg = false; 
+        } else if (obj.shorui === shorui.shorui) {  // 手入力添付書類はFromリストに戻さず削除 共通id-1では判別できないので書類名で判別、書類名は重複無し
           flg = false;
-        }
-      });
-      if (flg) {
+        } 
+      }
+      if (flg) {                                    // ダブルクリック書類にヒットしなければToリスト用一時データに追加
         tempToShoruiList.push(obj);
       }
     });
@@ -381,13 +381,41 @@ export class DataEditModalComponent implements OnInit {
     // 書類変更フラグをセット 閉じるボタン警告メッセージ出力用
     this.shoruiEdited = true;
   }
+
   /*
   * 添付書類数オーバー時、メッセージ
   */
   alertOverNumShorui() {
     const msg = {
       title: '添付書類上限数について',
-      message: '添付書類は、上限９件まで可能です。'
+      message: '9件以上は追加できません。'
+    };
+
+    const dialogRef = this.popupAlertDialog.open(PopupAlertComponent, {
+      data: msg,
+      disableClose: true,
+    });
+    // ダイアログ終了後処理
+    dialogRef.afterClosed()
+    .subscribe(
+      data => {
+        // nullデータ戻りチェック必須（無いとプログラムエラー)
+        if (data) {
+        }
+      },
+      error => {
+        console.log('error');
+      }
+    );
+  }
+
+  /*
+  * 添付手入力書類で同じ名前が既に存在している時、メッセージ
+  */
+  alertNgNameShorui() {
+    const msg = {
+      title: '',
+      message: '既に存在します。'
     };
 
     const dialogRef = this.popupAlertDialog.open(PopupAlertComponent, {
@@ -413,6 +441,7 @@ export class DataEditModalComponent implements OnInit {
   *  申請者情報は変更選択されている場合、一時データchangeShinseihaに申請者選択ダイアログの戻り処理でセットされているので
   *  ここで確定する(更新確定前にthis.dataにセットするとmain画面の一覧データとリンクしているのでが変更されてしまう。)
   *  フォームの値をセット
+  *  更新時特殊処理として、 ステータスstatusが郵送-1で受渡方法「受渡」の時(変更された)は、ステータスstatusを0にセットする。
   */
   update() {
     // 自動登録項目
@@ -445,6 +474,10 @@ export class DataEditModalComponent implements OnInit {
       this.data.seiho = '';
     }
     this.data.dlvry = this.formGroup.value.dlvry;               // 受渡方法
+    if (this.data.dlvry === Const.DLVRY_HANDING                 // 特殊処理 ステータス-1郵送書類の受渡方法が「郵送」から「受渡」に変更された場合
+      && this.data.status === Const.STATUS_DLVRY) {
+        this.data.status = Const.STATUS_NOT_CHECK;              // ステータス0(受渡し前未確認)に設定する
+    }
     this.data.shoukenbango = this.formGroup.value.shoukenbango; // 証券番号
     this.data.shoruiMaisu = this.formGroup.value.shoruiMaisu;   // 書類枚数
     this.data.bikou = this.formGroup.value.bikou;               // 備考
@@ -596,19 +629,38 @@ export class DataEditModalComponent implements OnInit {
 
   /*
   * 手入力添付書類追加ボタン
-  *
+  * 手入力書類IDは共通-1とする
+  * 同じ書類名の追加は不可。
   */
   public addShoruiList() {
     // 先頭(^)に続く空白(\s)」と「末尾($)の空白(\s)」を空文字('')で置替、空文字は処理せずreturn
-    if (this.formGroup.value.tenyuryoku.replace(/^\s+|\s+$/g, '')) {
+    let tenyuryokuShorui = this.formGroup.value.tenyuryoku.replace(/^\s+|\s+$/g, '');
+    if (tenyuryokuShorui) {
       // 添付書類可能数上限９件まで
       if (this.toShoruiList.length > 8 ) {
         this.alertOverNumShorui();
         return 0;
       }
+      // 添付書類リスト内に同じ書類名あるか検索しあれば処理中断メッセージ出力
+      // forEachはreturnでは抜けられない-->すべて操作される。フラグで判別してメッセージ処理する
+      let chkNgName = false;
+      this.toShoruiList.forEach(obj => {
+        Object.keys(obj).forEach(key => {
+          if (key === 'shorui' && obj[key] === tenyuryokuShorui) {
+            chkNgName = true;
+          }
+        });
+      });
+      // 同じ書類名だめメッセージ
+      if (chkNgName) {
+        this.alertNgNameShorui();
+        return 0;
+      }
+
+      // リスト追加処理
       const inputShorui = new Shorui();
       inputShorui.id = -1; // 手入力用ID -1
-      inputShorui.shorui = this.formGroup.value.tenyuryoku;
+      inputShorui.shorui = tenyuryokuShorui;
       this.toShoruiList.push(inputShorui);
       this.shoruiSource = new MatTableDataSource<Shorui>(this.fromShoruiList);
       this.shoruiSourceSelected = new MatTableDataSource<Shorui>(this.toShoruiList);
