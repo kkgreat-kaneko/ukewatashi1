@@ -111,7 +111,7 @@ export class DataCreateModalComponent implements OnInit {
     this.reuseKanriData = this.kanriService.getReuseKanri();  // 繰り返し用データセット
 
     //this.getHokengaishaList();
-    this.getLoginTantousha();                                 // 保険会社リスト初期化
+    this.getLoginTantousha();                                 // 保険会社リスト初期化 担当者表示順よりセット
     this.getKubunList();                                      // 区分リスト初期化
     this.getShoruiList();                                     // 添付書類選択リスト初期化
     this.toShoruiList = [];                                   // 添付書類決定リスト用データ初期化
@@ -166,6 +166,7 @@ export class DataCreateModalComponent implements OnInit {
   /*
   *  保険会社セレクト用データ取得
   *  全保険会社検索をバックエンドと通信
+  *  担当者の表示順に並び替えも行う
   */
   public getHokengaishaList() {
     this.hokengaishaListService.getAllList()
@@ -695,9 +696,14 @@ export class DataCreateModalComponent implements OnInit {
   }
 
   /*
+  * メンテナンス表示順設定による並び替え、未設定の場合はNULLを返す--->NULLの時changeHokengaishaOrderで条件処理
   * カンマ区切りID並び順文字列データを数字配列に変換
+  * 
   */
   formatHokengaishaOrder(hokengaishaOrder: string): number[] {
+    if (typeof hokengaishaOrder === "undefined") {
+      return null;
+    }
     const arr = hokengaishaOrder.split(',');
     return arr.map( sid => parseInt(sid, 10) );
   }
@@ -707,12 +713,29 @@ export class DataCreateModalComponent implements OnInit {
   *  担当者が保持している並びに変更
   */
   changeHokengaishaOrder(list: HokengaishaList[], order: number[]): HokengaishaList[] {
+    // 並び順設定がない時NULL マスタ検索id昇順リストを返す
+    if (!order) {
+      return list;
+    }
+    // 並び順指定に変更
     const hokengaishaList: HokengaishaList[] = [];
     for ( let num of order ) {
       for ( let hokengaisha of list ) {
         if ( num === hokengaisha.id ) {
           hokengaishaList.push(hokengaisha);
         }
+      }
+    }
+    // マスタ最新データとの差異を調整 並び順後のデータに含まれてなければ、最新書類をpushする
+    for ( let hokengaisha of list )  {
+      let notInclude = true;
+      for ( let orderedHokengaisha of hokengaishaList ) {
+        if (orderedHokengaisha.id === hokengaisha.id) {
+          notInclude = false;
+        }
+      }
+      if (notInclude) {
+        hokengaishaList.push(hokengaisha);
       }
     }
     return hokengaishaList;

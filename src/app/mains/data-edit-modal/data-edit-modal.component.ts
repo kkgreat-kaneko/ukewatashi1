@@ -11,6 +11,7 @@ import { HokengaishaService } from '../../service/hokengaisha.service';
 import { Hokengaisha } from '../../class/hokengaisha';
 import { Const } from '../../class/const';
 import { Tantousha } from '../../class/tantousha';
+import { TantoushaService } from '../../service/tantousha.service';
 import { KanriService } from '../../service/kanri.service';
 import { KanriTableService } from '../../service/kanri-table.service';
 import { Kanri } from '../../class/kanri';
@@ -36,6 +37,7 @@ import { SessionService } from '../../service/session.service';
 })
 export class DataEditModalComponent implements OnInit {
   message: string;                                          // エラーメッセージ
+  loginUser: Tantousha;                                     // ログイン担当者情報
   shinseishaData: Kanri;                                    // Viewセット用一時申請者情報
   hokengaishaList: HokengaishaList[];                       // 保険会社選択リスト用
   hokenTantouList: Hokengaisha[];                           // 保険会社担当者選択リスト用
@@ -89,6 +91,7 @@ export class DataEditModalComponent implements OnInit {
   constructor(private dialog: MatDialogRef<DataEditModalComponent>,
               @Inject(MAT_DIALOG_DATA) public data: Kanri,
               private shinseishaDialog: MatDialog,
+              private tantosushaService: TantoushaService,
               private hokengaishaListService: HokengaishaListService,
               private hokengaishaService: HokengaishaService,
               private fb: FormBuilder,
@@ -115,7 +118,8 @@ export class DataEditModalComponent implements OnInit {
     this.shinseishaData.shinseishaKaisha = this.data.shinseishaKaisha;    // 一時申請者会社初期化
     this.shinseishaData.shinseishaTeam = this.data.shinseishaTeam;        // 一時申請者チーム部署初期化
     this.setFormGroup();                                                  // フォームをFormGroupに登録
-    this.getHokengaishaList();                                            // 保険会社リスト初期化
+    //this.getHokengaishaList();                                          // 保険会社リスト初期化
+    this.getLoginTantousha();                                             // 保険会社リスト初期化 担当者表示順よりセット
     this.getKubunList();                                                  // 区分リスト初期化
     this.toShoruiList = [];                                               // 添付書類決定リスト用データ初期化
     /*
@@ -135,6 +139,27 @@ export class DataEditModalComponent implements OnInit {
     */
     this.selectedKanriSet();
   }
+
+  /*
+  *  ログイン担当者情報取得ファンクション
+  *  担当者固有情報：保険会社表示順、をセット
+  */
+  public getLoginTantousha() {
+    let tantousha: Tantousha;
+    this.tantosushaService.getLoginTantousha()
+    .then(res => {
+      this.loginUser = res;
+      this.getHokengaishaList();
+    })
+    .catch(err => {
+      console.log(`login fail: ${err}`);
+      this.message = 'データの取得に失敗しました。';
+    })
+    .then(() => {
+      // anything finally method
+    });
+  }
+
   /*
   * フォームグループセット処理
   *
@@ -158,11 +183,14 @@ export class DataEditModalComponent implements OnInit {
   /*
   *  保険会社セレクト用データ取得
   *  全保険会社検索をバックエンドと通信
+  *  担当者の表示順に並び替えも行う
   */
   public getHokengaishaList() {
     this.hokengaishaListService.getAllList()
     .then(res => {
-      this.hokengaishaList = res;
+      //this.hokengaishaList = res;
+      const order = this.formatHokengaishaOrder(this.loginUser.hokengaishaOrder);
+      this.hokengaishaList = this.changeHokengaishaOrder(res, order);
     })
     .catch(err => {
       console.log(`login fail: ${err}`);
@@ -833,6 +861,52 @@ export class DataEditModalComponent implements OnInit {
       }
     }
   }
+
+  /*
+  * メンテナンス表示順設定による並び替え、未設定の場合はNULLを返す--->NULLの時changeHokengaishaOrderで条件処理
+  * カンマ区切りID並び順文字列データを数字配列に変換
+  * 
+  */
+ formatHokengaishaOrder(hokengaishaOrder: string): number[] {
+  if (typeof hokengaishaOrder === "undefined") {
+    return null;
+  }
+  const arr = hokengaishaOrder.split(',');
+  return arr.map( sid => parseInt(sid, 10) );
+}
+
+/*
+*  保険会社並び順変更処理ファンクション
+*  担当者が保持している並びに変更
+*/
+changeHokengaishaOrder(list: HokengaishaList[], order: number[]): HokengaishaList[] {
+  // 並び順設定がない時NULL マスタ検索id昇順リストを返す
+  if (!order) {
+    return list;
+  }
+  // 並び順指定に変更
+  const hokengaishaList: HokengaishaList[] = [];
+  for ( let num of order ) {
+    for ( let hokengaisha of list ) {
+      if ( num === hokengaisha.id ) {
+        hokengaishaList.push(hokengaisha);
+      }
+    }
+  }
+  // マスタ最新データとの差異を調整 並び順後のデータに含まれてなければ、最新書類をpushする
+  for ( let hokengaisha of list )  {
+    let notInclude = true;
+    for ( let orderedHokengaisha of hokengaishaList ) {
+      if (orderedHokengaisha.id === hokengaisha.id) {
+        notInclude = false;
+      }
+    }
+    if (notInclude) {
+      hokengaishaList.push(hokengaisha);
+    }
+  }
+  return hokengaishaList;
+}
 
 }
 

@@ -56,9 +56,13 @@ export class HokengaishaListOrderComponent implements OnInit {
   }
 
   /*
-  * 並び順文字列データを数字配列に変換
+  * メンテナンス表示順文字列データを数字配列に変換、並び順を未設定の場合はNULLを返す--->NULLの時changeHokengaishaOrderで条件処理
+  * カンマ区切りID並び順文字列データを数字配列に変換
   */
   formatHokengaishaOrder(hokengaishaOrder: string): number[] {
+    if (typeof hokengaishaOrder === "undefined") {
+      return null;
+    }
     const arr = hokengaishaOrder.split(',');
     return arr.map( sid => parseInt(sid, 10) );
   }
@@ -68,12 +72,29 @@ export class HokengaishaListOrderComponent implements OnInit {
   *  担当者が保持している並びに変更
   */
   changeHokengaishaOrder(list: HokengaishaList[], order: number[]): HokengaishaList[] {
+    // 並び順設定がない時NULL マスタ検索id昇順リストを返す
+    if (!order) {
+      return list;
+    }
+    // 並び順指定に変更
     const hokengaishaList: HokengaishaList[] = [];
     for ( let num of order ) {
       for ( let hokengaisha of list ) {
         if ( num === hokengaisha.id ) {
           hokengaishaList.push(hokengaisha);
         }
+      }
+    }
+    // マスタ最新データとの差異を調整 並び順後のデータに含まれてなければ、最新書類をpushする
+    for ( let hokengaisha of list )  {
+      let notInclude = true;
+      for ( let orderedHokengaisha of hokengaishaList ) {
+        if (orderedHokengaisha.id === hokengaisha.id) {
+          notInclude = false;
+        }
+      }
+      if (notInclude) {
+        hokengaishaList.push(hokengaisha);
       }
     }
     return hokengaishaList;
