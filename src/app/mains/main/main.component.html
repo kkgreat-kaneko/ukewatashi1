@@ -202,7 +202,7 @@
         <h5 class="print-kanri-label">以降</h5>
       </div>
       <div class="pwd-change-btn">
-        <button type="button" mat-raised-button class="curd-button curd-btn-color" [disabled]="deletedKanriViewMode || bushoDataViewMode">パスワード変更</button>
+        <button type="button" mat-raised-button class="curd-button curd-btn-color" [disabled]="deletedKanriViewMode || bushoDataViewMode" (click)="showPasswordChange()">パスワード変更</button>
       </div>
     </div>
     <!------------------ ボタンパネル END  データテーブル部START ------------------------------------------------------------------->

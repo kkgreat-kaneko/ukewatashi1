@@ -25,13 +25,15 @@ import { DataDeleteModalComponent } from './data-delete-modal/data-delete-modal.
 import { DataApproveMultiModalComponent } from './data-approve-multi-modal/data-approve-multi-modal.component';
 import { DataApproveSingleModalComponent } from './data-approve-single-modal/data-approve-single-modal.component';
 import { DataPrintModalComponent } from './data-print-modal/data-print-modal.component';
+import { PasswordChangeModalComponent } from './password-change-modal/password-change-modal.component';
 
 
 @NgModule({
   declarations: [MainComponent, DataCreateModalComponent, ShinseishaModalComponent,
     DataEditModalComponent, DataDeleteModalComponent, DataApproveMultiModalComponent,
     DataApproveSingleModalComponent,
-    DataPrintModalComponent],
+    DataPrintModalComponent,
+    PasswordChangeModalComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -61,6 +63,7 @@ import { DataPrintModalComponent } from './data-print-modal/data-print-modal.com
     DataApproveMultiModalComponent,
     DataApproveSingleModalComponent,
     DataPrintModalComponent,
+    PasswordChangeModalComponent,
   ],
   exports: [
     MainComponent,

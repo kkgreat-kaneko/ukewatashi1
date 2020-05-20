@@ -20,6 +20,7 @@ import { PopupAlertComponent } from '../../popup/popup-alert/popup-alert.compone
 import { DataApproveMultiModalComponent } from '../data-approve-multi-modal/data-approve-multi-modal.component';
 import { DataApproveSingleModalComponent } from '../data-approve-single-modal/data-approve-single-modal.component';
 import { DataPrintModalComponent } from '../data-print-modal/data-print-modal.component';
+import { PasswordChangeModalComponent } from '../password-change-modal/password-change-modal.component';
 
 
 @Component({
@@ -85,6 +86,8 @@ export class MainComponent implements OnInit {
   btnColorClass: any;
 
   checkSheetData: Kanri[];                   // チェックシート印刷データ用
+
+  daialogTantousha: Tantousha;               // パスワード変更用インジェクト担当者
 
   constructor(private kanriService: KanriService, private kanriTableService: KanriTableService,
               private sessionService: SessionService, private dialog: MatDialog,
@@ -740,6 +743,36 @@ export class MainComponent implements OnInit {
   */
   public showMaintenance() {
     this.router.navigate(['/maintenance']);
+  }
+
+  /*
+  *  パスワード変更ボタン
+  *  passwordChangeModalComponentを開く
+  */
+  public showPasswordChange() {
+    this.daialogTantousha = new Tantousha();
+    const dialogRef = this.dialog.open(PasswordChangeModalComponent, {
+      data: this.daialogTantousha,    // モーダルコンポーネントにInjectするデータ 戻り処理ないがインスタンス渡し必要
+      disableClose: true,             // モーダル外クリック時画面を閉じる機能無効
+      restoreFocus: false,            // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
+      autoFocus: false,               // ダイアログ開いた時の自動フォーカス無効
+    });
+    // ダイアログ終了後処理
+    dialogRef.afterClosed()
+    .subscribe(
+      data => {
+        if (data) {
+          const msg1 = {
+            title: '',
+            message: 'パスワードが変更されました。'
+          };
+          this.showAlert(msg1);
+        }
+      },
+      error => {
+        console.log('error');
+      }
+    );
   }
 
 }
