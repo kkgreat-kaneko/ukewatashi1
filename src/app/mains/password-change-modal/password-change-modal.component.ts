@@ -14,7 +14,8 @@ import { PopupAlertComponent } from '../../popup/popup-alert/popup-alert.compone
 })
 export class PasswordChangeModalComponent implements OnInit {
   message: string;                                                                // 処理エラーメッセージ
-  pwdErrs: string[];                                                               // パスワード入力エラーメッセージ
+  pwdExpired = false;                                                             // 有効期限フラグ初期化
+  pwdErrs: string[];                                                              // パスワード入力エラーメッセージ
   formGroup: FormGroup;                                                           // フォームグループ、以下フォームコントロール初期化
   currentPasswd = new FormControl('', { validators: [Validators.required] });     // フォームinput「現在のパスワード」
   newPasswd = new FormControl('', { validators: [Validators.required] });         // フォームinput「新しいのパスワード」
@@ -32,6 +33,9 @@ export class PasswordChangeModalComponent implements OnInit {
   ngOnInit() {
     this.getLoginTantousha();                                   // バックエンドから最新ログインユーザー情報取得
     this.setFormGroup();                                        // フォームコントローラーをグループへセット処理
+    if (this.data.passwordSetdate === 'expired') {              // 有効期限切れ時、閉じるボタンDisabledフラグ用
+      this.pwdExpired = true;
+    }
   }
 
   public setFormGroup() {
@@ -46,9 +50,6 @@ export class PasswordChangeModalComponent implements OnInit {
   *  パスワード変更ボタン
   */
   public changePwd() {
-    /*test*/const testStr = 'wWwwwwWw"¥!#$%&()=~|\-^\'`{@[]+*};:<>?,./';
-    /*test*/ console.log(/^[\w!"#$%&'()=~|\-^¥`\{@\[\]\+\*\};:<>\?,\.\/]{1,100}$/g.test(testStr));
-    /*test*/console.log(testStr);
     this.pwdErrs = [];
     if (this.loginUser.password !== this.formGroup.value.currentPasswd) {
       this.pwdErrs.push('＊現在のパスワードが違います。');
@@ -78,7 +79,6 @@ export class PasswordChangeModalComponent implements OnInit {
     */
     this.loginUser.password = this.formGroup.value.newPasswd;
     this.loginUser.passwordSetdate = this.sessionService.getToday();
-    /**/console.log(this.loginUser);
     this.tantoushaService.update(this.loginUser)
     .then(res => {
       this.data = res;

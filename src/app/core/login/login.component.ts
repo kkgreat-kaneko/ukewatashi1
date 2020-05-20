@@ -43,16 +43,21 @@ export class LoginComponent implements OnInit {
       sessionStorage.setItem('kengen', res.tantousha.kengen);   // 担当者権限
       sessionStorage.setItem('kaisha', res.tantousha.kaisha);   // 担当者会社情報
       sessionStorage.setItem('busho', res.tantousha.busho);     // 担当者チーム
+      sessionStorage.setItem('pwdExpired', '');                 // パスワード期限フラグ初期化
       this.token = sessionStorage.getItem('token');
 
-      // ---test--- セッションDIのテスト ページリロードは不可
-      // this.sessionService.setTantousha(res.tantousha); //
-      // ---test end --
-
-      // 権限タイプによってルーティングだったが変更 権限によってメニュー表示非表示にする
-      // if (res.kengen === 0) {
+      /*
+      *  パスワード有効期限チェック有効期限:設定から９０日間
+      *  MainComponent初期化時にフラグ判別しパスワード変更画面を開く
+      */
+      let expireDate = new Date(res.tantousha.passwordSetdate);
+      /*test*/ //let expireDate = new Date('2020/02/10 00:00:00');
+      expireDate.setDate(expireDate.getDate() + 90);            // 90日後有効期限切れ
+      let currentDate = new Date();                             // 現在の日付
+      if (currentDate.getTime() > expireDate.getTime()) {       // パスワード有効期限チェック
+        sessionStorage.setItem('pwdExpired', '1');              // パスワード期限フラグセット
+      }
       this.router.navigate(['/main']);
-      // }
     })
     .catch(err => {
       console.log('error LoginComponent login()');

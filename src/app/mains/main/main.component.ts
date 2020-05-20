@@ -87,7 +87,7 @@ export class MainComponent implements OnInit {
 
   checkSheetData: Kanri[];                   // チェックシート印刷データ用
 
-  daialogTantousha: Tantousha;               // パスワード変更用インジェクト担当者
+  //daialogTantousha: Tantousha;               // パスワード変更用インジェクト担当者
 
   constructor(private kanriService: KanriService, private kanriTableService: KanriTableService,
               private sessionService: SessionService, private dialog: MatDialog,
@@ -161,6 +161,20 @@ export class MainComponent implements OnInit {
       'active-btn': false,
       'non-active-btn': true,
       };
+
+    /*
+    *  パスワード有効期限９０日超過時、パスワード変更ダイアログ開く。
+    *　ダイアログの閉じるボタンは、変更完了までDisabled状態となる。
+    */
+    if (this.sessionService.getPwdExpired()) {
+      // メッセージ出力
+      const msg = {
+        title: '',
+        message: 'パスワードの有効期限が切れています。変更をお願いします。'
+      };
+      this.showPwdAlert(msg);
+    }
+
   }
 
   /*
@@ -749,10 +763,14 @@ export class MainComponent implements OnInit {
   *  パスワード変更ボタン
   *  passwordChangeModalComponentを開く
   */
-  public showPasswordChange() {
-    this.daialogTantousha = new Tantousha();
+  public showPasswordChange(pwdExpired = false) {
+    //this.daialogTantousha = new Tantousha();
+    const daialogTantousha = new Tantousha();
+    if (pwdExpired) {
+      daialogTantousha.passwordSetdate = 'expired';
+    }
     const dialogRef = this.dialog.open(PasswordChangeModalComponent, {
-      data: this.daialogTantousha,    // モーダルコンポーネントにInjectするデータ 戻り処理ないがインスタンス渡し必要
+      data: daialogTantousha,    // モーダルコンポーネントにInjectするデータ 戻り処理ないがインスタンス渡し必要
       disableClose: true,             // モーダル外クリック時画面を閉じる機能無効
       restoreFocus: false,            // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
       autoFocus: false,               // ダイアログ開いた時の自動フォーカス無効
@@ -762,12 +780,40 @@ export class MainComponent implements OnInit {
     .subscribe(
       data => {
         if (data) {
+          this.sessionService.resetPwdExpired();
           const msg1 = {
             title: '',
             message: 'パスワードが変更されました。'
           };
           this.showAlert(msg1);
         }
+      },
+      error => {
+        console.log('error');
+      }
+    );
+  }
+
+  /*
+  * パスワード有効期限切れメッセージ
+  * 削除ボタン(データ未選択時、Status0,3以外データ選択時)
+  */
+  public showPwdAlert(msg: Msg) {
+    const dialogRef = this.popupAlertDialog.open(PopupAlertComponent, {
+      data: msg,
+      disableClose: true,
+      restoreFocus: false,                      // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
+      // autoFocus: false,                      // ダイアログ開いた時の自動フォーカス無効
+    });
+    // ダイアログ終了後処理
+    dialogRef.afterClosed()
+    .subscribe(
+      data => {
+        // nullデータ戻りチェック必須（無いとプログラムエラー)---->OKで閉じるしかないのでデータなし
+        if (data) {
+        }
+        // パスワード変更ダイアログ開く 引数にダイアログ閉じるボタンのDisabledフラグ
+        this.showPasswordChange(true);
       },
       error => {
         console.log('error');

@@ -42,6 +42,21 @@ export class SessionService {
   }
 
   /*
+  *  パスワード有効期限チェックフラグを返す。空文字＝有効、１がセット＝失効
+  *　ログイン処理時に有効期限９０日内かチェックしセット、変更画面で更新すると空文字にセット
+  */
+  public getPwdExpired(): string {
+    return sessionStorage.getItem('pwdExpired');
+  }
+
+  /*
+  *
+  */
+  public resetPwdExpired() {
+    sessionStorage.setItem('pwdExpired', '');          // パスワード期限フラグ初期化
+  }
+
+  /*
   * Current日付を返す
   */
   public getToday(): string {
