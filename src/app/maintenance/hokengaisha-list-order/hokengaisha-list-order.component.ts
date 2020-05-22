@@ -144,9 +144,10 @@ export class HokengaishaListOrderComponent implements OnInit {
     this.tantoushaService.update(this.tantousha)                  // ログインユーザー更新用データ初期化
     .then(res => {
       this.tantousha = res;
+      let message = ['表示順の並び替えを登録しました。'];
       const msg: Msg = {
         title: '登録完了',
-        message: '表示順の並び替えを登録しました。'
+        message: message,
       }
       this.showMsg(msg);
     })
@@ -199,5 +200,5 @@ export class HokengaishaListOrderComponent implements OnInit {
 */
 export interface Msg {
   title: string;          // ダイアログタイトル名をセット
-  message: string;        // ダイアログメッセージをセット
+  message: string[];        // ダイアログメッセージをセット
 }

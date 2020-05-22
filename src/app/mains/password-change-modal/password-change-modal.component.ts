@@ -5,7 +5,6 @@ import { FormGroup, FormControl, FormBuilder, Validators} from '@angular/forms';
 import { Tantousha } from '../../class/tantousha';
 import { TantoushaService } from '../../service/tantousha.service';
 import { SessionService } from '../../service/session.service';
-import { PopupAlertComponent } from '../../popup/popup-alert/popup-alert.component';
 
 @Component({
   selector: 'app-password-change-modal',

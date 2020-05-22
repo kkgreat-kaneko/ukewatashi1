@@ -416,9 +416,10 @@ export class DataEditModalComponent implements OnInit {
   * 添付書類数オーバー時、メッセージ
   */
   alertOverNumShorui() {
+    let message = ['9件以上は追加できません。'];
     const msg = {
       title: '添付書類上限数について',
-      message: '9件以上は追加できません。'
+      message: message,
     };
 
     const dialogRef = this.popupAlertDialog.open(PopupAlertComponent, {
@@ -443,9 +444,10 @@ export class DataEditModalComponent implements OnInit {
   * 添付手入力書類で同じ名前が既に存在している時、メッセージ
   */
   alertNgNameShorui() {
+    let message = ['既に存在します。'];
     const msg = {
       title: '',
-      message: '既に存在します。'
+      message: message,
     };
 
     const dialogRef = this.popupAlertDialog.open(PopupAlertComponent, {
