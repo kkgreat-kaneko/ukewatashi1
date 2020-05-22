@@ -89,9 +89,15 @@ export class MainComponent implements OnInit {
   checkSheetData: Kanri[];                   // チェックシート印刷データ用
 
   /*
+  * フォームコントーロラー初期化　（値セットするフォーム必要分だけ)
   * statusフォームクラス初期化 イニシャライズ処理内の不備書類チェックでデフォルト値4未確認すべて <---> 5不備書類 処理の為インスタンス化
   */
-  status = new FormControl('4');           // status絞込み
+  status = new FormControl('4');                    // status絞込み
+  beforeKanriNo = new FormControl('');              // 管理No.以前
+  limit = new FormControl('1000');                  // 表示件数1000デフォルト値
+  statusApp = new FormControl('3');                 // 承認ステータスデフォルトすべて
+  shinseishaKaisha = new FormControl('');           // JLX/JLXHS　会社選択ボタン
+
 
   constructor(private kanriService: KanriService, private kanriTableService: KanriTableService,
               private sessionService: SessionService, private dialog: MatDialog,
@@ -118,10 +124,10 @@ export class MainComponent implements OnInit {
 
     this.statusFormGroup = new FormGroup({
       status: this.status,                            // 未確認すべて:4 もしくは 不備書類:5
-      beforeKanriNo: new FormControl(''),
-      limit: new FormControl('1000'),                 // 表示件数1000デフォルト値
-      statusApp: new FormControl('3'),                // 承認ステータスデフォルトすべて
-      shinseishaKaisha: new FormControl(''),
+      beforeKanriNo: this.beforeKanriNo,              // 管理No.以前〜
+      limit: this.limit,                              // 表示件数1000デフォルト値
+      statusApp: this.statusApp,                      // 承認ステータスデフォルトすべて
+      shinseishaKaisha: this.shinseishaKaisha,        // JLX/JLXHS 会社選択ボタン
       detail1Item: new FormControl(''),
       detail2Item: new FormControl(''),
       detail3Item: new FormControl(''),
@@ -130,13 +136,43 @@ export class MainComponent implements OnInit {
       detail3Value: new FormControl(''),
       printKanriId: new FormControl(''),
     });
+
+    /*
+    * 所属員データ閲覧ボタン背景色動的変更用NgClass初期化
+    */
+    this.bushoBtnColorClass = {
+      'active-btn': false,
+      'non-active-btn': true,
+    };
+
+    /*
+    * 削除データ閲覧ボタン背景色動的変更用NgClass初期化
+    */
+    this.btnColorClass = {
+      'active-btn': false,
+      'non-active-btn': true,
+    };
+
     /*
     *  書類一覧表示するまでの処理を一括して行う。
     *  ログイン後の書類チェック処理、書類一覧作成処理、パスワード有効期限チェック処理
     *  書類データ初期化 担当者申請者のデータは初回未確定すべてOR不備書類のどちらかを出力
+    *  メンテナンス画面から戻りの場合、ngOnInitに戻るので、
+    *  その場合sessionStorageアイテムmaintenanceMode=1で判別して処理を分ける
+    *  通常初期化(ログイン直後)---------> パスワード有効期限チェック、ログイン後書類チェックからの書類一覧出力
+    *  メンテナンスモード--------------> メンテナンス遷移前のStatus絞込み状態を保持復元して書類一覧出力 削除閲覧と通常一覧出力とで遷移前状態がどちらかによって分岐する
     */
     this.initMsg = [];
-    this.initList();
+    if (sessionStorage.getItem('maintenanceMode')) {      // メンテナンス画面戻りの時
+      if(sessionStorage.getItem('deletedKanriViewMode')) {// メンテナンス遷移前が削除閲覧状態だった時
+        this.getDeletedList(1);                           // 引数1を渡すとメンテナンス遷移前状態に復元して削除閲覧リストを出力する
+      } else {
+        this.getList(1);                                  // 引数1を渡すとメンテナンス遷移前状態に復元して通常書類リストを出力する
+      }
+      sessionStorage.removeItem('maintenanceMode');       // メンテナンスモードから戻り処理完了、初期化
+    } else {
+      this.initList();                                    // 通常ログイン後初期化処理　内部でgetList()引数なしを実行している
+    }
 
     /*
     *  checkBoxのselected契機で受渡書類一覧テーブルの選択データを保持する。KanriTableServiceに選択されたselectItemを登録
@@ -153,38 +189,6 @@ export class MainComponent implements OnInit {
         this.kanriTableService.deSelectedAll();
       }
     });
-
-    /*
-    * 所属員データ閲覧ボタン背景色動的変更用NgClass初期化
-    */
-   this.bushoBtnColorClass = {
-    'active-btn': false,
-    'non-active-btn': true,
-    };
-
-    /*
-    * 削除データ閲覧ボタン背景色動的変更用NgClass初期化
-    */
-    this.btnColorClass = {
-      'active-btn': false,
-      'non-active-btn': true,
-      };
-
-    /*
-    *  パスワード有効期限９０日超過時、パスワード変更ダイアログ開く。
-    *　ダイアログの閉じるボタンは、変更完了までDisabled状態となる。
-    */
-    /*
-    if (this.sessionService.getPwdExpired()) {
-      // メッセージ出力
-      let message = ['パスワードの有効期限が切れています。変更をお願いします。'];
-      const msg = {
-        title: '',
-        message: message,
-      };
-      this.showPwdAlert(msg);
-    }
-    */
 
   }
 
@@ -298,10 +302,15 @@ export class MainComponent implements OnInit {
   /*
   * 通常データの検索、データテーブルへセット処理
   * setKanri処理でフォーム上の検索条件がKanriクラスに検索用プロパティをセットしPOSTデータ作成
+  * maintenanceMode--->メンテナンス画面からの戻り時、SessionStorageに保持したフォーム状態を復元してKanriクラスにセットする。
   * KanriServiceよりJAX-RSと通信
   */
-  public getList() {
-    this.setKanri();
+  public getList(maintenanceMode = 0) {
+    if (maintenanceMode) {
+      this.setKanriMaintenanceMode();
+    } else {
+      this.setKanri();
+    }
     this.kanriService.getList(this.kanri)
     .then(res => {
       // 選択状態のクリア必要(データテーブル再セット後、不具合となる為)
@@ -524,7 +533,6 @@ export class MainComponent implements OnInit {
   */
   public showDeletedKanri() {
       this.deletedKanriViewMode = !this.deletedKanriViewMode;                                     // 削除データ閲覧モードセット
-      // this.deletedKanriViewColor = this.deletedKanriViewColor === 'white' ? 'accent' : 'white';   // 削除閲覧データボタン背景色セット
       this.btnColorClass['active-btn'] = !this.btnColorClass['active-btn'];
       this.btnColorClass['non-active-btn'] = !this.btnColorClass['non-active-btn'];
       this.switchGetList();
@@ -534,9 +542,14 @@ export class MainComponent implements OnInit {
   * 削除データ検索、データテーブルへセットしリスト表示する処理
   * 削除データ閲覧モードONの時
   * 削除データ閲覧ボタンと条件絞込みのイベント処理内でコールされる
+  * maintenanceMode--->getListと同様メンテナンス画面遷移前の削除閲覧モード状態を復元する処理(悩ましい)
   */
-  public getDeletedList() {
-    this.setKanri();
+  public getDeletedList(maintenanceMode = 0) {
+    if (maintenanceMode) {
+      this.setKanriMaintenanceMode();
+    } else {
+      this.setKanri();
+    }
     this.kanriDelService.getList(this.kanri)
     .then(res => {
       // 選択状態のクリア必要(データテーブル再セット後、不具合となる為)
@@ -782,6 +795,104 @@ export class MainComponent implements OnInit {
   }
 
   /*
+  *  メンテナンスへページ遷移し戻ってきた時、メイン画面の検索選択状態を保持し遷移前状態の復元用--->setKanriMaintenanceMode()で復元
+  *  ダイアログと違い画面が遷移戻りの場合は、フォーム状態は保持されない為、戻った時、ログイン後と同じ動きとなってしまう為、別処理が必要。
+  *  Status絞込み 承認Status絞込み JLX/JLXHSボタン 所属員データボタンの選択値をSessionStorageに保存
+  */
+  private saveKanriMaintenanceMode() {
+    // 初期化
+    sessionStorage.removeItem('formStatus');
+    sessionStorage.removeItem('formLimit');
+    sessionStorage.removeItem('formStatusApp');
+    sessionStorage.removeItem('formBeforeKanriNo');
+    sessionStorage.removeItem('formShinseishaKaisha1');
+    sessionStorage.removeItem('formShinseishaKaisha2');
+    sessionStorage.removeItem('bushoDataViewMode');
+    sessionStorage.removeItem('deletedKanriViewMode');
+
+    sessionStorage.setItem('formStatus', this.statusFormGroup.value.status);              // status
+    sessionStorage.setItem('formLimit', this.statusFormGroup.value.limit);                // 表示件数
+    sessionStorage.setItem('formStatusApp', this.statusFormGroup.value.statusApp);        // 承認Status    
+    // 管理No以前
+    if (this.statusFormGroup.value.beforeKanriNo) {
+      sessionStorage.setItem('formBeforeKanriNo', this.statusFormGroup.value.beforeKanriNo);  
+    }
+    // 会社選択 JLX/JLXHSボタン選択値をセット (どちらか１つ選択もしくは２つとも選択) SessionStorageは文字列のみセットなので配列値をそれぞれセット
+    if (this.statusFormGroup.value.shinseishaKaisha) {
+      if (this.statusFormGroup.value.shinseishaKaisha[0]) {
+        sessionStorage.setItem('formShinseishaKaisha1', this.statusFormGroup.value.shinseishaKaisha[0]);
+      }
+      if (this.statusFormGroup.value.shinseishaKaisha[1]) {
+        sessionStorage.setItem('formShinseishaKaisha2', this.statusFormGroup.value.shinseishaKaisha[1]);
+      }
+    }
+    // 所属員データ選択 選択未選択モードより判別（所属長のみボタン表示あり)
+    if (this.bushoDataViewMode) {
+      sessionStorage.setItem('bushoDataViewMode', '1');                                       // boolean型はセットできない--->1代入
+    }
+    // 削除データ閲覧モード選択 MODE:TRUE-->閲覧ON
+    if (this.deletedKanriViewMode) {
+      sessionStorage.setItem('deletedKanriViewMode', '1');
+    }
+  }
+
+  /*
+  *  メンテナンス画面から戻った時、検索状態とその一覧を復元する為の処理
+  *  バックエンドへ渡すkanriとViewフォーム値を復元セットする
+  *  Status絞込み 承認Status絞込み JLX/JLXHSボタン 所属員データボタンの選択値をセット
+  *  悩ましい。。。ダイアログにすれば苦労しないが。
+  */
+  private setKanriMaintenanceMode() {
+    this.kanri = new Kanri();
+    this.kanri.userId = sessionStorage.getItem('userId');                       // UserID
+    this.kanri.kengen = Number(sessionStorage.getItem('kengen'));               // 権限
+    this.kanri.status = Number(sessionStorage.getItem('formStatus'));           // status
+    this.status.setValue(sessionStorage.getItem('formStatus'));
+    this.kanri.limit = Number(sessionStorage.getItem('formLimit'));             // 表示件数
+    this.limit.setValue(sessionStorage.getItem('formLimit'));
+    this.kanri.statusApp = Number(sessionStorage.getItem('formStatusApp'));     // 承認Status
+    this.statusApp.setValue(sessionStorage.getItem('formStatusApp'));
+    // 管理No以前
+    const beforeKanriNo = Number(sessionStorage.getItem('formBeforeKanriNo'));
+    if (beforeKanriNo) {
+      this.kanri.beforeId = beforeKanriNo;
+      this.beforeKanriNo.setValue(sessionStorage.getItem('formBeforeKanriNo')); // 文字列セット
+    }
+    // 会社選択 JLX/JLXHSボタン選択値を配列でセット (どちらか１つ選択もしくは２つとも選択)
+    const sKaisha: string[] = [];
+    const shinseishaKaisha1 = sessionStorage.getItem('formShinseishaKaisha1');
+    if (shinseishaKaisha1) {
+      sKaisha.push(shinseishaKaisha1);
+    }
+    const shinseishaKaisha2 = sessionStorage.getItem('formShinseishaKaisha2');
+    if (shinseishaKaisha2) {
+      sKaisha.push(shinseishaKaisha2);
+    }
+    if (sKaisha.length > 0) {
+      this.kanri.sKaisha = sKaisha;
+      this.shinseishaKaisha.setValue(sKaisha);
+    }
+    // 所属員データ選択 選択未選択モードより判別（所属長のみボタン表示あり)
+    const bushoDataViewMode = sessionStorage.getItem('bushoDataViewMode');
+    if (bushoDataViewMode) {
+      this.bushoDataViewMode = true;
+      this.bushoBtnColorClass['active-btn'] = true;
+      this.bushoBtnColorClass['non-active-btn'] = false;
+      this.kanri.tantoushaKaisha = sessionStorage.getItem('kaisha');        // 会社
+      this.kanri.tantoushaTeam = sessionStorage.getItem('busho');           // 部署
+      this.kanri.sBusho = this.bushoDataViewMode;
+    }
+
+    // 削除閲覧選択 選択未選択モードより判別
+    const deletedKanriViewMode = sessionStorage.getItem('deletedKanriViewMode');
+    if (deletedKanriViewMode) {
+      this.deletedKanriViewMode = true;                                     // 削除データ閲覧モードセット
+      this.btnColorClass['active-btn'] = true;
+      this.btnColorClass['non-active-btn'] = false;
+    }
+  }
+
+  /*
   * 検索条件をフィルターへ渡す値をセット
   * MatTableDataSourceのフィルターセット
   * 検索実行ボタンがクリックされた時、setKanri処理の後に検索条件を別途セット
@@ -862,6 +973,8 @@ export class MainComponent implements OnInit {
   *  メンテナンスコンポーネント開く
   */
   public showMaintenance() {
+    sessionStorage.setItem('maintenanceMode', '1');        // メンテナンスモードセット、メイン画面戻り時判別用
+    this.saveKanriMaintenanceMode();
     this.router.navigate(['/maintenance']);
   }
 
