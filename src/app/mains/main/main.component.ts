@@ -34,6 +34,7 @@ export class MainComponent implements OnInit {
   admin = Const.KENGEN_ALL;       // 権限レベル
   manager = Const.KENGEN_MANAGER;
   normal = Const.KENGEN_NORMAL;
+  initMsg: string[];              // ログイン後チェック用メッセージ
 
   displayColumns = [            // データテーブル列要素指定
     'select', 'status', 'statusApp', 'id', 'tantousha', 'shinseisha', 'sakuseibi', 'dlvry',
@@ -87,7 +88,10 @@ export class MainComponent implements OnInit {
 
   checkSheetData: Kanri[];                   // チェックシート印刷データ用
 
-  //daialogTantousha: Tantousha;               // パスワード変更用インジェクト担当者
+  /*
+  * statusフォームクラス初期化 イニシャライズ処理内の不備書類チェックでデフォルト値4未確認すべて <---> 5不備書類 処理の為インスタンス化
+  */
+  status = new FormControl('4');           // status絞込み
 
   constructor(private kanriService: KanriService, private kanriTableService: KanriTableService,
               private sessionService: SessionService, private dialog: MatDialog,
@@ -102,7 +106,6 @@ export class MainComponent implements OnInit {
   */
   ngOnInit() {
     this.loginUser = this.sessionService.setLoginUser();
-    /*verify test*/ // console.log(this.loginUser);
     /*
     * 一覧の複数選択と単一選択可能を権限別に設定、選択時changeイベント登録
     */
@@ -114,10 +117,10 @@ export class MainComponent implements OnInit {
     this.cbEmmiter = this.selection.onChange.asObservable();
 
     this.statusFormGroup = new FormGroup({
-      status: new FormControl('4'),
+      status: this.status,                            // 未確認すべて:4 もしくは 不備書類:5
       beforeKanriNo: new FormControl(''),
-      limit: new FormControl('1000'),
-      statusApp: new FormControl('3'),
+      limit: new FormControl('1000'),                 // 表示件数1000デフォルト値
+      statusApp: new FormControl('3'),                // 承認ステータスデフォルトすべて
       shinseishaKaisha: new FormControl(''),
       detail1Item: new FormControl(''),
       detail2Item: new FormControl(''),
@@ -127,8 +130,13 @@ export class MainComponent implements OnInit {
       detail3Value: new FormControl(''),
       printKanriId: new FormControl(''),
     });
-
-    this.getInitList(); // 管理データ初期化 担当者申請者のデータは初回固定条件
+    /*
+    *  書類一覧表示するまでの処理を一括して行う。
+    *  ログイン後の書類チェック処理、書類一覧作成処理、パスワード有効期限チェック処理
+    *  書類データ初期化 担当者申請者のデータは初回未確定すべてOR不備書類のどちらかを出力
+    */
+    this.initMsg = [];
+    this.initList();
 
     /*
     *  checkBoxのselected契機で受渡書類一覧テーブルの選択データを保持する。KanriTableServiceに選択されたselectItemを登録
@@ -166,15 +174,105 @@ export class MainComponent implements OnInit {
     *  パスワード有効期限９０日超過時、パスワード変更ダイアログ開く。
     *　ダイアログの閉じるボタンは、変更完了までDisabled状態となる。
     */
+    /*
     if (this.sessionService.getPwdExpired()) {
       // メッセージ出力
+      let message = ['パスワードの有効期限が切れています。変更をお願いします。'];
       const msg = {
         title: '',
-        message: 'パスワードの有効期限が切れています。変更をお願いします。'
+        message: message,
       };
       this.showPwdAlert(msg);
     }
+    */
 
+  }
+
+  /*
+  *  イニシャライズチェック処理 ---> 書類一覧データ生成処理
+  *  不備書類検索　あれば一覧status絞込みを不備書類にして出力処理に変更
+  *  書類不備検索 条件：入力担当者＝ログインID
+  */
+  public initList() {
+    this.setKanri();
+    this.kanriService.getInitChkFubi(this.kanri)      // ログインID = 入力担当者に不備書類があるか検索
+    .then(res => {
+      if (res) {
+        this.status.setValue('5');                    // status絞込みを不備書類にセット
+      }
+      this.getInitChkNotChk();                        // 書類不備がない場合、未確認受渡一覧を表示するメッセージ処理
+      this.getInitList();                             // 管理データ初期化 担当者申請者のデータは初回固定条件 status絞込み 未確認すべてOR書類不備
+    })
+    .catch(err => {
+      console.log(`login fail: ${err}`);
+      this.message = 'データの取得に失敗しました。';
+    })
+    .then(() => {
+      // anything finally method
+    });
+  }
+
+  /*
+  *  イニシャライズ処理initList内で使用　ログイン後チェック処理
+  *  パスワード有効期限チェック、未確認受渡書類の有無　検索条件：入力担当者 = ログインID、status = 0、受渡方法 = 受渡
+  *  非同期地獄の極み。。。
+  */
+  public getInitChkNotChk() {
+    this.setKanri();
+    this.kanriService.getInitChkNotChk(this.kanri)
+    .then(res => {
+      /* 書類チェック検索にある場合 メッセージ文言をセットする--->出力はパスワード処理*/
+      if (res) {
+        /* 不備書類がなく、未確認書類データが有れば、メッセージをセット */
+        if (res.paramLongs[0]) {
+          if (this.status.value === '4') {
+            //this.initMsg = ['書類不備とされたケースはありません。', '保険会社側未確認分を表示します。'];
+            this.initMsg.push('書類不備とされたケースはありません。');
+            this.initMsg.push('保険会社側未確認分を表示します。');
+          }
+        }
+        /* 不備書類有無にかかわらず郵送ケースが一致有れば、メッセージをセット */
+        if (res.paramLongs[1]) {
+          this.initMsg.push('郵送ケースで Status 0 のままデータが残っていますが');
+          this.initMsg.push('チェックシート印刷を行えば Status -1 となり');
+          this.initMsg.push('次回からは出なくなります。');
+        }
+      }
+      /*
+      *  パスワード有効期限チェック処理
+      *  パスワード有効期限９０日超過時、パスワード変更ダイアログ開く。
+      *　ダイアログの閉じるボタンは、変更完了までDisabled状態となる。
+      *  パスワード変更処理後、書類チェックメッセージを出力（showPwdAlert内でコール)
+      *  パスワード有効期限切れでなければ、書類チェックメッセージを出力
+      */
+      if (this.sessionService.getPwdExpired()) {
+        let message = ['パスワードの有効期限が切れています。変更をお願いします。'];
+        const msg = {
+          title: '',
+          message: message,
+        };
+        // パスワード変更用メッセージ出力関数 最終処理showInitAlertで書類チェックメッセージを出力して書類一覧出力初期化完了
+        this.showPwdAlert(msg);
+      } else {
+        /* パスワード有効期限OK時は、書類チェックメッセージのみ出力 this.initMsgは設定済み
+        *  不備書類データがある場合は、メッセージを出力しないパターンある為、initMsgを有無チェック
+        */
+        if (this.initMsg) {
+           const msg = {
+            title: '',
+            message: this.initMsg,
+          };
+          this.showAlert(msg);
+        }
+      }
+    })
+    .catch(err => {
+      console.log(`login fail: ${err}`);
+      this.message = 'データの取得に失敗しました。';
+    })
+    .then(() => {
+      // anything finally method
+    });
   }
 
   /*
@@ -276,9 +374,10 @@ export class MainComponent implements OnInit {
 
     // リスト未選択で編集ボタンクリック時
     if (!selected) {
+      let message = ['編集対象を選択してください。'];
       const msg1 = {
         title: 'メッセージ',
-        message: '編集対象を選択してください。'
+        message: message,
       };
       this.showAlert(msg1);
       return 0;
@@ -286,9 +385,10 @@ export class MainComponent implements OnInit {
 
     // 書類ステータスが編集可能条件不一致
     if ( !statuses.find(element => element === selected.status.toString()) ) {
+      let message = ['編集が可能な対象はStatus -1、0、3 の案件だけです。'];
       const msg2 = {
         title: 'メッセージ',
-        message: '編集が可能な対象はStatus -1、0、3 の案件だけです。'
+        message: message,
       };
       this.showAlert(msg2);
       return 0;
@@ -296,11 +396,12 @@ export class MainComponent implements OnInit {
 
     // 書類承認ステータス＝承認済み 編集不可
     if (selected.statusApp === Const.APP_STATUS_OK) {
-      const msg2 = {
+      let message = ['承認済みの案件は編集できません。'];
+      const msg3 = {
         title: 'メッセージ',
-        message: '承認済みの案件は編集できません。'
+        message: message,
       };
-      this.showAlert(msg2);
+      this.showAlert(msg3);
       return 0;
     }
 
@@ -336,9 +437,10 @@ export class MainComponent implements OnInit {
 
     if (selected) {
       if (selected.status !== Const.STATUS_NOT_CHECK && selected.status !== Const.STATUS_NG) {
+        let message = ['削除が可能な対象はstatusが0か3の案件です。'];
         const msg = {
           title: 'メッセージ',
-          message: '削除が可能な対象はstatusが0か3の案件です。'
+          message: message,
         };
         this.showAlert(msg);
         return 0;
@@ -363,9 +465,10 @@ export class MainComponent implements OnInit {
         }
       );
     } else {                            // 一覧を未選択の時
+      let message = ['削除対象を選択して下さい。'];
       const msg = {
         title: 'メッセージ',
-        message: '削除対象を選択して下さい。'
+        message: message,
       };
       this.showAlert(msg);
     }
@@ -375,6 +478,7 @@ export class MainComponent implements OnInit {
   /*
   * 警告メッセージ
   * 削除ボタン(データ未選択時、Status0,3以外データ選択時)
+  * 引数インターフィイスMsg　ソース最後に宣言
   */
   public showAlert(msg: Msg) {
     const dialogRef = this.popupAlertDialog.open(PopupAlertComponent, {
@@ -463,11 +567,12 @@ export class MainComponent implements OnInit {
     const selecteds = this.kanriTableService.getSelectedAll();
     // リスト未選択で編集ボタンクリック時
     if (!selecteds) {
-      const msg1 = {
+      let message = ['承認対象を選択してください。'];
+      const msg = {
         title: 'メッセージ',
-        message: '承認対象を選択してください。'
+        message: message,
       };
-      this.showAlert(msg1);
+      this.showAlert(msg);
       return 0;
     }
 
@@ -482,11 +587,12 @@ export class MainComponent implements OnInit {
         }
     });
     if (Object.keys(selecteds).length !== appNotIds.length && Object.keys(selecteds).length !== appOkIds.length) {
-      const msg1 = {
+      let message = ['複数案件の「承認」または「未承認に戻す」を行う場合', 'どちらかに統一して選択してください。'];
+      const msg = {
         title: 'メッセージ',
-        message: '複数案件の「承認」または「未承認に戻す」を行う場合\nどちらかに統一して選択してください。'
+        message: message,
       };
-      this.showAlert(msg1);
+      this.showAlert(msg);
       return 0;
     }
 
@@ -781,11 +887,12 @@ export class MainComponent implements OnInit {
       data => {
         if (data) {
           this.sessionService.resetPwdExpired();
-          const msg1 = {
+          let message = ['パスワードが変更されました。'];
+          const msg = {
             title: '',
-            message: 'パスワードが変更されました。'
+            message: message,
           };
-          this.showAlert(msg1);
+          this.showInitAlert(msg);
         }
       },
       error => {
@@ -821,6 +928,43 @@ export class MainComponent implements OnInit {
     );
   }
 
+  /*
+  * ログイン後書類チェック用メッセージ
+  * initListをコール親として、パスワード変更チェック処理内showPasswordChangeから最終コールされる。（非同期処理により複雑にコールされている）
+  * 最終処理として、パスワード変更完了メッセージの後にログイン後の書類チェック結果メッセージを出力して終了する。
+  * 引数インターフィイスMsg　ソース最後に宣言
+  */
+  public showInitAlert(msg: Msg) {
+    const dialogRef = this.popupAlertDialog.open(PopupAlertComponent, {
+      data: msg,
+      disableClose: true,
+      restoreFocus: false,                  // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
+      // autoFocus: false,                     // ダイアログ開いた時の自動フォーカス無効
+    });
+    // ダイアログ終了後処理
+    dialogRef.afterClosed()
+    .subscribe(
+      data => {
+        // nullデータ戻りチェック必須（無いとプログラムエラー)
+        if (data) {
+        }
+        /* 書類チェック結果メッセージを出力する。（ログイン後書類一覧出力初期化の最終処理となる)
+        *  不備書類がある場合、メッセージ出力しないパターンがある為、initMsgの有無をチェック
+        */
+        if (this.initMsg) {
+          const msg = {
+            title: '',
+            message: this.initMsg,
+          };
+          this.showAlert(msg);
+        }
+      },
+      error => {
+        console.log('error');
+      }
+    );
+  }
+
 }
 
 /* --------------------------------------------------------------------------------- */
@@ -829,7 +973,7 @@ export class MainComponent implements OnInit {
 */
 export interface Msg {
   title: string;          // ダイアログタイトル名をセット
-  message: string;        // ダイアログメッセージをセット
+  message: string[];        // ダイアログメッセージをセット
 }
 
 /*

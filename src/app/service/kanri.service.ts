@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { SessionService } from './session.service';
 import { Kanri } from '../class/kanri';
 import { Const } from '../class/const';
+import { RequestDto } from '../class/request-dto';
 import { saveAs } from 'file-saver';
 
 @Injectable({
@@ -15,6 +16,28 @@ export class KanriService {
   chcekSheetPdf: Blob;
 
   constructor(private http: HttpClient, private session: SessionService, private sanitizer: DomSanitizer) {}
+
+  /*
+  * ログイン後チェック処理３　不備書類検索
+  * 検索条件：入力担当者 = ログインID、status = 3
+  */
+  public async getInitChkNotChk(kanri: Kanri): Promise<RequestDto> {
+    const headers = this.session.setTkHeaders();
+    this.res = await this.http.post( Const.WWW_ROOT + 'kanri/getinitchknotchk', kanri, {headers: headers})
+    .toPromise();
+    return this.res;
+  }
+
+  /*
+  * ログイン後チェック処理３　不備書類検索
+  * 検索条件：入力担当者 = ログインID、status = 3
+  */
+  public async getInitChkFubi(kanri: Kanri): Promise<number> {
+    const headers = this.session.setTkHeaders();
+    this.res = await this.http.post( Const.WWW_ROOT + 'kanri/getinitchkfubi', kanri, {headers: headers})
+    .toPromise();
+    return this.res;
+  }
 
   /*
   * メイン画面書類データ初期リスト検索用
