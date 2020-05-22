@@ -38,6 +38,7 @@ import { SessionService } from '../../service/session.service';
 export class DataEditModalComponent implements OnInit {
   message: string;                                          // エラーメッセージ
   loginUser: Tantousha;                                     // ログイン担当者情報
+  sakuseibi: string;                                        // 作成日整形日付（時間省略）
   shinseishaData: Kanri;                                    // Viewセット用一時申請者情報
   hokengaishaList: HokengaishaList[];                       // 保険会社選択リスト用
   hokenTantouList: Hokengaisha[];                           // 保険会社担当者選択リスト用
@@ -112,6 +113,7 @@ export class DataEditModalComponent implements OnInit {
   */
   ngOnInit() {
     this.data = this.kanriTableService.getSelected();                     // 選択書類データ初期セット
+    this.sakuseibi = this.data.sakuseibi.substr(0, 10);                   // 作成日View用整形日付（時間を省略)
     this.shinseishaData = new Kanri();                                    // 一時申請者データ HTMLビュー使用とupdate時に更新データへ同期用
     this.shinseishaData.shinseishaUserId = this.data.shinseishaUserId;    // 一時申請者ID初期化
     this.shinseishaData.shinseisha = this.data.shinseisha;                // 一時申請者氏初期化

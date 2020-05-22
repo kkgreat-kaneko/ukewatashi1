@@ -37,6 +37,7 @@ import { PopupAlertComponent } from '../../popup/popup-alert/popup-alert.compone
 export class DataCreateModalComponent implements OnInit {
   message: string;                                          // エラーメッセージ
   loginUser: Tantousha;                                     // ログイン担当者情報
+  sakuseibi: string;                                        // 作成日整形日付（時間を省略)
   hokengaishaList: HokengaishaList[];                       // 保険会社選択リスト用
   hokenTantouList: Hokengaisha[];                           // 保険会社担当者選択リスト用
   seihoList: SeihoList[];                                   // 生保分選択リスト用
@@ -108,6 +109,7 @@ export class DataCreateModalComponent implements OnInit {
   */
   ngOnInit() {
     this.data = this.kanriService.createInitData(this.data);  // 書類管理データ固定初期化
+    this.sakuseibi = this.data.sakuseibi.substr(0, 10);       // 作成日View用整形日付（時間を省略)
     this.reuseKanriData = this.kanriService.getReuseKanri();  // 繰り返し用データセット
 
     //this.getHokengaishaList();
