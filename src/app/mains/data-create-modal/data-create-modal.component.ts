@@ -598,12 +598,12 @@ export class DataCreateModalComponent implements OnInit {
       this.keiyakusha.setValue(this.reuseKanriData.keiyakusha);        // 契約者
       if (this.reuseKanriData.kubunInput) {
         this.kubunInput.setValue(this.reuseKanriData.kubunInput);      // 区分手入力
-        this.kubun.disable();                                 // 区分無効
-        this.kubunDisable = true;                             // 区分グレーアウト
+        this.kubun.disable();                                          // 区分無効
+        this.kubunDisable = true;                                      // 区分グレーアウト
       } else {
         this.kubun.setValue(this.reuseKanriData.kubun);                // 区分
-        this.kubunInput.disable();                            // 区分手入力無効
-        this.kubunInputDisable = true;                        // 区分手入力グレーアウト
+        this.kubunInput.disable();                                     // 区分手入力無効
+        this.kubunInputDisable = true;                                 // 区分手入力グレーアウト
       }
       this.dlvry.setValue(this.reuseKanriData.dlvry);                  // 受渡方法
       this.shoruiMaisu.setValue(this.reuseKanriData.shoruiMaisu);      // 書類枚数
