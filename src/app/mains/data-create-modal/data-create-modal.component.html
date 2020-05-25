@@ -98,7 +98,8 @@
           <div class="tenyuryoku">
             <mat-form-field class="tenyuryoku" appearance="legacy">
               <mat-label>添付書類手入力</mat-label>
-              <input type="text" matInput placeholder="" value="" formControlName="tenyuryoku">
+              <input type="text" matInput placeholder="" value="" formControlName="tenyuryoku"
+              [ngStyle]="shoruiUmeChecked && {'background-color': 'lightgrey'}">
             </mat-form-field>
           </div>
           <div class="">

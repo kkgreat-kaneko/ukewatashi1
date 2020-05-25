@@ -65,7 +65,7 @@ export class DataEditModalComponent implements OnInit {
   shoruiMaisu = new FormControl('');                        // 受渡枚数フォーム
   bikou = new FormControl('');                              // 備考フォーム
   shoruiUmu = new FormControl('');                          // 書類有無フォーム
-  tenyuryoku = new FormControl('');                         // 添付書類手入力フォーム
+  tenyuryoku = new FormControl({value: '', disabled: false});   // 添付書類手入力フォーム disabledプロパティセット
 
   displayColumns = ['shorui'];                              // 添付書類選択データテーブル列要素 htmlのヘッダー名表示設定無し
   shoruiSource: MatTableDataSource<Shorui>;                 // 添付書類選択用データテーブル
@@ -700,6 +700,8 @@ export class DataEditModalComponent implements OnInit {
       this.shoruiListValid = false;
       // 書類変更フラグをセット 閉じるボタン警告メッセージ用
       this.shoruiEdited = true;
+      // 追加後、手入力フォームリセット
+      this.tenyuryoku.reset();
     }
   }
 
@@ -711,9 +713,11 @@ export class DataEditModalComponent implements OnInit {
   public checkShoruiUme() {
     if (!this.formGroup.value.shoruiUmu) {  // 添付書類無し *checkboxとデータの値が逆 form有り=0/データ上=1
       this.shoruiUmeChecked = true;         // 書類リストdisabledセット
+      this.tenyuryoku.disable();            // 手入力添付書類フォームdisabled
       this.shoruiListValid = false;         // 転記ボタンdisabled解除
     } else {                                // 添付書類有り
       this.shoruiUmeChecked = false;        // 書類リストdisabled解除
+      this.tenyuryoku.enable()              // 手入力添付書類フォームdisabled解除
       // 転記ボタンdisabled判定用
       if (typeof this.toShoruiList === 'undefined') {
         this.shoruiListValid = true;
@@ -764,7 +768,7 @@ export class DataEditModalComponent implements OnInit {
 
   /*
   *  選択レコードの書類データをフォームにセットする処理
-  *
+  *  初期化処理 ngOnInit内実行
   */
   public selectedKanriSet() {
     // 選択レコードの書類データ取得
@@ -825,17 +829,19 @@ export class DataEditModalComponent implements OnInit {
     }
     /*
     * 添付書類チェック状態セット
-    * 添付書類リストのdisabled状態と転記ボタンのdisabled状態のセット
+    * 添付書類なし--->添付書類リストと手入力添付書類のdisabled状態セット
+    * 編集開いた時は、転記ボタンのdisabled初期状態は、解除。
     * 上段の添付書類リストのセット後に処理する必要あり
     */
     this.shoruiUmu.setValue(!this.data.shoruiUmu);                // 書類有無 有り1/無し０チェックボックス値が逆
 
     if (!this.shoruiUmu.value) {                                  // 書類がある時
-      this.shoruiUmeChecked = false;                              // 書類有無チェック状態からの書類リストdisabledセット
+      this.shoruiUmeChecked = false;                              // 書類有無チェック状態からの書類リストdisabled解除
       this.shoruiListValid = false;                               // 転記ボタンdisabled解除(初期値false)
     } else {                                                      // 書類無しチェックの時
-      this.shoruiUmeChecked = true;                               // 書類有無チェック状態からの書類リストdisabled解除
+      this.shoruiUmeChecked = true;                               // 書類有無チェック状態からの書類リストdisabledセット
       this.shoruiListValid = false;                               // 転記ボタンdisabled解除(初期値false)
+      this.tenyuryoku.disable();                                  // 手入力添付書類disableセット
     }
 
   }
