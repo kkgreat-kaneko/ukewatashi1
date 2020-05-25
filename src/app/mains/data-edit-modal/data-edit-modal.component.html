@@ -102,11 +102,22 @@
             </mat-form-field>
           </div>
           <!-- 区分手入力---->
-          <div class="">
+          <!--div class="">
             <mat-form-field class="kubun-input" appearance="legacy">
               <mat-label>*区分手入力</mat-label>
               <input type="text" matInput placeholder="" formControlName="kubunInput" #kubunInput (change)="changeKubun(kubunInput)"
               [ngStyle]="kubunInputDisable && {'background-color': 'lightgrey'}">
+            </mat-form-field>
+          </div-->
+          <!--区分-->
+          <div class="form-left">
+            <mat-form-field class="">
+              <mat-label>*区分</mat-label>
+              <select matNativeControl formControlName="kubun" placeholder="区分" #kubun (change)="changeKubun(kubun)"
+              [ngStyle]="kubunDisable && {'background-color': 'lightgrey'}">
+                <option value="" selected></option>
+                <option [value]="kubun.kubun" *ngFor="let kubun of kubunList">{{kubun.kubun}}</option>
+              </select>
             </mat-form-field>
           </div>
         </div>
@@ -169,7 +180,7 @@
                   </mat-form-field>
                 </div>
                 <!--区分-->
-                <div class="form-left">
+                <!--div class="form-left">
                   <mat-form-field class="">
                     <mat-label>*区分</mat-label>
                     <select matNativeControl formControlName="kubun" placeholder="区分" #kubun (change)="changeKubun(kubun)"
@@ -177,6 +188,14 @@
                       <option value="" selected></option>
                       <option [value]="kubun.kubun" *ngFor="let kubun of kubunList">{{kubun.kubun}}</option>
                     </select>
+                  </mat-form-field>
+                </div-->
+                <!-- 区分手入力---->
+                <div class="">
+                  <mat-form-field class="kubun-input" appearance="legacy">
+                    <mat-label>*区分手入力</mat-label>
+                    <input type="text" matInput placeholder="" formControlName="kubunInput" #kubunInput (change)="changeKubun(kubunInput)"
+                    [ngStyle]="kubunInputDisable && {'background-color': 'lightgrey'}">
                   </mat-form-field>
                 </div>
               </div>
