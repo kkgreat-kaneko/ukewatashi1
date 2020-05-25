@@ -10,7 +10,7 @@ import { HokengaishaListService } from '../../service/hokengaisha-list.service';
 import { HokengaishaList } from '../../class/hokengaisha-list';
 import { HokengaishaService } from '../../service/hokengaisha.service';
 import { Hokengaisha } from '../../class/hokengaisha';
-// import { SessionService } from '../../service/session.service';
+import { SessionService } from '../../service/session.service';
 import { Const } from '../../class/const';
 import { TantoushaService } from '../../service/tantousha.service';
 import { Tantousha } from '../../class/tantousha';
@@ -98,6 +98,7 @@ export class DataCreateModalComponent implements OnInit {
               private shoruiService: ShoruiService,
               private kanriService: KanriService,
               private popupAlertDialog: MatDialog,
+              private sessionService: SessionService,
   ) { }
 
   /*
@@ -421,7 +422,9 @@ export class DataCreateModalComponent implements OnInit {
   create() {
     // 入力項目の値セット
     // 必須項目
-    this.data.id = 0;
+    this.data.id = 0;                                            // 新規デフォルトid:0 必須の為ダミーid
+    this.data.sakuseibi = this.sessionService.getToday();        // 作成日 転記ボタンクリック時点日時で再セットする
+    this.data.saishuHenshubi = this.sessionService.getToday();   // 最終編集日
     this.data.hokengaisha = this.formGroup.value.hokengaisha;    // 保険会社
     if (this.kubun.enabled) {
       this.data.kubun = this.formGroup.value.kubun;              // 区分

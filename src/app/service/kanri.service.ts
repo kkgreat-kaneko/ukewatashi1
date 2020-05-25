@@ -124,8 +124,8 @@ export class KanriService {
     data.status = 0;                                              // 処理ステータス
     data.statusApp = 0;                                           // 承認ステータス
     data.okng = 0;                                                // 区分OK/NG
-    data.sakuseibi = this.session.getToday();                     // 作成日
-    data.saishuHenshubi = this.session.getToday();                // 最終編集日
+    data.sakuseibi = this.session.getToday();                     // 作成日 Viewで使用する為セットするが転記ボタンクリック時に再度セットしている
+    //data.saishuHenshubi = this.session.getToday();              // 最終編集日 転記ボタン/編集完了ボタン時セットに変更
     // 担当者固定値セット
     data.tantoushaUserId = sessionStorage.getItem('userId');      // 担当者ユーザーID
     data.tantousha = sessionStorage.getItem('shimei');            // 担当者氏名
