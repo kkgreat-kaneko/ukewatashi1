@@ -1,0 +1,23 @@
+<mat-dialog-content>
+    <div class="container" fxLayout="column">
+        <h4>区分表示順変更</h4>
+
+        <div mat-dialog-actions class="">
+            <button type="button" mat-raised-button color="accent" class="close-btn"
+                        (click)="close()">閉じる</button>    
+        </div>
+        <div mat-dialog-actions class="">
+            <button type="button" mat-raised-button color="primary" class="exec-btn"
+                        (click)="updateKubunOrder()">登録実行</button>
+        </div>
+
+        <h5>区分名</h5>
+
+        <div class="list-panel">
+            <div cdkDropList class="kubun-list" (cdkDropListDropped)="drop($event)">
+                <div class="list-box" *ngFor="let kubun of kubunList" cdkDrag>{{kubun.kubun}}</div>
+            </div>
+        </div>
+
+    </div>
+</mat-dialog-content>

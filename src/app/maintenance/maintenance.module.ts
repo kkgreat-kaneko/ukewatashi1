@@ -19,10 +19,11 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { PopupModule } from '../popup/popup.module';
 import { MaintenanceComponent } from './maintenance/maintenance.component';
 import { HokengaishaListOrderComponent } from './hokengaisha-list-order/hokengaisha-list-order.component';
+import { KubunOrderComponent } from './kubun-order/kubun-order.component';
 
 
 @NgModule({
-  declarations: [MaintenanceComponent, HokengaishaListOrderComponent],
+  declarations: [MaintenanceComponent, HokengaishaListOrderComponent, KubunOrderComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -46,6 +47,7 @@ import { HokengaishaListOrderComponent } from './hokengaisha-list-order/hokengai
   ],
   entryComponents: [
     HokengaishaListOrderComponent,
+    KubunOrderComponent,
   ],
   exports: [
     MaintenanceComponent,

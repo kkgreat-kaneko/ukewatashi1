@@ -234,7 +234,8 @@ export class DataCreateModalComponent implements OnInit {
   public getKubunList() {
     this.kubunService.getAllList()
     .then(res => {
-      this.kubunList = res;
+      const order = this.formatKubunOrder(this.loginUser.kubunOrder);
+      this.kubunList = this.changeKubunOrder(res, order);
     })
     .catch(err => {
       console.log(`login fail: ${err}`);
@@ -752,6 +753,52 @@ export class DataCreateModalComponent implements OnInit {
       }
     }
     return hokengaishaList;
+  }
+
+  /*
+  * メンテナンス表示順設定による並び替え、未設定の場合はNULLを返す--->NULLの時changeKubunOrderで条件処理
+  * カンマ区切りID並び順文字列データを数字配列に変換
+  * 
+  */
+  formatKubunOrder(kubunOrder: string): number[] {
+    if (typeof kubunOrder === "undefined") {
+      return null;
+    }
+    const arr = kubunOrder.split(',');
+    return arr.map( sid => parseInt(sid, 10) );
+  }
+
+  /*
+  *  区分並び順変更処理ファンクション
+  *  担当者が保持している並びに変更
+  */
+  changeKubunOrder(list: Kubun[], order: number[]): Kubun[] {
+    // 並び順設定がない時NULL マスタ検索id昇順リストを返す
+    if (!order) {
+      return list;
+    }
+    // 並び順指定に変更
+    const kubunList: Kubun[] = [];
+    for ( let num of order ) {
+      for ( let kubun of list ) {
+        if ( num === kubun.id ) {
+          kubunList.push(kubun);
+        }
+      }
+    }
+    // マスタ最新データとの差異を調整 並び順後のデータに含まれてなければ、最新書類をpushする
+    for ( let kubun of list )  {
+      let notInclude = true;
+      for ( let orderedKubun of kubunList ) {
+        if (orderedKubun.id === kubun.id) {
+          notInclude = false;
+        }
+      }
+      if (notInclude) {
+        kubunList.push(kubun);
+      }
+    }
+    return kubunList;
   }
 
 }
