@@ -106,8 +106,10 @@ export class DataEditModalComponent implements OnInit {
 
   /*
   * ログインユーザー情報取得
-  * 書類データ登録初期値セット
-  * フォーム選択用データをマスターより取得処理（添付書類については編集登録ではselectedKanri()内でセットしている)
+  * --->getLoginTantousha処理内で、各種初期化を行っている。
+  * ---->保険会社選択リストgetHokengaishaList、区分選択リストgetKubunList、添付書類データFrom/ToリストgetShoruiList
+  * ---->添付書類については編集登録ではselectedKanri()内でセットしている(getShoruiListを内部で実行)
+  * ---->バックエンドと非同期処理となる為、getLoginTantousha処理内での実行となっている。
   * フォームグループの初期化
   * 書類選択用テーブルイベント登録
   */
@@ -120,10 +122,13 @@ export class DataEditModalComponent implements OnInit {
     this.shinseishaData.shinseishaKaisha = this.data.shinseishaKaisha;    // 一時申請者会社初期化
     this.shinseishaData.shinseishaTeam = this.data.shinseishaTeam;        // 一時申請者チーム部署初期化
     this.setFormGroup();                                                  // フォームをFormGroupに登録
-    //this.getHokengaishaList();                                          // 保険会社リスト初期化
-    this.getLoginTantousha();                                             // 保険会社リスト初期化 担当者表示順よりセット
-    this.getKubunList();                                                  // 区分リスト初期化
     this.toShoruiList = [];                                               // 添付書類決定リスト用データ初期化
+    
+    /*
+    * ログイン担当者情報取得後、担当者表示順に並び替えする為、
+    * 保険会社リスト、区分リスト、書類リストの初期化を非同期処理内を実行する
+    */
+    this.getLoginTantousha();
     /*
     *  checkBoxのselected契機で申請者テーブル選択データ保持serviceに選択されたselectItemを登録
     *  ShinseishaTableServiceが呼び出しから利用される
@@ -135,23 +140,27 @@ export class DataEditModalComponent implements OnInit {
         // this.selectedShorui = null;
       }
     });
-    /*
-    * 編集データのフォームへのセット処理
-    * 添付書類の編集データセットは、添付選択リスト初期化を内部で実行時にセットしている
-    */
-    this.selectedKanriSet();
+    //this.selectedKanriSet();
   }
 
   /*
   *  ログイン担当者情報取得ファンクション
-  *  担当者固有情報：保険会社表示順、をセット
+  *  担当者固有情報：保険会社表示順、区分表示順、書類表示順をフォームにセット
+  *  書類リスト作成selectKanriSetは、レコードの添付書類を添付書類リストに追加する処理
+  * 　と選択リスト表示順並び処理getShoruiListの処理を実行している
   */
   public getLoginTantousha() {
     let tantousha: Tantousha;
     this.tantosushaService.getLoginTantousha()
     .then(res => {
       this.loginUser = res;
-      this.getHokengaishaList();
+      this.getHokengaishaList();                                            // 保険会社リスト初期化
+      this.getKubunList();                                                  // 区分リスト初期化
+      /*
+      * 編集データのフォームへのセット処理
+      * 添付書類の編集データセットは、添付選択リスト初期化getShoruiListを内部で実行セットしている
+      */
+      this.selectedKanriSet();
     })
     .catch(err => {
       console.log(`login fail: ${err}`);
@@ -190,7 +199,6 @@ export class DataEditModalComponent implements OnInit {
   public getHokengaishaList() {
     this.hokengaishaListService.getAllList()
     .then(res => {
-      //this.hokengaishaList = res;
       const order = this.formatHokengaishaOrder(this.loginUser.hokengaishaOrder);
       this.hokengaishaList = this.changeHokengaishaOrder(res, order);
     })
@@ -288,7 +296,8 @@ export class DataEditModalComponent implements OnInit {
   public getShoruiList(shoruies: tmpShorui[] = null) {
     this.shoruiService.getAllList()
     .then(res => {
-      this.fromShoruiList = res;
+      const order = this.formatShoruiOrder(this.loginUser.shoruiOrder);
+      this.fromShoruiList = this.changeShoruiOrder(res, order);
       this.fromShoruiList.forEach(obj => {
         obj.okng = 0;                         // 選択書類Fromリストの各書類不備情報を初期化
       });
@@ -769,7 +778,7 @@ export class DataEditModalComponent implements OnInit {
 
   /*
   *  選択レコードの書類データをフォームにセットする処理
-  *  初期化処理 ngOnInit内実行
+  *  初期化処理 ngOnInit、getLoginTantousha内実行
   */
   public selectedKanriSet() {
     // 選択レコードの書類データ取得
@@ -963,6 +972,52 @@ export class DataEditModalComponent implements OnInit {
       }
     }
     return kubunList;
+  }
+
+  /*
+  * メンテナンス表示順設定による並び替え、未設定の場合はNULLを返す--->NULLの時changeShoruiOrderで条件処理
+  * カンマ区切りID並び順文字列データを数字配列に変換
+  * 
+  */
+  formatShoruiOrder(shoruiOrder: string): number[] {
+    if (typeof shoruiOrder === "undefined") {
+      return null;
+    }
+    const arr = shoruiOrder.split(',');
+    return arr.map( sid => parseInt(sid, 10) );
+  }
+
+  /*
+  *  書類並び順変更処理ファンクション
+  *  担当者が保持している並びに変更
+  */
+  changeShoruiOrder(list: Shorui[], order: number[]): Shorui[] {
+    // 並び順設定がない時NULL マスタ検索id昇順リストを返す
+    if (!order) {
+      return list;
+    }
+    // 並び順指定に変更
+    const shoruiList: Shorui[] = [];
+    for ( let num of order ) {
+      for ( let shorui of list ) {
+        if ( num === shorui.id ) {
+          shoruiList.push(shorui);
+        }
+      }
+    }
+    // マスタ最新データとの差異を調整 並び順後のデータに含まれてなければ、最新書類をpushする
+    for ( let shorui of list )  {
+      let notInclude = true;
+      for ( let orderedShorui of shoruiList ) {
+        if (orderedShorui.id === shorui.id) {
+          notInclude = false;
+        }
+      }
+      if (notInclude) {
+        shoruiList.push(shorui);
+      }
+    }
+    return shoruiList;
   }
 
 }

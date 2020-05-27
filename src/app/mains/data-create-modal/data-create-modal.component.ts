@@ -113,10 +113,15 @@ export class DataCreateModalComponent implements OnInit {
     this.sakuseibi = this.data.sakuseibi.substr(0, 10);       // 作成日View用整形日付（時間を省略)
     this.reuseKanriData = this.kanriService.getReuseKanri();  // 繰り返し用データセット
 
-    //this.getHokengaishaList();
+    /*
+    * ログイン担当者情報取得後、担当者表示順に並び替えする為、
+    * 保険会社リストgetHokenbgaishgaList、
+    * 区分リストgetKubunList、
+    * 書類リストの初期化getShoruiList
+    * --->getLoginTantousha非同期処理内で実行する
+    */
     this.getLoginTantousha();                                 // 保険会社リスト初期化 担当者表示順よりセット
-    this.getKubunList();                                      // 区分リスト初期化
-    this.getShoruiList();                                     // 添付書類選択リスト初期化
+    
     this.toShoruiList = [];                                   // 添付書類決定リスト用データ初期化
 
     this.formGroup = this.fb.group({                          // フォームグループ初期化
@@ -148,14 +153,16 @@ export class DataCreateModalComponent implements OnInit {
 
   /*
   *  ログイン担当者情報取得ファンクション
-  *  担当者固有情報：保険会社表示順、をセット
+  *  担当者固有情報：保険会社表示順、区分表示順、書類表示順をセット
   */
   public getLoginTantousha() {
     let tantousha: Tantousha;
     this.tantosushaService.getLoginTantousha()
     .then(res => {
       this.loginUser = res;
-      this.getHokengaishaList();
+      this.getHokengaishaList();                                            // 保険会社リスト初期化
+      this.getKubunList();                                                  // 区分リスト初期化
+      this.getShoruiList();                                                 // 添付書類選択リスト初期化
     })
     .catch(err => {
       console.log(`login fail: ${err}`);
@@ -228,7 +235,7 @@ export class DataCreateModalComponent implements OnInit {
   }
 
   /*
-  *  区分セレクト用データ取得
+  *  区分セレクト用データ取得、ユーザー表示順に並び替え
   *  全区分検索をバックエンドと通信
   */
   public getKubunList() {
@@ -247,13 +254,14 @@ export class DataCreateModalComponent implements OnInit {
   }
 
   /*
-  *  添付書類選択用用データ取得
+  *  添付書類選択用用データ取得、ユーザー表示順に並び替え
   *  全書類検索をバックエンドと通信
   */
   public getShoruiList() {
     this.shoruiService.getAllList()
     .then(res => {
-      this.fromShoruiList = res;
+      const order = this.formatShoruiOrder(this.loginUser.shoruiOrder);
+      this.fromShoruiList = this.changeShoruiOrder(res, order);
       this.shoruiSource = new MatTableDataSource<Shorui>(this.fromShoruiList);
       this.shoruiSourceSelected = new MatTableDataSource<Shorui>(this.toShoruiList);
     })
@@ -799,6 +807,52 @@ export class DataCreateModalComponent implements OnInit {
       }
     }
     return kubunList;
+  }
+
+  /*
+  * メンテナンス表示順設定による並び替え、未設定の場合はNULLを返す--->NULLの時changeShoruiOrderで条件処理
+  * カンマ区切りID並び順文字列データを数字配列に変換
+  * 
+  */
+  formatShoruiOrder(shoruiOrder: string): number[] {
+    if (typeof shoruiOrder === "undefined") {
+      return null;
+    }
+    const arr = shoruiOrder.split(',');
+    return arr.map( sid => parseInt(sid, 10) );
+  }
+
+  /*
+  *  書類並び順変更処理ファンクション
+  *  担当者が保持している並びに変更
+  */
+  changeShoruiOrder(list: Shorui[], order: number[]): Shorui[] {
+    // 並び順設定がない時NULL マスタ検索id昇順リストを返す
+    if (!order) {
+      return list;
+    }
+    // 並び順指定に変更
+    const shoruiList: Shorui[] = [];
+    for ( let num of order ) {
+      for ( let shorui of list ) {
+        if ( num === shorui.id ) {
+          shoruiList.push(shorui);
+        }
+      }
+    }
+    // マスタ最新データとの差異を調整 並び順後のデータに含まれてなければ、最新書類をpushする
+    for ( let shorui of list )  {
+      let notInclude = true;
+      for ( let orderedShorui of shoruiList ) {
+        if (orderedShorui.id === shorui.id) {
+          notInclude = false;
+        }
+      }
+      if (notInclude) {
+        shoruiList.push(shorui);
+      }
+    }
+    return shoruiList;
   }
 
 }

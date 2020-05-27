@@ -20,10 +20,11 @@ import { PopupModule } from '../popup/popup.module';
 import { MaintenanceComponent } from './maintenance/maintenance.component';
 import { HokengaishaListOrderComponent } from './hokengaisha-list-order/hokengaisha-list-order.component';
 import { KubunOrderComponent } from './kubun-order/kubun-order.component';
+import { ShoruiOrderComponent } from './shorui-order/shorui-order.component';
 
 
 @NgModule({
-  declarations: [MaintenanceComponent, HokengaishaListOrderComponent, KubunOrderComponent],
+  declarations: [MaintenanceComponent, HokengaishaListOrderComponent, KubunOrderComponent, ShoruiOrderComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -48,6 +49,7 @@ import { KubunOrderComponent } from './kubun-order/kubun-order.component';
   entryComponents: [
     HokengaishaListOrderComponent,
     KubunOrderComponent,
+    ShoruiOrderComponent,
   ],
   exports: [
     MaintenanceComponent,
