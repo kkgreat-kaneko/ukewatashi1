@@ -459,7 +459,7 @@ export class MainComponent implements OnInit {
         data: this.dialogKanri,         // モーダルコンポーネントにInjectするデータ 戻り処理ないがインスタンス渡し必要
         disableClose: true,             // モーダル外クリック時画面を閉じる機能無効
         restoreFocus: false,            // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
-        autoFocus: false,               // ダイアログ開いた時の自動フォーカス無効
+        //autoFocus: false,               // ダイアログ開いた時の自動フォーカス無効 *コメントアウト不備書類削除選択時、削除理由にフォーカス
       });
       // ダイアログ終了後処理
       dialogRef.afterClosed()
