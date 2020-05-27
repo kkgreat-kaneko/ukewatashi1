@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatTreeNestedDataSource } from '@angular/material';
+import { Const } from '../../class/const';
+import { Tantousha } from '../../class/tantousha';
+import { TantoushaService } from '../../service/tantousha.service';
 import { HokengaishaListOrderComponent } from '../hokengaisha-list-order/hokengaisha-list-order.component';
 import { KubunOrderComponent } from '../kubun-order/kubun-order.component';
 import { ShoruiOrderComponent } from '../shorui-order/shorui-order.component';
@@ -11,12 +14,36 @@ import { ShoruiOrderComponent } from '../shorui-order/shorui-order.component';
   styleUrls: ['./maintenance.component.css']
 })
 export class MaintenanceComponent implements OnInit {
+  message: string;
+  loginUser: Tantousha;
+  normalMode: boolean;                                        // 管理者メニューdisabled用フラグ
 
   constructor(private router: Router,
               private dialog: MatDialog,
-    ) { }
+              private tantoushaService: TantoushaService,
+  ) { }
 
   ngOnInit() {
+    this.getLoginTantousha();
+  }
+
+  /*
+  *  ログイン担当者情報取得ファンクション
+  */
+  public getLoginTantousha() {
+    let tantousha: Tantousha;
+    this.tantoushaService.getLoginTantousha()
+    .then(res => {
+      this.loginUser = res;
+      this.loginUser.kengen === Const.KENGEN_ALL ? this.normalMode = false : this.normalMode = true;
+    })
+    .catch(err => {
+      console.log(`login fail: ${err}`);
+      this.message = 'データの取得に失敗しました。';
+    })
+    .then(() => {
+      // anything finally method
+    });
   }
 
   /*
