@@ -36,7 +36,7 @@ export class KubunOrderComponent implements OnInit {
   /*
   * ドロップ処理
   * リスト並び順が変更されると
-  * 保険会社IDを並び順にうカンマ区切り形式データとしてグローバル変数(hokengaishaOrder)に保存
+  * 保険会社IDを並び順にうカンマ区切り形式データとしてグローバル変数(kubunOrder)に保存
   */
   drop(event: CdkDragDrop<Kubun[]>) {
     moveItemInArray(this.kubunList, event.previousIndex, event.currentIndex);
@@ -55,7 +55,7 @@ export class KubunOrderComponent implements OnInit {
   }
 
   /*
-  * メンテナンス表示順文字列データを数字配列に変換、並び順を未設定の場合はNULLを返す--->NULLの時changeHokengaishaOrderで条件処理
+  * メンテナンス表示順文字列データを数字配列に変換、並び順を未設定の場合はNULLを返す--->NULLの時changeKubunOrderで条件処理
   * カンマ区切りID並び順文字列データを数字配列に変換
   */
   formatKubunOrder(kubunOrder: string): number[] {
