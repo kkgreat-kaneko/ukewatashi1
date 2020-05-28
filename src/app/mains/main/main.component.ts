@@ -261,7 +261,7 @@ export class MainComponent implements OnInit {
         /* パスワード有効期限OK時は、書類チェックメッセージのみ出力 this.initMsgは設定済み
         *  不備書類データがある場合は、メッセージを出力しないパターンある為、initMsgを有無チェック
         */
-        if (this.initMsg) {
+        if (this.initMsg.length > 0) {
            const msg = {
             title: '',
             message: this.initMsg,
