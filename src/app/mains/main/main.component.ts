@@ -442,8 +442,20 @@ export class MainComponent implements OnInit {
   * 削除画面開く条件：書類選択必須として、status0、3の書類選択のみ可能
   */
   public deleteKanri() {
-    const selected = this.kanriTableService.getSelected();
+    const selectedAll = this.kanriTableService.getSelectedAll();
+    if (selectedAll) {
+      if (selectedAll.length > 1) {
+        let message = ['複数選択されています。一括削除はできません。'];
+          const msg = {
+            title: 'メッセージ',
+            message: message,
+          };
+          this.showAlert(msg);
+          return 0;
+      }
+    }
 
+    const selected = this.kanriTableService.getSelected();
     if (selected) {
       if (selected.status !== Const.STATUS_NOT_CHECK && selected.status !== Const.STATUS_NG) {
         let message = ['削除が可能な対象はstatusが0か3の案件です。'];

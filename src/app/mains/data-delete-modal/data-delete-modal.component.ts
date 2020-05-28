@@ -15,10 +15,11 @@ import { FormGroup, FormControl, FormBuilder, Validators} from '@angular/forms';
 })
 export class DataDeleteModalComponent implements OnInit {
   message: string;                                          // エラーメッセージ
-  sakujyoriyuReadOnly = '';                                 // 削除理由有無 初期値無し
-  buttonDisabled = false;                                   // 実行ボタン可能判定
+  //sakujyoriyuReadOnly = '';                               // 削除理由有無 初期値無し
+  //buttonDisabled = false;                                 // 実行ボタン可能判定
   formGroup: FormGroup;                                     // フォームグループ、以下フォームコントロール初期化
-  sakujyoriyu = new FormControl('', { validators: [Validators.required] });                        // 削除理由フォーム
+  sakujyoriyu: FormControl;                                 // 削除理由フォーム
+  //sakujyoriyu = new FormControl('', { validators: [Validators.required] });                        // 削除理由フォーム
 
 
   constructor(private dialog: MatDialogRef<DataDeleteModalComponent>,
@@ -31,11 +32,14 @@ export class DataDeleteModalComponent implements OnInit {
 
   ngOnInit() {
     this.data = this.kanriTableService.getSelected();         // インジェクションに選択された書類データ初期セット
-    this.setFormGroup();                                      // フォームコントローラーをグループへセット処理
     if (this.data.status === Const.STATUS_NG) {               // Status3=不備の時、以下組み合わせ
-      this.sakujyoriyuReadOnly = null;                        // 削除理由フォームを入力可能とする
-      this.buttonDisabled = true;                             // 実行ボタン不可（削除理由入力後可能)
+      //this.sakujyoriyuReadOnly = null;                      // 削除理由フォームを入力可能とする
+      //this.buttonDisabled = true;                             // 実行ボタン不可（削除理由入力後可能)
+      this.sakujyoriyu = new FormControl('', { validators: [Validators.required] });  // 削除理由フォーム作成必須条件とする
+    } else {
+      this.sakujyoriyu = new FormControl('');                 // 削除理由フォーム作成必須条件なし
     }
+    this.setFormGroup();                                      // フォームコントローラーをグループへセット処理
   }
 
   public setFormGroup() {

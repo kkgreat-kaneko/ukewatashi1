@@ -18,18 +18,27 @@
       <section class="">
         <mat-form-field class="sakujyoriyu">
           <mat-label>削除理由</mat-label>
-          <textarea matInput formControlName="sakujyoriyu"
+          <!--textarea matInput formControlName="sakujyoriyu"
                   cdkTextareaAutosize
                   cdkAutosizeMinRows="6"
                   cdkAutosizeMaxRows="6"
                   placeholder="削除理由を入力してください"
                   [readonly]="sakujyoriyuReadOnly"
+                  cdkFocusInitial></textarea-->
+          <textarea matInput formControlName="sakujyoriyu"
+                  cdkTextareaAutosize
+                  cdkAutosizeMinRows="6"
+                  cdkAutosizeMaxRows="6"
+                  placeholder="削除理由を入力してください"
                   cdkFocusInitial></textarea>
         </mat-form-field>
       </section>
       <section mat-dialog-actions class="">
-        <button type="button" mat-raised-button color="accent" class="jikkou"
+        <!--button type="button" mat-raised-button color="warn" class="jikkou"
                   [disabled]="!formGroup.valid && buttonDisabled"
+                  (click)="deleteKanri()">実行</button-->
+        <button type="button" mat-raised-button color="warn" class="jikkou"
+                  [disabled]="!formGroup.valid"
                   (click)="deleteKanri()">実行</button>
       </section>
     </div>
