@@ -1076,7 +1076,7 @@ export class MainComponent implements OnInit {
         /* 書類チェック結果メッセージを出力する。（ログイン後書類一覧出力初期化の最終処理となる)
         *  不備書類がある場合、メッセージ出力しないパターンがある為、initMsgの有無をチェック
         */
-        if (this.initMsg) {
+        if (this.initMsg.length > 0) {
           const msg = {
             title: '',
             message: this.initMsg,
