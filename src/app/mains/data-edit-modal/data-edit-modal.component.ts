@@ -607,9 +607,10 @@ export class DataEditModalComponent implements OnInit {
   * はい=閉じる、いいえ=閉じないで画面戻る
   */
  alertShoruiEdited() {
+  const message = ['変更がありますが、終了してよいですか？'];
   const msg = {
     title: '',
-    message: '変更がありますが、終了してよいですか？'
+    message: message
   };
 
   const dialogRef = this.popupAlertDialog.open(PopupAlertYesNoComponent, {
