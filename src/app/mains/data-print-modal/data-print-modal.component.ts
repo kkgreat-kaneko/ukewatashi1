@@ -1,7 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { KanriService } from '../../service/kanri.service';
 import { Kanri } from '../../class/kanri';
+import { PopupAlertComponent } from '../../popup/popup-alert/popup-alert.component';
+
 
 @Component({
   selector: 'app-data-print-modal',
@@ -20,6 +22,7 @@ export class DataPrintModalComponent implements OnInit {
   printData: Kanri[];   // テストデモ用
 
   constructor(private dialog: MatDialogRef<DataPrintModalComponent>,
+              private popupAlertDialog: MatDialog,
               private kanriService: KanriService,
               @Inject(MAT_DIALOG_DATA) public data: Kanri[]
             ) { }
@@ -80,7 +83,14 @@ export class DataPrintModalComponent implements OnInit {
   * バックエンドに送信 バックエンド側で帳票分けるOnInit内と同じ処理を行っている
   */
   public printAll() {
-    this.kanriService.checkSheetPrint(this.data);
+    // 印刷前メッセージ
+    const message = ['チェックシートをダウンロードします'];
+    const msg = {
+      title: '',
+      message: message,
+    };
+    this.msgAndPrintAll(msg);
+    //this.kanriService.checkSheetPrint(this.data);
   }
 
   /*
@@ -88,7 +98,14 @@ export class DataPrintModalComponent implements OnInit {
   *
   */
   public printSelect() {
-    this.kanriService.checkSheetPrint(this.printData);
+    // 印刷前メッセージ
+    const message = ['チェックシートをダウンロードします'];
+    const msg = {
+      title: '',
+      message: message,
+    };
+    this.msgAndPrintSelect(msg); 
+    //this.kanriService.checkSheetPrint(this.printData);
   }
   /*
   * 左向きボタン処理　ページ戻り
@@ -129,5 +146,65 @@ export class DataPrintModalComponent implements OnInit {
     this.dialog.close();
   }
 
+  /*
+  * 印刷前メッセージ後に全件印刷処理
+  * printAll
+  */
+  public msgAndPrintAll(msg: Msg) {
+    const dialogRef = this.popupAlertDialog.open(PopupAlertComponent, {
+      data: msg,
+      disableClose: true,
+      restoreFocus: false,                  // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
+      // autoFocus: false,                     // ダイアログ開いた時の自動フォーカス無効
+    });
+    // ダイアログ終了後処理
+    dialogRef.afterClosed()
+    .subscribe(
+      data => {
+        // nullデータ戻りチェック必須（無いとプログラムエラー)
+        if (data) {
+        }
+        this.kanriService.checkSheetPrint(this.data);
+      },
+      error => {
+        console.log('error');
+      }
+    );
+  }
 
+  /*
+  * 印刷前メッセージ後に個別印刷処理
+  * printSelect
+  */
+  public msgAndPrintSelect(msg: Msg) {
+    const dialogRef = this.popupAlertDialog.open(PopupAlertComponent, {
+      data: msg,
+      disableClose: true,
+      restoreFocus: false,                  // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
+      // autoFocus: false,                     // ダイアログ開いた時の自動フォーカス無効
+    });
+    // ダイアログ終了後処理
+    dialogRef.afterClosed()
+    .subscribe(
+      data => {
+        // nullデータ戻りチェック必須（無いとプログラムエラー)
+        if (data) {
+        }
+        this.kanriService.checkSheetPrint(this.printData);
+      },
+      error => {
+        console.log('error');
+      }
+    );
+  }
+
+}
+
+/* --------------------------------------------------------------------------------- */
+/*
+*  POPUPダイアログメッセージ用インターフェイス
+*/
+export interface Msg {
+  title: string;          // ダイアログタイトル名をセット
+  message: string[];        // ダイアログメッセージをセット
 }
