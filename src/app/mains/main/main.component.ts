@@ -385,7 +385,7 @@ export class MainComponent implements OnInit {
     if (!selected) {
       let message = ['編集対象を選択してください。'];
       const msg1 = {
-        title: 'メッセージ',
+        title: '',
         message: message,
       };
       this.showAlert(msg1);
@@ -396,7 +396,7 @@ export class MainComponent implements OnInit {
     if ( !statuses.find(element => element === selected.status.toString()) ) {
       let message = ['編集が可能な対象はStatus -1、0、3 の案件だけです。'];
       const msg2 = {
-        title: 'メッセージ',
+        title: '',
         message: message,
       };
       this.showAlert(msg2);
@@ -407,7 +407,7 @@ export class MainComponent implements OnInit {
     if (selected.statusApp === Const.APP_STATUS_OK) {
       let message = ['承認済みの案件は編集できません。'];
       const msg3 = {
-        title: 'メッセージ',
+        title: '',
         message: message,
       };
       this.showAlert(msg3);
@@ -447,7 +447,7 @@ export class MainComponent implements OnInit {
       if (selectedAll.length > 1) {
         let message = ['複数選択されています。一括削除はできません。'];
           const msg = {
-            title: 'メッセージ',
+            title: '',
             message: message,
           };
           this.showAlert(msg);
@@ -460,7 +460,7 @@ export class MainComponent implements OnInit {
       if (selected.status !== Const.STATUS_NOT_CHECK && selected.status !== Const.STATUS_NG) {
         let message = ['削除が可能な対象はstatusが0か3の案件です。'];
         const msg = {
-          title: 'メッセージ',
+          title: '',
           message: message,
         };
         this.showAlert(msg);
@@ -488,7 +488,7 @@ export class MainComponent implements OnInit {
     } else {                            // 一覧を未選択の時
       let message = ['削除対象を選択して下さい。'];
       const msg = {
-        title: 'メッセージ',
+        title: '',
         message: message,
       };
       this.showAlert(msg);
@@ -594,7 +594,7 @@ export class MainComponent implements OnInit {
     if (!selecteds) {
       let message = ['承認対象を選択してください。'];
       const msg = {
-        title: 'メッセージ',
+        title: '',
         message: message,
       };
       this.showAlert(msg);
@@ -614,7 +614,7 @@ export class MainComponent implements OnInit {
     if (Object.keys(selecteds).length !== appNotIds.length && Object.keys(selecteds).length !== appOkIds.length) {
       let message = ['複数案件の「承認」または「未承認に戻す」を行う場合', 'どちらかに統一して選択してください。'];
       const msg = {
-        title: 'メッセージ',
+        title: '',
         message: message,
       };
       this.showAlert(msg);
@@ -692,36 +692,50 @@ export class MainComponent implements OnInit {
     } else {
       this.dialogKanri.id = this.statusFormGroup.value.printKanriId;
     }
-
+    /*
+    * チェックシート印刷データ検索
+    * データをチェックシートダイアログにInjectionで渡す。並び替えはダイアログロジック処理
+    * データなしの場合、メッセージ出力してメインに戻る
+    */
     this.kanriService.checkSheetPrintInit(this.dialogKanri)
     .then(res => {
-      this.checkSheetData = res;
-      /*
-      * ダイアログ表示 Injectデータを渡すには非同期処理のthen内で実行が必要
-      */
-      const dialogRef = this.dialog.open(DataPrintModalComponent, {
-        data: this.checkSheetData,                    // モーダルコンポーネントにInjectするデータ 戻り処理ないがインスタンス渡し必要
-        disableClose: true,                           // モーダル外クリック時モーダル画面を閉じる機能無効
-        width: '1250px',
-        maxWidth: '1300px',                           //  最大幅がデフォルト設定あるので、変更必要
-        minHeight: '550px',                           // 最小高さ
-        maxHeight: '600px',                           // 最大高さ mat-dialog-content min-height,max-heightと合わせて調整必要
-        panelClass: 'myprint-dialog-panel',           // カスタマイズスタイルクラス style.cssに設定　背景色用
-        autoFocus: false,                             // ダイアログ開いた後のボタン等への自動フォーカス無効
-        restoreFocus: false,                          // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
-      });
-      // ダイアログ終了後処理
-      dialogRef.afterClosed()
-        .subscribe(
-          data => {
-            if (data) {
-            }
-            this.getList();                          // 書類一覧更新表示
-        },
-        error => {
-          console.log('error');
-        }
-      );
+      if (res.length > 0) {
+        this.checkSheetData = res;
+        /*
+        * ダイアログ表示 Injectデータを渡すには非同期処理のthen内で実行が必要
+        */
+        const dialogRef = this.dialog.open(DataPrintModalComponent, {
+          data: this.checkSheetData,                    // モーダルコンポーネントにInjectするデータ 戻り処理ないがインスタンス渡し必要
+          disableClose: true,                           // モーダル外クリック時モーダル画面を閉じる機能無効
+          width: '1250px',
+          maxWidth: '1300px',                           //  最大幅がデフォルト設定あるので、変更必要
+          minHeight: '550px',                           // 最小高さ
+          maxHeight: '600px',                           // 最大高さ mat-dialog-content min-height,max-heightと合わせて調整必要
+          panelClass: 'myprint-dialog-panel',           // カスタマイズスタイルクラス style.cssに設定　背景色用
+          autoFocus: false,                             // ダイアログ開いた後のボタン等への自動フォーカス無効
+          restoreFocus: false,                          // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
+        });
+        // ダイアログ終了後処理
+        dialogRef.afterClosed()
+          .subscribe(
+            data => {
+              if (data) {
+              }
+              this.getList();                          // 書類一覧更新表示
+          },
+          error => {
+            console.log('error');
+          }
+        );
+      } else {
+        const message = ['現在印刷する対象はありません。'];
+        const msg = {
+          title: '',
+          message: message,
+        };
+        this.showAlert(msg);
+        return 0;
+      }
 
     })
     .catch(err => {
