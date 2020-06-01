@@ -715,8 +715,8 @@ export class MainComponent implements OnInit {
         .subscribe(
           data => {
             if (data) {
-              this.getList();                          // 書類一覧更新表示
             }
+            this.getList();                          // 書類一覧更新表示
         },
         error => {
           console.log('error');
