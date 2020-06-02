@@ -49,13 +49,21 @@ export class LoginComponent implements OnInit {
       /*
       *  パスワード有効期限チェック有効期限:設定から９０日間
       *  MainComponent初期化時にフラグ判別しパスワード変更画面を開く
+      *  パスワード有効期限切れ２週間前チェック：期限切れ14日前
       */
       let expireDate = new Date(res.tantousha.passwordSetdate);
       /*test*/ //let expireDate = new Date('2020/02/10 00:00:00');
       expireDate.setDate(expireDate.getDate() + 90);            // 90日後有効期限切れ
+      let beforeTwoWeeks = new Date(expireDate.getTime());
+      beforeTwoWeeks.setDate(beforeTwoWeeks.getDate() - 14);    // 14日前有効期限切れ
       let currentDate = new Date();                             // 現在の日付
       if (currentDate.getTime() > expireDate.getTime()) {       // パスワード有効期限チェック
         sessionStorage.setItem('pwdExpired', '1');              // パスワード期限フラグセット
+      } else {
+        const pwdChkbreforeAlertDate =  (beforeTwoWeeks.getTime() - currentDate.getTime()) / 86400000;    // 8600000ミリ秒= 1日
+        if (pwdChkbreforeAlertDate < 0) {
+          sessionStorage.setItem('pwdBeforeExpired', '1');      // パスワード14日前期限フラグセット
+        }
       }
       this.router.navigate(['/main']);
     })

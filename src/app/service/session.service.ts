@@ -57,6 +57,14 @@ export class SessionService {
   }
 
   /*
+  *  パスワード有効期限切れ１４日前フラグを返す
+  *
+  */
+  public getPwdBeforeExpired() {
+    return sessionStorage.getItem('pwdBeforeExpired');
+  }
+
+  /*
   * Current日付を返す
   */
   public getToday(): string {

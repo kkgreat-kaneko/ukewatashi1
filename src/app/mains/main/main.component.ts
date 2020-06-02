@@ -106,9 +106,27 @@ export class MainComponent implements OnInit {
             ) { }
 
   /*
-  *   フォームコントローラー作成登録、データーテーブル初期化、
-  *   データテーブルチェックボックスセレクtションイベント初期化
-  *   ＊＊＊権限による設定未開発 管理者権限モードで開発中 ＊＊＊
+  *   初期化処理
+  *   1.フォームコントローラー作成登録
+  *   2.データテーブル選択チェックボックス セレクトションイベント初期化
+  *   3.所属員閲覧ボタン(所属長のみ)のON/OFF用フラグ設定
+  *   4.削除閲覧ボタンのON/OFF用フラグ設定
+  *   5.初期化分岐パターンとして、ログイン後の初期化とメンテナンス画面遷移からの戻り初期化処理の
+  *     ２パターンがある。
+  *   6.パターン1(ログイン後初期化処理)initList()
+  *     A:不備書類チェック処理 不備有は検索絞込みを不備書類選択状態にセット、無しは未選択すべてにセットする
+  *       getInitChkFubi
+  *     B:書類チェック処理し結果有はMSG変数にメッセージ代入(代入まで)
+  *       パスワード有効期限チェック処理 期限切れの時、メッセージダイアログ後パスワード変更ダイアログに遷移
+  *       PWDチェック完了後、書類チェックメッセージ(有れば)出力
+  *     C：書類一覧検索処理 getInitList
+  *       statusのみ変動値；不備書類チェックにて分岐 status:0未確認すべて　もしくは　3不備書類の検索条件となる
+  *   7.パターン2(メンテナンス画面戻り処理)　画面遷移の為ngOnInitを通過してしまう。
+  *     A:SessionStorage保存されたメンテナンスモードフラグを読み取り、ログイン後ORメンテナンス戻り？を判別している
+  *     B:さらに通常の書類一覧表示モードと削除閲覧モードを同じくSessionStorageより判別し、どちらの処理に分岐
+  *     C:通常一覧表示処理 getList(1) SessionStorageに保存された条件絞込み選択状態を復元して、一覧の出力を復元
+  *     D:削除閲覧一覧表示処理 getDeletedList(1) SessionStorageに保存された条件絞込み選択状態を復元して、一覧の出力を復元
+  *   
   */
   ngOnInit() {
     this.loginUser = this.sessionService.setLoginUser();
@@ -260,14 +278,17 @@ export class MainComponent implements OnInit {
       } else {
         /* パスワード有効期限OK時は、書類チェックメッセージのみ出力 this.initMsgは設定済み
         *  不備書類データがある場合は、メッセージを出力しないパターンある為、initMsgを有無チェック
+        *  showPwdBeforeExpiredAlert--->書類チェック結果メッセージ出力後にパスワード14日前チェック処理実行
+        *  実行結果より、パスワード変更促す警告メッセージを出力する
         */
         if (this.initMsg.length > 0) {
-           const msg = {
+          const msg = {
             title: '',
             message: this.initMsg,
           };
-          this.showAlert(msg);
+          this.showPwdBeforeExpiredAlert(msg);
         }
+        
       }
     })
     .catch(err => {
@@ -1094,6 +1115,43 @@ export class MainComponent implements OnInit {
           const msg = {
             title: '',
             message: this.initMsg,
+          };
+          this.showAlert(msg);
+        }
+      },
+      error => {
+        console.log('error');
+      }
+    );
+  }
+
+  /*
+  * パスワード有効期限14日前警告メッセージ
+  * 書類チュック結果のメッセージ出力処理後、
+  * 14日前チェック処理実行結果より、警告メッセージを出力する。
+  */
+  public showPwdBeforeExpiredAlert(msg: Msg) {
+    const dialogRef = this.popupAlertDialog.open(PopupAlertComponent, {
+      data: msg,
+      disableClose: true,
+      restoreFocus: false,                  // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
+      // autoFocus: false,                     // ダイアログ開いた時の自動フォーカス無効
+    });
+    // ダイアログ終了後処理
+    dialogRef.afterClosed()
+    .subscribe(
+      data => {
+        // nullデータ戻りチェック必須（無いとプログラムエラー)
+        if (data) {
+        }
+        /* SessionStorageの14日前フラグセット状態よりメッセージ処理
+        *  パスワード変更促すメッセージ
+        */
+        if (this.sessionService.getPwdBeforeExpired()) {
+          const message = ['パスワードの有効期限が近ついています。', '変更をお願いします。'];
+          const msg = {
+            title: '',
+            message: message,
           };
           this.showAlert(msg);
         }
