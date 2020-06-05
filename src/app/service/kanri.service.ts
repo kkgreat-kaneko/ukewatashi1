@@ -276,6 +276,39 @@ export class KanriService {
   }
   */
 
+  /*
+  *   確認書印刷前、件数チェック処理
+  */
+  public async chkHokenConfirm(kanri: Kanri): Promise<number> {
+    const headers = this.session.setTkHeaders();
+    this.res = await this.http.post( Const.WWW_ROOT + 'kanri/chkhokenconfirm', kanri, {headers: headers})
+    .toPromise();
+    return this.res;
+  }
+
+  /*
+  *   確認書印刷
+  */
+  public printHokenConfirm(kanri: Kanri) {
+    const headers = this.session.setTkHeaders();
+    this.http.post( Const.WWW_ROOT + 'kanri/printhokenconfirm', kanri, { responseType: 'blob', headers: headers })
+    .subscribe(
+      response => {
+        const hokenConfirmPdf = new Blob([response], { type: 'application/pdf' } );
+        // ゲットしたBlobデータ(PDF)を別ウィンドウでダウンロードせず開く
+        const url1 = URL.createObjectURL(hokenConfirmPdf);
+        if (window.navigator.msSaveBlob) {
+          saveAs(hokenConfirmPdf, 'hokenConfirm.pdf');        // IEの時はBlobデータが開けないのでダウンロードする
+        } else {
+          window.open(url1);
+        }
+      },
+      error => {
+        console.log('error print checkSheet');
+      }
+    );
+  }
+
 }
 
 /*----------------------------------------------------------

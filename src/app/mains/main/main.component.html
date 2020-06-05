@@ -87,7 +87,8 @@
             <div class="hidden-jlx-jlxhs"></div>
           </ng-template>
           <div class="" *ngIf="loginUser.kengen === admin">
-            <button type="button" mat-raised-button class="print-confirm-btn active-btn">確認書印刷</button>
+            <button type="button" mat-raised-button class="print-confirm-btn active-btn"
+            (click)="showDataHokenPrint()">確認書印刷</button>
           </div>
           <div class="" *ngIf="loginUser.kengen === manager">
             <button type="button" mat-raised-button class="print-confirm-btn"

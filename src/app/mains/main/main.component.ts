@@ -21,6 +21,7 @@ import { DataApproveMultiModalComponent } from '../data-approve-multi-modal/data
 import { DataApproveSingleModalComponent } from '../data-approve-single-modal/data-approve-single-modal.component';
 import { DataPrintModalComponent } from '../data-print-modal/data-print-modal.component';
 import { PasswordChangeModalComponent } from '../password-change-modal/password-change-modal.component';
+import { DataHokenPrintModalComponent } from '../data-hoken-print-modal/data-hoken-print-modal.component';
 
 
 @Component({
@@ -1155,6 +1156,32 @@ export class MainComponent implements OnInit {
           };
           this.showAlert(msg);
         }
+      },
+      error => {
+        console.log('error');
+      }
+    );
+  }
+
+  /*
+  *  確認書印刷ボタン
+  *  dataHokenPrintModalComponentを開く
+  */
+  public showDataHokenPrint(pwdExpired = false) {
+    const daialogTantousha = new Tantousha();
+    const dialogRef = this.dialog.open(DataHokenPrintModalComponent, {
+      data: daialogTantousha,         // モーダルコンポーネントにInjectするデータ 戻り処理ないがインスタンス渡し必要(ダミー的な)
+      disableClose: true,             // モーダル外クリック時画面を閉じる機能無効
+      restoreFocus: false,            // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
+      autoFocus: false,               // ダイアログ開いた時の自動フォーカス無効
+    });
+    // ダイアログ終了後処理
+    dialogRef.afterClosed()
+    .subscribe(
+      data => {
+        if (data) {
+        }
+        this.getList();               // 書類一覧更新表示
       },
       error => {
         console.log('error');

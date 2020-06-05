@@ -1,0 +1,41 @@
+<mat-dialog-content [formGroup]="formGroup">
+    <div class="" fxLayout="column">
+        <div class="" fxLayout="row">
+            <section>
+                <h3>確認書印刷画面</h3>
+                <h4>確認書済分が<br>印刷可能です。</h4>
+            </section>
+            <section mat-dialog-actions class="">
+                <button type="button" mat-raised-button color="" class="tojiru" (click)="close()">閉じる</button>
+            </section>
+        </div>
+        <div class="" fxLayout="row">
+            <div class="" fxLayout="column">
+                <!---------保険会社セレクト--------->
+                <div class="form-hokengaisha">
+                    <mat-form-field class="hokengaisha">
+                        <mat-label>*保険会社</mat-label>
+                        <select matNativeControl formControlName="hokengaisha" placeholder="保険会社" (change)="getHokenTantouList()">
+                        <option value="" selected></option>
+                        <option [value]="hokengaisha.hokengaisha" *ngFor="let hokengaisha of hokengaishaList">{{hokengaisha.hokengaisha}}</option>
+                        </select>
+                    </mat-form-field>
+                </div>
+                <!-- 保険担当者セレクト -->
+                <div class="form-hokentantou">
+                    <mat-form-field class="">
+                        <mat-label>*保険会社担当者</mat-label>
+                        <select matNativeControl formControlName="hokenTantou" placeholder="保険会社担当者">
+                        <option value="" selected></option>
+                        <option [value]="hokenTantou.kakuninsha" *ngFor="let hokenTantou of hokenTantouList">{{hokenTantou.kakuninsha}}</option>
+                        </select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <section mat-dialog-actions class="">
+                <button type="button" mat-raised-button color="" class="print" 
+                [disabled]="formGroup.invalid" (click)="printHokenConfirm()">印刷</button>
+            </section>
+      </div>
+    </div>
+</mat-dialog-content>

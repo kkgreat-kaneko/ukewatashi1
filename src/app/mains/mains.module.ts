@@ -26,6 +26,7 @@ import { DataApproveMultiModalComponent } from './data-approve-multi-modal/data-
 import { DataApproveSingleModalComponent } from './data-approve-single-modal/data-approve-single-modal.component';
 import { DataPrintModalComponent } from './data-print-modal/data-print-modal.component';
 import { PasswordChangeModalComponent } from './password-change-modal/password-change-modal.component';
+import { DataHokenPrintModalComponent } from './data-hoken-print-modal/data-hoken-print-modal.component';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { PasswordChangeModalComponent } from './password-change-modal/password-c
     DataEditModalComponent, DataDeleteModalComponent, DataApproveMultiModalComponent,
     DataApproveSingleModalComponent,
     DataPrintModalComponent,
-    PasswordChangeModalComponent],
+    PasswordChangeModalComponent,
+    DataHokenPrintModalComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -64,6 +66,7 @@ import { PasswordChangeModalComponent } from './password-change-modal/password-c
     DataApproveSingleModalComponent,
     DataPrintModalComponent,
     PasswordChangeModalComponent,
+    DataHokenPrintModalComponent,
   ],
   exports: [
     MainComponent,

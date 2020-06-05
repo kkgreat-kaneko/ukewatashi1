@@ -1,0 +1,48 @@
+mat-dialog-content {
+    width: 500px;
+    height: 280px;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+h3{
+    margin: 5px 5px 5px 5px;
+}
+h4{
+    margin: 10px 5px 5px 250px;
+}
+.form-varidation {
+    font-size: small;
+    color: #ff0000;
+  }
+.panel {
+    height: 250px;
+    border: solid 6px;
+    border-color: #0277bd;/*#00a9f4;*/
+    border-radius: 5px 5px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-bottom: 10px;
+}
+.tojiru, .print{
+    height: 40px;
+    width: 100px;
+    line-height: 1px;
+    font-weight: bold;
+}
+.print {
+    background: #ffab91;
+    margin-left: 105px;
+}
+.tojiru {
+    margin-left: 10px;
+    background: #e0f2f1;
+}
+.form-hokengaisha {
+    margin-left: 30px;
+}
+.hokengaisha {
+    width: 240px;
+}
+.form-hokentantou {
+    margin-left: 30px;
+}
