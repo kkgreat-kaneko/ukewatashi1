@@ -1,0 +1,163 @@
+<div class="container">
+    <div class="panel" fxLayout="column">
+    <form [formGroup]="formGroup">
+        <h4>担当者データ</h4>
+        <!------横列１段目----------------------->
+        <div class="" fxLayout="row">
+            <div class="">
+                <mat-form-field class="user-id all-form" appearance="legacy">
+                  <mat-label>ユーザーID</mat-label>
+                  <input type="text" matInput placeholder="" formControlName="userId" (input)="chkIdText($event)">
+                </mat-form-field>
+            </div>
+            <div class="">
+                <mat-form-field class="password all-form" appearance="legacy">
+                  <mat-label>パスワード(英数記号)</mat-label>
+                  <input type="text" #password matInput placeholder="" formControlName="password" (input)="chkPwdText($event)">
+                  <!--span class="form-varidation" *ngIf="password.dirty && password.errors != null && password.errors.required">*入力必須です</span-->
+                </mat-form-field>
+            </div>
+            <div class="">
+                <mat-form-field class="password-setdate all-form" appearance="legacy">
+                  <mat-label>PWD設定日(登録実行は不要)</mat-label>
+                  <input type="text" matInput placeholder="" formControlName="passwordSetdate" (input)="chkPwdSetdateText($event)">
+                </mat-form-field>
+            </div>
+            <div class="">
+                <mat-form-field class="kengen all-form">
+                    <mat-label>権限</mat-label>
+                    <select matNativeControl formControlName="kengen">
+                        <option [value]="item.value" *ngFor="let item of kengenSelect" 
+                            [selected]="item.value === selected">{{item.label}}</option>
+                    </select>
+                </mat-form-field>
+            </div>
+            <div class="">
+                <mat-form-field class="shimei all-form" appearance="legacy">
+                  <mat-label>氏名</mat-label>
+                  <input type="text" matInput placeholder="" formControlName="shimei">
+                </mat-form-field>
+            </div>
+            <div class="">
+                <mat-form-field class="kaisha all-form">
+                    <mat-label>会社名</mat-label>
+                    <select matNativeControl formControlName="kaisha">
+                        <option [value]="item.value" *ngFor="let item of kaishaSelect" 
+                            [selected]="item.value === selected">{{item.label}}</option>
+                    </select>
+                </mat-form-field>
+            </div>
+            <div class="">
+                <mat-form-field class="busho all-form" appearance="legacy">
+                  <mat-label>部署名</mat-label>
+                  <input type="text" matInput placeholder="" formControlName="busho">
+                </mat-form-field>
+            </div>
+            <div class="">
+                <mat-form-field class="kubun all-form" appearance="legacy">
+                  <mat-label>区分</mat-label>
+                  <input type="text" matInput placeholder="" formControlName="kubun">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <!------横列２段目----------------------->
+        <div class="btns" fxLayout="row">
+            <section mat-dialog-actions class="">
+                <button type="button" mat-raised-button color="" class="btn search-btn-color"
+                        (click)="find()">検索</button>
+            </section>
+            <section mat-dialog-actions class="">
+                <button type="button" mat-raised-button color="" class="btn clear-btn-color"
+                        (click)="clear()">クリア</button>
+            </section>
+            <section mat-dialog-actions class="">
+                <button type="button" mat-raised-button color="" class="btn create-btn-color"
+                        (click)="create()">登録実行</button>
+            </section>
+            <section mat-dialog-actions class="">
+                <button type="button" mat-raised-button color="" class="btn edit-btn-color"
+                        (click)="update()">更新実行</button>
+            </section>
+            <section mat-dialog-actions class="">
+                <button type="button" mat-raised-button color="" class="btn delete-btn-color"
+                        (click)="delete()">削除実行</button>
+            </section>
+            <section mat-dialog-actions class="">
+                <button type="button" mat-raised-button color="" class="btn close-btn-color"
+                        (click)="close()">閉じる</button>
+            </section>
+        </div>
+
+        <!--担当者一覧-->
+        <div class="list-container">
+            <div class="list">
+                <table mat-table [dataSource]="dataSource" matSort>
+                    <!-- チェックボックス -->
+                    <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let element">
+                        <mat-checkbox (click)="$event.stopPropagation()"
+                                    (change)="selection.toggle(element)"
+                                    [checked]="selection.isSelected(element)"
+                        >
+                        </mat-checkbox>
+                    </td>
+                    </ng-container>
+                    <!--列：ユーザーID -->
+                    <ng-container matColumnDef="userId">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>ユーザーID</th>
+                        <td mat-cell *matCellDef="let element"> {{element.userId}} </td>
+                    </ng-container>
+                    <!--列：パスワード -->
+                    <ng-container matColumnDef="password">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>パスワード</th>
+                        <td mat-cell *matCellDef="let element"> {{element.password}} </td>
+                    </ng-container>
+                    <!--列：パスワード設定日 -->
+                    <ng-container matColumnDef="passwordSetdate">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>パスワード設定日</th>
+                        <td mat-cell *matCellDef="let element"> {{element.passwordSetdate}} </td>
+                    </ng-container>
+                    <!--列：権限 -->
+                    <ng-container matColumnDef="kengen">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>権限</th>
+                        <td mat-cell *matCellDef="let element"> {{showKengenName(element.kengen)}} </td>
+                    </ng-container>
+                    <!--列：氏名 -->
+                    <ng-container matColumnDef="shimei">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>氏名</th>
+                        <td mat-cell *matCellDef="let element"> {{element.shimei}} </td>
+                    </ng-container>
+                    <!--列：会社名 -->
+                    <ng-container matColumnDef="kaisha">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>会社名</th>
+                        <td mat-cell *matCellDef="let element"> {{element.kaisha}} </td>
+                    </ng-container>
+                    <!--列：部署名 -->
+                    <ng-container matColumnDef="busho">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>会社名</th>
+                        <td mat-cell *matCellDef="let element"> {{element.busho}} </td>
+                    </ng-container>
+                    <!--列：区分 -->
+                    <ng-container matColumnDef="kubun">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>区分</th>
+                        <td mat-cell *matCellDef="let element"> {{element.kubun}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let element; columns: displayColumns;"
+                        [class.tr-row]="selection.isSelected(element)"
+                        (click)="selection.toggle(element)">
+                    </tr>
+                </table>
+            </div>
+            <div class="paginator">
+                <mat-paginator [pageSizeOptions]="[500, 100, 10]" showFirstLastButtons></mat-paginator>
+            </div>
+        </div>
+
+
+    </form>
+    </div>
+</div>

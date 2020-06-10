@@ -60,6 +60,17 @@ export class TantoushaService {
   }
 
   /*
+  *  担当者登録
+  *
+  */
+  public async create(tantousha: Tantousha): Promise<Tantousha> {
+    const headers = this.session.setTkHeaders();
+    this.res = await this.http.post( Const.WWW_ROOT + 'tantousha/create/', tantousha, {headers: headers})
+    .toPromise();
+    return this.res;
+  }
+
+  /*
   *  担当者更新 1件
   *
   */
@@ -70,5 +81,45 @@ export class TantoushaService {
     return this.res;
   }
 
+  /*
+  *  担当者IDより1件削除
+  *
+  */
+  public async delete(id: string): Promise<number> {
+    const headers = this.session.setTkHeaders();
+    this.res = await this.http.delete( Const.WWW_ROOT + 'tantousha/delete/' + id, {headers: headers})
+    .toPromise();
+    return this.res;
+  }
+
+  /*
+  * 担当者ID部分一致検索
+  */
+  public async findLikeUserId(tantousha: Tantousha): Promise<Tantousha[]> {
+    const headers = this.session.setTkHeaders();
+    this.res = await this.http.post( Const.WWW_ROOT + 'tantousha/findlikeuserid', tantousha, {headers: headers})
+    .toPromise();
+    return this.res;
+  }
+
+  /*
+  * 担当者氏名部分一致検索
+  */
+  public async findLikeShimei(tantousha: Tantousha): Promise<Tantousha[]> {
+    const headers = this.session.setTkHeaders();
+    this.res = await this.http.post( Const.WWW_ROOT + 'tantousha/findlikeshimei', tantousha, {headers: headers})
+    .toPromise();
+    return this.res;
+  }
+
+  /*
+  * 担当者ID AND 氏名部分一致検索
+  */
+  public async findLikeUserIdAndShimei(tantousha: Tantousha): Promise<Tantousha[]> {
+    const headers = this.session.setTkHeaders();
+    this.res = await this.http.post( Const.WWW_ROOT + 'tantousha/findlikeuseridshimei', tantousha, {headers: headers})
+    .toPromise();
+    return this.res;
+  }
 
 }

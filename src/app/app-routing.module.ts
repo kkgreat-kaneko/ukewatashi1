@@ -4,9 +4,11 @@ import { AuthGuard } from './auth.guard';
 import { LoginComponent } from './core/login/login.component';
 import { MainComponent } from './mains/main/main.component';
 import { MaintenanceComponent } from './maintenance/maintenance/maintenance.component';
+import { MstTantoushaComponent } from './mst-tantousha/mst-tantousha/mst-tantousha.component';
 
 
 const routes: Routes = [
+  { path: 'mst-tantousha', component: MstTantoushaComponent, canActivate: [AuthGuard]},
   { path: 'maintenance', component: MaintenanceComponent, canActivate: [AuthGuard]},
   { path: 'main', component: MainComponent, canActivate: [AuthGuard]},
   { path: '', component: LoginComponent},

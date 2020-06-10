@@ -18,6 +18,10 @@ export class Const {
   static readonly KENGEN_ALL: number = 0;                     // 管理者
   static readonly KENGEN_MANAGER: number = 1;                 // 所属長
   static readonly KENGEN_NORMAL: number = 2;                  // 一般
+  // 権限名称
+  static readonly KENGEN_ALL_LABEL: string = '管理者';         // 管理者
+  static readonly KENGEN_MANAGER_LABEL: string = '所属長';     // 所属長
+  static readonly KENGEN_NORMAL_LABEL: string = '一般';        // 一般
 
   // 会社名
   static readonly JLX_HOKEN: string = '株式会社JALUX保険部';

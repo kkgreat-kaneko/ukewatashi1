@@ -47,6 +47,14 @@ export class MaintenanceComponent implements OnInit {
   }
 
   /*
+  *  担当者データボタン
+  *  MstTantoushaComponentへ画面を遷移する
+  */
+  public showMstTantousha() {
+    this.router.navigate(['/mst-tantousha']);
+  }
+
+  /*
   *  保険会社リスト表示順ボタン
   * 
   */
