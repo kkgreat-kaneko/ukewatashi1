@@ -116,7 +116,9 @@ tr.mat-footer-row, tr.mat-row {
     margin-left: 20px;
 }
 .user-id {
-    width: 80px;
+    font-size: smaller;
+    margin-left: 15px;
+    width: 90px;
 }
 .password {
     width: 130px;
