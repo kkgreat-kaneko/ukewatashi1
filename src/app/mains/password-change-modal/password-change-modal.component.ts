@@ -62,6 +62,9 @@ export class PasswordChangeModalComponent implements OnInit {
     if (this.formGroup.value.newPasswd.length < 8) {
       this.pwdErrs.push('＊パスワードは8文字以上必要です。');
     }
+    if (this.formGroup.value.newPasswd.length > 16) {
+      this.pwdErrs.push('＊パスワードは16文字以内です。');
+    }
     if (this.formGroup.value.newPasswd !== this.formGroup.value.newConfirmPasswd) {
       this.pwdErrs.push('*新しいパスワードと確認パスワードが違います。');
     }
