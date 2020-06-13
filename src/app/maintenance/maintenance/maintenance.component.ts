@@ -63,6 +63,14 @@ export class MaintenanceComponent implements OnInit {
   }
 
   /*
+  *  保険会社リストデータボタン(保険会社)
+  *  MstHokengaishaListComponentへ画面遷移する
+  */
+  public showMstHokengaishaList() {
+    this.router.navigate(['/mst-hokengaisha-list']);
+  }
+
+  /*
   *  保険会社リスト表示順ボタン
   * 
   */

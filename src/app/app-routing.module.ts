@@ -6,8 +6,10 @@ import { MainComponent } from './mains/main/main.component';
 import { MaintenanceComponent } from './maintenance/maintenance/maintenance.component';
 import { MstTantoushaComponent } from './mst-tantousha/mst-tantousha/mst-tantousha.component';
 import { MstHokengaishaComponent } from './mst-hokengaisha/mst-hokengaisha/mst-hokengaisha.component';
+import { MstHokengaishaListComponent } from './mst-hokengaisha-list/mst-hokengaisha-list/mst-hokengaisha-list.component';
 
 const routes: Routes = [
+  { path: 'mst-hokengaisha-list', component: MstHokengaishaListComponent, canActivate: [AuthGuard]},
   { path: 'mst-hokengaisha', component: MstHokengaishaComponent, canActivate: [AuthGuard]},
   { path: 'mst-tantousha', component: MstTantoushaComponent, canActivate: [AuthGuard]},
   { path: 'maintenance', component: MaintenanceComponent, canActivate: [AuthGuard]},

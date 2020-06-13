@@ -6,6 +6,7 @@ import { PopupModule } from './popup/popup.module';
 import { MaintenanceModule } from './maintenance/maintenance.module';
 import { MstTantoushaModule } from './mst-tantousha/mst-tantousha.module';
 import { MstHokengaishaModule } from './mst-hokengaisha/mst-hokengaisha.module';
+import { MstHokengaishaListModule } from './mst-hokengaisha-list/mst-hokengaisha-list.module';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -26,6 +27,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MaintenanceModule,
     MstTantoushaModule,
     MstHokengaishaModule,
+    MstHokengaishaListModule,
   ],
   providers: [{provide: LOCALE_ID, useValue: 'ja-JP'}],
   bootstrap: [AppComponent]
