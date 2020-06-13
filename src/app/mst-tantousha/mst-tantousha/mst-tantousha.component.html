@@ -77,11 +77,11 @@
             </section>
             <section mat-dialog-actions class="">
                 <button type="button" mat-raised-button color="" class="btn edit-btn-color"
-                        (click)="update()">更新実行</button>
+                        (click)="update()" [disabled]="!tantousha">更新実行</button>
             </section>
             <section mat-dialog-actions class="">
                 <button type="button" mat-raised-button color="" class="btn delete-btn-color"
-                        (click)="delete()">削除実行</button>
+                        (click)="delete()" [disabled]="!tantousha">削除実行</button>
             </section>
             <section mat-dialog-actions class="">
                 <button type="button" mat-raised-button color="" class="btn close-btn-color"
