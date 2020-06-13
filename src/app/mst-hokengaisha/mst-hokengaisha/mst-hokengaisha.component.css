@@ -1,0 +1,160 @@
+h3, h4 {
+    margin: 0;
+  }
+h4{
+    margin-bottom: 8px;
+}
+.container {
+    width: auto;
+    height: 100%;
+    min-height: 740px;
+    margin-left: auto;
+    margin-right: auto;
+    background: -webkit-linear-gradient(to right, #00a9f4, #0277bd);
+    background: linear-gradient(to right, #00a9f4, #0277bd);
+    padding: 10px;
+}
+.panel {
+    width: 1150px;
+    height: 580px;
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    background: #ffffff;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    border: solid 3px #aaaaaa;
+    border-radius: 10px 10px;
+}
+.line1-form ::ng-deep .mat-form-field-wrapper {
+	padding-bottom: 15px;
+}
+.line1-form ::ng-deep .mat-form-field-infix {
+  border-top: 5;
+}
+.line1-form ::ng-deep .mat-form-field-underline {
+	bottom: 18px;
+}
+.line2-form ::ng-deep .mat-form-field-wrapper {
+	padding-bottom: 10px;
+}
+.line2-form ::ng-deep .mat-form-field-infix {
+  border-top: 5;
+}
+.line2-form ::ng-deep .mat-form-field-underline {
+	bottom: 13px;
+}
+.btns {
+    padding-left: 320px;
+}
+.btn {
+    height: 30px;
+    line-height: 1px;
+    margin-left: 30px;
+    width: 85px;
+}
+.search-btn {
+    margin-left: 70px;
+}
+.search-btn-color {
+    background: #e0f2f1;
+}
+.clear-btn-color {
+    background: #e0f2f1;
+}
+.create-btn-color {
+    background: #9575cd;
+}
+.edit-btn-color {
+    background: #ffab91;
+}
+.delete-btn-color {
+    background: #fff176;
+}
+.close-btn-color {
+    background: #e0f2f1;
+}
+
+/* DataTable CSS */
+.list-container {
+    min-height: 300px;
+    width: 1100px;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1px;
+    background: #FFFFFF;
+    border: solid 1px;
+    border-radius: 5px 5px;
+  }
+.list {
+    min-height: 325px;
+    max-height: 325px;
+    width: 1090px;
+    overflow: auto;
+    /*overflow-y: auto;
+    overflow-x: auto;*/
+}
+table {
+    width: 1390px;
+}
+th, td {
+    font-size: x-small;
+}
+th {
+    font-weight: 900;
+}
+tr.mat-header-row {
+    height: 25px;
+}
+tr.mat-footer-row, tr.mat-row {
+    height: 30px;
+}
+.tr-row {
+    background-color: #EDE7F6;
+}
+.paginator {
+    width: 1090px;
+    margin: 0px;
+}
+.select {
+    width: 40px;
+}
+
+/*入力フォーム*/
+.line1-form, .line2-form {
+    font-size: smaller;
+    margin-left: 20px;
+}
+.user-id {
+    font-size: smaller;
+    margin-left: 15px;
+    width: 120px;
+}
+.password {
+    width: 130px;
+}
+.password-setdate {
+    width: 140px;
+}
+.kengen {
+    width: 60px;
+}
+.kakuninsha {
+    width: 140px;
+}
+.hokengaisha {
+    width: 190px;
+}
+.seiho {
+    width: 190px;
+}
+.busho {
+    width: 160px;
+}
+.yomi {
+    width: 140px;
+}
