@@ -19,7 +19,7 @@ import { PopupAlertComponent } from '../../popup/popup-alert/popup-alert.compone
 })
 export class MstTantoushaComponent implements OnInit {
   message: string;                                                    // エラーメッセージ
-  tantousha: Tantousha;                                               // 担当者更新用
+  tantousha: Tantousha;                                               // 担当者更新用・一覧選択データ用
   updateUserId: string;
   kaishaSelect = [                                                    // 会社選択フォームOption値
     { label: Const.JLX_HOKEN, value: Const.JLX_HOKEN},
@@ -447,9 +447,6 @@ export class MstTantoushaComponent implements OnInit {
         // anything finally method
       });
     }
-
-
-
   }
 
   /*
