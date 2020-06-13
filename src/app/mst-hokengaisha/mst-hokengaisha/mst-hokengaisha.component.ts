@@ -295,13 +295,6 @@ export class MstHokengaishaComponent implements OnInit {
       .then(() => {
         // anything finally method
       });
-    } else {                                                                           // 新仕様　更新実行する場合は、一覧から選択が必須--->未選択では警告MSG出力
-      const message = ['更新実行は、一覧から選択してから行ってください。']
-      const msg = {
-        title: '',
-        message: message,
-      };
-      this.showAlert(msg);
     }
   }
 
@@ -339,13 +332,6 @@ export class MstHokengaishaComponent implements OnInit {
       .then(() => {
         // anything finally method
       });
-    } else {                                                                    // 新仕様　削除実行する場合は、一覧から選択が必須--->未選択では警告MSG出力
-      const message = ['削除実行は、一覧から選択してから行ってください。']
-      const msg = {
-        title: '',
-        message: message,
-      };
-      this.showAlert(msg);
     }
   }
 
