@@ -64,10 +64,10 @@ export class MstHokengaishaComponent implements OnInit {
     this.getHokenTantouAll();
     this.getHokengaishaList();
     /*
-    *  checkBoxのselected契機で担当者一覧の選択データを保持する。Tantousha変数に選択されたselectItemを登録
-    *  Tantousha変数が編集・削除のボタンから利用される
+    *  checkBoxのselected契機で担当者一覧の選択データを保持する。selectedHokengaisha変数に選択されたselectItemを登録
+    *  selectedHokengaisha変数が編集・削除のボタンから利用される
     *  選択、選択解除によってデータ保持リセット行う
-    *  一覧は単一選択のみ可、Tantousha変数にセットされれた選択データ単一用、解除する処理
+    *  一覧は単一選択のみ可、selectedHokengaisha変数にセットされれた選択データ単一用、解除する処理
     */
     this.cbEmmiter.subscribe(cb => {
       if (cb.source.selected.length > 0) {
@@ -128,7 +128,7 @@ export class MstHokengaishaComponent implements OnInit {
   /*
   *  保険会社セレクト用データ取得
   *  全保険会社検索をバックエンドと通信
-  *  担当者の表示順に並び替えも行う
+  *  
   */
   public getHokengaishaList() {
     this.hokengaishaListService.getAllList()

@@ -49,10 +49,10 @@ export class MstHokengaishaListComponent implements OnInit {
     this.getHokengaishaList();
 
     /*
-    *  checkBoxのselected契機で担当者一覧の選択データを保持する。Tantousha変数に選択されたselectItemを登録
-    *  Tantousha変数が編集・削除のボタンから利用される
+    *  checkBoxのselected契機で担当者一覧の選択データを保持する。SelectedHokengaisha変数に選択されたselectItemを登録
+    *  SelectedHokengaisha変数が編集・削除のボタンから利用される
     *  選択、選択解除によってデータ保持リセット行う
-    *  一覧は単一選択のみ可、Tantousha変数にセットされれた選択データ単一用、解除する処理
+    *  一覧は単一選択のみ可、SelectedHokengaisha変数にセットされれた選択データ単一用、解除する処理
     */
     this.cbEmmiter.subscribe(cb => {
       if (cb.source.selected.length > 0) {
