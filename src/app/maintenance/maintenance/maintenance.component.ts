@@ -71,6 +71,14 @@ export class MaintenanceComponent implements OnInit {
   }
 
   /*
+  *  区分リストボタン
+  *  MstKubunComponentへ画面遷移する
+  */
+  public showMstKubun() {
+    this.router.navigate(['/mst-kubun']);
+  }
+
+  /*
   *  保険会社リスト表示順ボタン
   * 
   */

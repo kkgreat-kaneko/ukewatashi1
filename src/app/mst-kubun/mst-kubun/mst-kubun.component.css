@@ -1,0 +1,120 @@
+h3, h4 {
+    margin: 0;
+  }
+h4{
+    margin-bottom: 8px;
+}
+.container {
+    width: auto;
+    height: 100%;
+    min-height: 740px;
+    margin-left: auto;
+    margin-right: auto;
+    background: -webkit-linear-gradient(to right, #00a9f4, #0277bd);
+    background: linear-gradient(to right, #00a9f4, #0277bd);
+    padding: 10px;
+}
+.panel {
+    width: 700px;
+    height: 580px;
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    background: #ffffff;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    border: solid 3px #aaaaaa;
+    border-radius: 10px 10px;
+}
+.line1-form ::ng-deep .mat-form-field-wrapper {
+	padding-bottom: 15px;
+}
+.line1-form ::ng-deep .mat-form-field-infix {
+  border-top: 5;
+}
+.line1-form ::ng-deep .mat-form-field-underline {
+	bottom: 18px;
+}
+.btns {
+    padding-left: 320px;
+}
+.btn {
+    height: 30px;
+    line-height: 1px;
+    margin-left: 30px;
+    width: 85px;
+}
+.clear-btn-color {
+    background: #e0f2f1;
+}
+.create-btn-color {
+    background: #9575cd;
+}
+.edit-btn-color {
+    background: #ffab91;
+}
+.delete-btn-color {
+    background: #fff176;
+}
+.close-btn-color {
+    background: #e0f2f1;
+}
+
+/* DataTable CSS */
+.list-container {
+    min-height: 300px;
+    width: 520px;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1px;
+    background: #FFFFFF;
+    border: solid 1px;
+    border-radius: 5px 5px;
+  }
+.list {
+    min-height: 345px;
+    max-height: 345px;
+    width: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+table {
+    width: 500px;
+}
+td {
+    font-size: x-small;
+}
+th {
+    font-size: normal;
+    height: 40px;
+    font-weight: 900;
+}
+tr.mat-header-row {
+    height: 25px;
+}
+tr.mat-footer-row, tr.mat-row {
+    height: 30px;
+}
+.tr-row {
+    background-color: #EDE7F6;
+}
+.paginator {
+    width: 500px;
+    margin: 0px;
+}
+.select {
+    width: 40px;
+}
+
+/*入力フォーム*/
+.line1-form{
+    font-size: smaller;
+    margin-left: 20px;
+}
+.kubun {
+    width: 190px;
+}

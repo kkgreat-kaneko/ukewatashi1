@@ -1,0 +1,68 @@
+<div class="container">
+    <div class="panel" fxLayout="column">
+    <form [formGroup]="formGroup">
+        <h4>区分リスト</h4>
+        <!------横列１段目----------------------->
+        <div class="" fxLayout="row">
+            <div class="">
+                <mat-form-field class="kubun line1-form" appearance="legacy">
+                  <mat-label>区分</mat-label>
+                  <input type="text" matInput placeholder="" formControlName="kubun">
+                </mat-form-field>
+            </div>
+        </div>
+        <!------横列２段目----------------------->
+        <div class="" fxLayout="row">
+            <section mat-dialog-actions class="">
+                <button type="button" mat-raised-button color="" class="btn create-btn-color"
+                        (click)="create()">登録実行</button>
+            </section>
+            <section mat-dialog-actions class="">
+                <button type="button" mat-raised-button color="" class="btn edit-btn-color"
+                        (click)="update()" [disabled]="!selectedKubun">更新実行</button>
+            </section>
+            <section mat-dialog-actions class="">
+                <button type="button" mat-raised-button color="" class="btn delete-btn-color"
+                        (click)="delete()" [disabled]="!selectedKubun">削除実行</button>
+            </section>
+            <section mat-dialog-actions class="">
+                <button type="button" mat-raised-button color="" class="btn close-btn-color"
+                        (click)="close()">閉じる</button>
+            </section>
+        </div>
+        <!--区分一覧-->
+        <div class="list-container">
+            <div class="list">
+                <table mat-table [dataSource]="dataSource" matSort>
+                    <!-- チェックボックス -->
+                    <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef class="select"></th>
+                    <td mat-cell *matCellDef="let element">
+                        <mat-checkbox (click)="$event.stopPropagation()"
+                                    (change)="selection.toggle(element)"
+                                    [checked]="selection.isSelected(element)"
+                        >
+                        </mat-checkbox>
+                    </td>
+                    </ng-container>
+                    <!--列：区分-->
+                    <ng-container matColumnDef="kubun">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>区分</th>
+                        <td mat-cell *matCellDef="let element"> {{element.kubun}} </td>
+                    </ng-container>
+                    
+                    <tr mat-header-row *matHeaderRowDef="displayColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let element; columns: displayColumns;"
+                        [class.tr-row]="selection.isSelected(element)"
+                        (click)="selection.toggle(element)">
+                    </tr>
+                </table>
+            </div>
+            <div class="paginator">
+                <mat-paginator [pageSizeOptions]="[500, 100, 10]" showFirstLastButtons></mat-paginator>
+            </div>
+        </div>
+
+    </form>
+    </div>
+</div>
