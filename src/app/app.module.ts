@@ -8,6 +8,7 @@ import { MstTantoushaModule } from './mst-tantousha/mst-tantousha.module';
 import { MstHokengaishaModule } from './mst-hokengaisha/mst-hokengaisha.module';
 import { MstHokengaishaListModule } from './mst-hokengaisha-list/mst-hokengaisha-list.module';
 import { MstKubunModule } from './mst-kubun/mst-kubun.module';
+import { MstShoruiModule } from './mst-shorui/mst-shorui.module';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -30,6 +31,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MstHokengaishaModule,
     MstHokengaishaListModule,
     MstKubunModule,
+    MstShoruiModule,
   ],
   providers: [{provide: LOCALE_ID, useValue: 'ja-JP'}],
   bootstrap: [AppComponent]

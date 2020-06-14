@@ -79,6 +79,14 @@ export class MaintenanceComponent implements OnInit {
   }
 
   /*
+  *  書類リストボタン
+  *  MstShoruiComponentへ画面遷移する
+  */
+  public showMstShorui() {
+    this.router.navigate(['/mst-shorui']);
+  }
+
+  /*
   *  保険会社リスト表示順ボタン
   * 
   */
