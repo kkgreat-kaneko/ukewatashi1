@@ -1,7 +1,7 @@
 .container {
   width: auto;
   height: 100%;
-  min-height: 740px;
+  min-height: 770px;
   margin-left: auto;
   margin-right: auto;
   /*background: -webkit-linear-gradient(to right, #4682b4, #3a7bd5);*/ /* Chrome 10-25, Safari 5.1-6 */
@@ -13,7 +13,7 @@
 .main {
   width: 1120px;
   height: 100%;
-  min-height: 660px;
+  min-height: 690px;
   /*min-height: 580px;*/
   /*max-height: 750px;*/
   margin-top: 0;
@@ -246,7 +246,7 @@ mat-form-field {
 .curd-btn-color {
   background: #e0f2f1;
 }
-/* 削除閲覧ボタンアクティブ時背景色　その他チェックシート印刷・確認書印刷・メンテナンスボタン背景色 */
+/* 削除閲覧ボタンアクティブ時背景色　その他チェックシート印刷・確認書印刷・メンテナンスボタン・CSV出力背景色 */
 .active-btn {
 	background: #fff176;
 }
@@ -312,9 +312,9 @@ mat-form-field {
   border-radius: 5px 5px;
 }
 .list {
-  min-height: 325px;
+  min-height: 355px;
   /*max-height: 400px;*/
-  max-height: 325px;
+  max-height: 355px;
   width: 1095px;
   overflow: auto;
 }
@@ -336,9 +336,102 @@ tr.mat-footer-row, tr.mat-row {
 .tr-row {
   background-color: #EDE7F6;
 }
+/* 一覧の列幅設定 */
+.th-select {
+  width: 20px;
+}
+.th-status {
+  width: 30px;
+}
+.th-status-app {
+  width: 35px;
+}
+.th-id {
+  width: 50px;
+}
+.th-tantousha {
+  width: 90px;
+}
+.th-shinseisha {
+  width: 90px;
+}
+.th-sakuseibi {
+  width: 70px;
+}
+.th-dlvry {
+  width: 40px;
+}
+.th-hokengaisha {
+  width: 120px;
+}
+.th-seihobun {
+  width: 50px;
+}
+.th-hoken-tantou {
+  width: 90px;
+}
+.th-shoukenbango {
+  width: 60px;
+}
+.th-keiyakusha {
+  width: 100px;
+}
+.th-kubun {
+  width: 100px;
+}
+.th-shorui-maisu {
+  width: 60px;
+}
+.th-bikou {
+  width: 200px;
+}
+.th-hokenbikou {
+  width: 200px;
+}
+.th-saishu-henshubi {
+  width: 70px;
+}
+.th-kakuninsha {
+  width: 90px;
+}
+.th-kakuninbi {
+  width: 70px;
+}
+.th-shouninsha {
+  width: 90px;
+}
+.th-shouninbi {
+  width: 70px;
+}
+.th-mishouninsha {
+  width: 90px;
+}
+.th-mishouninbi {
+  width: 70px;
+}
+.th-sakujyosha {
+  width: 90px;
+}
+.th-sakujyoriyu {
+  width: 200px;
+}
+/* ページ送り・CSVボタン・フッター */
 .paginator {
   width: 1095px;
+  height: 55px;
   margin: 0px;
+}
+mat-paginator {
+  margin-right: 20px;
+  margin-left: auto;
+}
+.csv-output {
+  padding-top: 15px;
+}
+.csv-output button {
+    height: 30px;
+    line-height: 1px;
+    margin-left: 50px;
 }
 .footer {
   margin-top: 10px;

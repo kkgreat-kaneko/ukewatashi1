@@ -214,7 +214,7 @@
           <!-- チェックボックス -->
           <ng-container matColumnDef="select">
             <!--<th mat-header-cell *matHeaderCellDef mat-sort-header ></th>-->
-            <th mat-header-cell *matHeaderCellDef></th>
+            <th mat-header-cell *matHeaderCellDef class="th-select"></th>
             <td mat-cell *matCellDef="let element">
               <mat-checkbox (click)="$event.stopPropagation()"
                             (change)="selection.toggle(element)"
@@ -225,128 +225,128 @@
           </ng-container>
           <!--列：Status -->
           <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>status</th>
-            <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-status">status</th>
+            <td mat-cell *matCellDef="let element">　{{element.status}}</td>
           </ng-container>
           <!--列：承認 -->
           <ng-container matColumnDef="statusApp">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>承認</th>
-            <td mat-cell *matCellDef="let element"> {{element.statusApp === statusAppOk ? '済' : '未'}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-status-app">承認</th>
+            <td mat-cell *matCellDef="let element">{{element.statusApp === statusAppOk ? '済' : '未'}}</td>
           </ng-container>
           <!--列：管理No. -->
           <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>管理No</th>
-            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-id">管理No</th>
+            <td mat-cell *matCellDef="let element">{{element.id}}</td>
           </ng-container>
           <!--列：入力担当者 -->
           <ng-container matColumnDef="tantousha">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>入力担当者</th>
-            <td mat-cell *matCellDef="let element"> {{element.tantousha}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-tantousha">入力担当者</th>
+            <td mat-cell *matCellDef="let element">{{element.tantousha}}</td>
           </ng-container>
           <!--列：申請者 -->
           <ng-container matColumnDef="shinseisha">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>申請者</th>
-            <td mat-cell *matCellDef="let element"> {{element.shinseisha}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-shinseisha">申請者</th>
+            <td mat-cell *matCellDef="let element">{{element.shinseisha}}</td>
           </ng-container>
           <!--列：作成日 -->
           <ng-container matColumnDef="sakuseibi">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>作成日</th>
-            <td mat-cell *matCellDef="let element"> {{element.sakuseibi}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-sakuseibi">作成日</th>
+            <td mat-cell *matCellDef="let element">{{element.sakuseibi ? element.sakuseibi.substr(0,10) : ''}}</td>
           </ng-container>
           <!--列：方法 -->
           <ng-container matColumnDef="dlvry">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>方法</th>
-            <td mat-cell *matCellDef="let element"> {{element.dlvry}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-dlvry">方法</th>
+            <td mat-cell *matCellDef="let element">{{element.dlvry}}</td>
           </ng-container>
           <!--列：保険会社 -->
           <ng-container matColumnDef="hokengaisha">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>保険会社</th>
-            <td mat-cell *matCellDef="let element"> {{element.hokengaisha}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-hokengaisha">保険会社</th>
+            <td mat-cell *matCellDef="let element">{{element.hokengaisha}}</td>
           </ng-container>
           <!--列：生保分 -->
           <ng-container matColumnDef="seihobun">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>生保分</th>
-            <td mat-cell *matCellDef="let element"> {{element.seihobun}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-seihobun">生保分</th>
+            <td mat-cell *matCellDef="let element" class="td-seihobun">　{{element.seihobun ? '✔️' : ''}}</td>
           </ng-container>
           <!--列：保険担当者 -->
           <ng-container matColumnDef="hokenTantou">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>保険担当者</th>
-            <td mat-cell *matCellDef="let element"> {{element.hokenTantou}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-hoken-tantou">保険担当者</th>
+            <td mat-cell *matCellDef="let element">{{element.hokenTantou}}</td>
           </ng-container>
           <!--列：証券番号 -->
           <ng-container matColumnDef="shoukenbango">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>証券番号</th>
-            <td mat-cell *matCellDef="let element"> {{element.shoukenbango}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-shoukenbango">証券番号</th>
+            <td mat-cell *matCellDef="let element">{{element.shoukenbango}}</td>
           </ng-container>
           <!--列：契約者名 -->
           <ng-container matColumnDef="keiyakusha">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>契約者名</th>
-            <td mat-cell *matCellDef="let element"> {{element.keiyakusha}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-keiyakusha">契約者名</th>
+            <td mat-cell *matCellDef="let element">{{element.keiyakusha}}</td>
           </ng-container>
           <!--列：区分 -->
           <ng-container matColumnDef="kubun">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>区分</th>
-            <td mat-cell *matCellDef="let element"> {{element.kubun}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-kubun">区分</th>
+            <td mat-cell *matCellDef="let element">{{element.kubun}}</td>
           </ng-container>
           <!--列：書類枚数 -->
           <ng-container matColumnDef="shoruiMaisu">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>書類枚数</th>
-            <td mat-cell *matCellDef="let element"> {{element.shoruiMaisu}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-shorui-maisu">書類枚数</th>
+            <td mat-cell *matCellDef="let element">　{{element.shoruiMaisu}}</td>
           </ng-container>
           <!--列：備考 -->
           <ng-container matColumnDef="bikou">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>備考</th>
-            <td mat-cell *matCellDef="let element"> {{element.bikou}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-bikou">備考</th>
+            <td mat-cell *matCellDef="let element">{{element.bikou}}</td>
           </ng-container>
           <!--列：保険会社備考 -->
           <ng-container matColumnDef="hokenBikou">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>保険会社備考</th>
-            <td mat-cell *matCellDef="let element"> {{element.hokenBikou}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-hokenbikou">保険会社備考</th>
+            <td mat-cell *matCellDef="let element">{{element.hokenBikou}}</td>
           </ng-container>
           <!--列：最終編集日 -->
           <ng-container matColumnDef="saishuHenshubi">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>最終編集日</th>
-            <td mat-cell *matCellDef="let element"> {{element.saishuHenshubi}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-saishu-henshubi">最終編集日</th>
+            <td mat-cell *matCellDef="let element">{{element.saishuHenshubi ? element.saishuHenshubi.substr(0,10) : ''}}</td>
           </ng-container>
           <!--列：保険会社確認者 -->
           <ng-container matColumnDef="kakuninsha">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>保険会社確認者</th>
-            <td mat-cell *matCellDef="let element"> {{element.kakuninsha}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-kakuninsha">保険会社確認者</th>
+            <td mat-cell *matCellDef="let element">{{element.kakuninsha}}</td>
           </ng-container>
           <!--列：確認日 -->
           <ng-container matColumnDef="kakuninbi">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>確認日</th>
-            <td mat-cell *matCellDef="let element"> {{element.kakuninbi}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-kakuninbi">確認日</th>
+            <td mat-cell *matCellDef="let element">{{element.kakuninbi ? element.kakuninbi.substr(0,10) : ''}}</td>
           </ng-container>
           <!--列：承認者 -->
           <ng-container matColumnDef="shouninsha">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>承認者</th>
-            <td mat-cell *matCellDef="let element"> {{element.shouninsha}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-shouninsha">承認者</th>
+            <td mat-cell *matCellDef="let element">{{element.shouninsha}}</td>
           </ng-container>
           <!--列：承認日 -->
           <ng-container matColumnDef="shouninbi">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>承認日</th>
-            <td mat-cell *matCellDef="let element"> {{element.shouninbi}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-shouninbi">承認日</th>
+            <td mat-cell *matCellDef="let element">{{element.shouninbi ? element.shouninbi.substr(0, 10) : ''}}</td>
           </ng-container>
           <!--列：承認戻し者 -->
           <ng-container matColumnDef="mishouninsha">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>承認戻し者</th>
-            <td mat-cell *matCellDef="let element"> {{element.mishouninsha}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-mishouninsha">承認戻し者</th>
+            <td mat-cell *matCellDef="let element">{{element.mishouninsha}}</td>
           </ng-container>
           <!--列：承認戻し日 -->
           <ng-container matColumnDef="mishouninbi">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>承認戻し日</th>
-            <td mat-cell *matCellDef="let element"> {{element.mishouninbi}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-mishouninbi">承認戻し日</th>
+            <td mat-cell *matCellDef="let element">{{element.mishouninbi ? element.mishouninbi.substr(0,10) : ''}}</td>
           </ng-container>
           <!--列：削除者 -->
           <ng-container matColumnDef="sakujyosha">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>削除者</th>
-            <td mat-cell *matCellDef="let element"> {{element.sakujyosha}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-sakujyosha">削除者</th>
+            <td mat-cell *matCellDef="let element">{{element.sakujyosha}}</td>
           </ng-container>
           <!--列：削除理由 -->
           <ng-container matColumnDef="sakujyoriyu">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>削除理由</th>
-            <td mat-cell *matCellDef="let element"> {{element.sakujyoriyu}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-sakujyoriyu">削除理由</th>
+            <td mat-cell *matCellDef="let element">{{element.sakujyoriyu}}</td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayColumns; sticky: true"></tr>
@@ -356,8 +356,11 @@
           </tr>
         </table>
       </div>
-      <div class="paginator">
-        <mat-paginator [pageSizeOptions]="[10, 20, 30, 40, 50, 100]" showFirstLastButtons></mat-paginator>
+      <div class="paginator" fxLayout="row">
+        <div class="csv-output">
+          <button type="button" mat-raised-button class="active-btn">管理データCSV出力</button>
+        </div>
+        <mat-paginator [pageSizeOptions]="[1000,500,100,10]" showFirstLastButtons></mat-paginator>
       </div>
     </div>
     <div class="footer">
