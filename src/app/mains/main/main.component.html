@@ -358,7 +358,7 @@
       </div>
       <div class="paginator" fxLayout="row">
         <div class="csv-output">
-          <button type="button" mat-raised-button class="active-btn">管理データCSV出力</button>
+          <button type="button" mat-raised-button class="active-btn" (click)="outputKanriCsv()">管理データCSV出力</button>
         </div>
         <mat-paginator [pageSizeOptions]="[1000,500,100,10]" showFirstLastButtons></mat-paginator>
       </div>

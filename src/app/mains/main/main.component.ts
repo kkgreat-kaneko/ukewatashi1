@@ -22,6 +22,7 @@ import { DataApproveSingleModalComponent } from '../data-approve-single-modal/da
 import { DataPrintModalComponent } from '../data-print-modal/data-print-modal.component';
 import { PasswordChangeModalComponent } from '../password-change-modal/password-change-modal.component';
 import { DataHokenPrintModalComponent } from '../data-hoken-print-modal/data-hoken-print-modal.component';
+import { AngularCsv } from 'angular7-csv/dist/Angular-csv'
 
 
 @Component({
@@ -98,6 +99,20 @@ export class MainComponent implements OnInit {
   limit = new FormControl('1000');                  // 表示件数1000デフォルト値
   statusApp = new FormControl('3');                 // 承認ステータスデフォルトすべて
   shinseishaKaisha = new FormControl('');           // JLX/JLXHS　会社選択ボタン
+
+  csvOptions = {                                    // CSV出力用angular7-csvオプション設定
+    fieldSeparator: ',',
+    quoteStrings: '"',
+    decimalseparator: '.',
+    showLabels: true,
+    showTitle: false,
+    title: '',
+    useBom: true,
+    noDownload: false,
+    headers: ['status', '承認', '管理No.', '作成日', '方法', '保険会社', '生保分', '保険担当者', '証券番号', '契約者名', '区分',
+      '書類枚数', '備考', '保険会社備考', '入力担当者', '申請者', '最終編集日', '保険会社確認者', '確認日', '承認者', '承認日',
+      '承認戻し者', '承認戻し日',　'削除者', '削除理由']
+  };
 
 
   constructor(private kanriService: KanriService, private kanriTableService: KanriTableService,
@@ -1189,6 +1204,59 @@ export class MainComponent implements OnInit {
     );
   }
 
+  /*
+  *  管理データCSV出力ボタン
+  *  angular7-csvライブラリー使用
+  */
+  public outputKanriCsv() {
+    let kanriCsvArr: KanriCsvData[];
+    kanriCsvArr = this.makeKanriCsv();
+    new  AngularCsv(kanriCsvArr, "kanriCsv", this.csvOptions);
+  }
+
+  /*
+  *  CSVデータ作成ユーティリティ
+  *  書類一覧のデータソースからサブスクセットした配列の要素からCSV必要項目と項目順番で並び替えしたCSV出力用データを作成する
+  */
+  public makeKanriCsv(): KanriCsvData[]{
+    let subscData: any;
+    this.dataSource.connect().subscribe(data => subscData = data);          // データソースから読み取りセット
+
+    let kanriCsvArr: KanriCsvData[] = [];                                   // csvデータ　作成処理
+    subscData.forEach(kanri => {
+      let data: KanriCsvData = {
+        status: kanri.status,
+        statusApp: kanri.statusApp,
+        id: kanri.id,
+        sakuseibi: kanri.sakuseibi,
+        delvry: kanri.dlvry,
+        hokengaisha: kanri.hokengaisha,
+        seihobun: kanri.seihobun,
+        hokenTantou: kanri.hokenTantou,
+        shoukenbango: kanri.shoukenbango,
+        keiyakusha: kanri.keiyakusha,
+        kubun: kanri.kubun,
+        shoruiMaisu: kanri.shoruiMaisu,
+        bikou: kanri.bikou ? kanri.bikou : '',
+        hokenBikou: kanri.hokenBikou ? kanri.hokenBikou : '',
+        tantousha: kanri.tantousha,
+        shinseisha: kanri.shinseisha,
+        saishuHenshubi: kanri.saishuHenshubi,
+        kakuninsha: kanri.kakuninsha ? kanri.kakuninsha : '',
+        kakuninbi: kanri.kakuninbi ? kanri.kakuninbi: '',
+        shouninsha: kanri.shouninsha ? kanri.shouninsha : '',
+        shouninbi: kanri.shouninbi ? kanri.shouninbi : '',
+        mishouninsha: kanri.mishouninsha ? kanri.mishouninsha : '',
+        mishouninbi: kanri.mishouninbi ? kanri.mishouninbi : '',
+        sakujyosha: kanri.sakujyosha ? kanri.sakujyosha : '',
+        sakujyobi: kanri.sakujyobi ? kanri.sakujyobi : '',
+        sakujyoriyu: kanri.sakujyoriyu ? kanri.sakujyoriyu : ''
+      }
+      kanriCsvArr.push(data);
+    });
+    return kanriCsvArr;
+  }
+
 }
 
 /* --------------------------------------------------------------------------------- */
@@ -1212,4 +1280,37 @@ export interface ApproveData {
   mishouninsha: string;     // 未承認者
   mishouninbi: string;      // 未承認日
   // saishuHenshubi: string;   // 最終編集日
+}
+
+/*
+*  CSVデータ用インターフェイス
+*
+*/
+export interface KanriCsvData {
+  status: number;           // status
+  statusApp: number;        // 承認
+  id: number;               // 管理No
+  sakuseibi: string;        // 作成日
+  delvry: string;           // 方法
+  hokengaisha: string;      // 保険会社
+  seihobun: number;         // 生保分
+  hokenTantou: string;      // 保険担当者
+  shoukenbango: string;     // 証券番号
+  keiyakusha: string;       // 契約者名
+  kubun: string;            // 区分
+  shoruiMaisu: number;      // 書類枚数
+  bikou: string;            // 備考
+  hokenBikou: string;       // 保険会社備考
+  tantousha: string;        // 入力担当者
+  shinseisha: string;       // 申請者
+  saishuHenshubi: string;   // 最終編集日
+  kakuninsha: string;       // 保険会社確認者
+  kakuninbi: string;        // 確認日
+  shouninsha: string;       // 承認者
+  shouninbi: string;        // 承認日
+  mishouninsha: string;     // 承認戻し者
+  mishouninbi: string;      // 承認戻し日
+  sakujyosha: string;       // 削除者
+  sakujyobi: string;        // 削除日
+  sakujyoriyu: string;      // 削除理由
 }
