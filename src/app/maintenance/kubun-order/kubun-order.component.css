@@ -22,6 +22,7 @@ mat-dialog-content {
 .close-btn {
     margin-right: 0px;
     margin-left: auto;
+    background: #e0f2f1;
 }
 .exec-btn {
     margin-right: 0px;
