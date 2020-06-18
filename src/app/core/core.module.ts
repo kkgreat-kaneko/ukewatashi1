@@ -9,10 +9,11 @@ import { MatButtonModule } from '@angular/material';
 import { MatInputModule } from '@angular/material/input';
 
 import { LoginComponent } from './login/login.component';
+import { LoginInsJlxComponent } from './login-ins-jlx/login-ins-jlx.component';
 
 
 @NgModule({
-  declarations: [LoginComponent],
+  declarations: [LoginComponent, LoginInsJlxComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -25,7 +26,7 @@ import { LoginComponent } from './login/login.component';
     MatInputModule,
   ],
   exports: [
-    LoginComponent,
+    LoginComponent, LoginInsJlxComponent
   ]
 })
 export class CoreModule {

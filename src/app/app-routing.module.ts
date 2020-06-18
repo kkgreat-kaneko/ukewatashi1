@@ -9,8 +9,10 @@ import { MstHokengaishaComponent } from './mst-hokengaisha/mst-hokengaisha/mst-h
 import { MstHokengaishaListComponent } from './mst-hokengaisha-list/mst-hokengaisha-list/mst-hokengaisha-list.component';
 import { MstKubunComponent } from './mst-kubun/mst-kubun/mst-kubun.component';
 import { MstShoruiComponent } from './mst-shorui/mst-shorui/mst-shorui.component';
+import { LoginInsJlxComponent } from './core/login-ins-jlx/login-ins-jlx.component';
 
 const routes: Routes = [
+  { path: 'login-ins-jlx', component: LoginInsJlxComponent},
   { path: 'mst-shorui', component: MstShoruiComponent, canActivate: [AuthGuard]},
   { path: 'mst-kubun', component: MstKubunComponent, canActivate: [AuthGuard]},
   { path: 'mst-hokengaisha-list', component: MstHokengaishaListComponent, canActivate: [AuthGuard]},
