@@ -1,0 +1,65 @@
+<div class="container">
+<form>
+    <div class="main" fxLayout="column">
+        <h3>保険会社確認フォーム</h3>
+        <div class="header" fxLayout="row">
+            <h5>保険会社</h5>
+            <h4 class="kaisha">AFLAC</h4>
+            <h5 class="mgl-30">担当者</h5>
+            <h4 class="tantou">有賀　豪</h4>
+        </div>
+        <div class="section1" fxLayout="row">
+            <div class="select-panel" fxLayout="column">
+                <div class="kanri-no-limit">
+                    <label>管理No.</label>
+                    <mat-form-field class="limit" appearance="legacy">
+                    <input type="number" matInput matType="number" placeholder="">
+                    </mat-form-field>
+                    <span style="font-size:small">以前</span>
+                </div>
+                <div class="kanri-no-limit">
+                    <label>表示件数</label>
+                    <mat-form-field class="limit">
+                      <select matNativeControl>
+                        <option value="1000">1000</option>
+                        <option value="2000">2000</option>
+                        <option value="5000">5000</option>
+                        <option value="10000">10000</option>
+                      </select>
+                    </mat-form-field>
+                </div>
+                <mat-radio-group class="radio-col" name="status">
+                    <mat-radio-button class="mat-radio-margin" value="1">郵送</mat-radio-button>
+                    <mat-radio-button class="mat-radio-margin" value="2">印刷済分</mat-radio-button>
+                    <mat-radio-button class="mat-radio-margin" value="3">確認済分</mat-radio-button>
+                    <mat-radio-button class="mat-radio-margin" value="4">未確認分</mat-radio-button>
+                </mat-radio-group>
+                
+            </div>
+            <div class="announce-msg" fxLayout="column">
+                <h2>下記の保険案件の書類のチェック・確認をお願いします。</h2>
+                <h5>書類の状況はStatusで確認できます。</h5>
+                <section class="status-guide">
+                    <h5>
+                        書類受渡前＝<span class="mgl-20 mgr-10 color-red txt-bold">０</span>
+                        保険会社側書類確認済・確認書印刷前＝<span class="mgl-20 mgr-10 color-red txt-bold">１</span><br>
+                        書類不備＝<span class="mgl-20 mgr-10 color-red txt-bold">３</span>
+                        保険会社側確認書印刷完了＝<span class="mgl-20 mgr-10 color-red txt-bold">２</span>
+                        郵送＝<span class="mgl-20 mgr-10 color-red txt-bold">−１</span>
+                    </h5>
+                </section>
+            </div>
+            <div class="btn-panel" fxLayout="column">
+                <div class="">
+                    <button type="button" mat-raised-button class="logout-btn" (click)="logout()">終了</button>
+                </div>
+                <h5>確認済分が印刷可能です。</h5>
+                <div class="">
+                    <button type="button" mat-raised-button class="print-btn" (click)="logout()">確認書印刷</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+

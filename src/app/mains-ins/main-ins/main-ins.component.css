@@ -1,0 +1,322 @@
+h1,h2,h3, h4, h5 {
+    margin: 0;
+}
+input {
+    font-size: small;
+}
+select {
+    font-size: small;
+}
+/* 空白用クラス */
+.mgl-10{
+    margin-left : 10px;
+}
+.mgl-20{
+    margin-left : 20px;
+}
+.mgl-30{
+    margin-left : 30px;
+}
+.mgr-10{
+    margin-right: 10px;
+}
+.mgr-20{
+    margin-right: 20px;
+}
+.mgr-30{
+    margin-right: 30px;
+}
+/* 文字太用クラス */
+.txt-bold {
+    font-weight: bold;
+}
+/* 文字色用クラス */
+.color-red {
+    color: red;
+}
+.container {
+    width: auto;
+    height: 100%;
+    min-height: 740px;
+    margin-left: auto;
+    margin-right: auto;
+    background: -webkit-linear-gradient(to right, #00a9f4, #0277bd);
+    background: linear-gradient(to right, #00a9f4, #0277bd);
+    padding: 10px;
+}
+.main {
+    width: 1200px;
+    height: 100%;
+    min-height: 690px;
+    margin-top: 0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    border: solid 1px #aaaaaa;
+    /*box-sizing: border-box;*/
+  }
+/*保険会社　担当者*/
+.header {
+    margin: 5px 5px 5px 220px;
+}
+.header h4{
+    margin: 0 10px 0 10px;
+}
+.tantou {
+    display: flex;              /* 中央揃え用 */
+    width: 200px;
+    color: white;
+    background-color: #006064;
+    align-items: center;        /* 縦方向中央揃え */
+    justify-content: center;    /* 横方向中央揃え */
+    border: solid 1px;
+    border-radius: 5px 5px;
+}
+.kaisha {
+    display: flex;              /* 中央揃え用 */
+    width: 420px;
+    color: white;
+    background-color: #006064;
+    align-items: center;        /* 縦方向中央揃え */
+    justify-content: center;    /* 横方向中央揃え */
+    border: solid 1px;
+    border-radius: 5px 5px;
+}
+/* 条件選択パネル部 */
+.select-panel {
+    width: 200px;
+    height: 180px;
+    background: #ffffff;
+    border: solid 3px #aaaaaa;
+    border-radius: 10px 10px;
+    padding: 3px 0 0 0;
+}
+.kanri-no-limit {
+    margin-left: 15px;
+}
+.kanri-no-limit label{
+    display: block;
+    float: left;
+    width: 60px;
+    padding-top: 10px;
+    text-align:left;
+    font-size: small;
+  }
+.limit {
+    width: 80px;
+}
+.limit ::ng-deep .mat-form-field-wrapper {
+    height: 30px;
+    padding-bottom: 5px;
+}
+.limit ::ng-deep .mat-form-field-infix {
+    border-top: 0;
+}
+.limit ::ng-deep .mat-form-field-underline {
+    bottom: 8px;
+}
+.mat-radio-button {
+    transform: scale(0.7); /* ラジオボタン大きさ */
+  }
+.mat-radio-margin {
+    margin-bottom: 0px;
+    font-size: normal;
+}
+.radio-col { /*ラジオボタン並び縦 */
+    display: flex;
+    flex-direction: column;
+    margin-right: auto;
+    
+}
+.radio-col label {
+    margin-bottom: 0px;
+}
+/*処理依頼案内・ステータス説明箇所*/
+.announce-msg {
+    display: block;
+    width: 750px;
+    padding-top: 20px;
+    padding-left: 80px;
+}
+.announce-msg h2 {
+    color: crimson;
+    font-weight: bold;
+}
+.announce-msg h5 {
+    margin-top: 10px;
+    margin-left: 5px;
+}
+.status-guide {
+    display: block;
+    width: 600px;
+    height: 75px;
+    margin-top: 10px;
+    background: #ffffff;
+    border: solid 3px #aaaaaa;
+    border-radius: 10px 10px;
+}
+.status-guide h5 {
+    margin-top: 15px;
+    margin-left: 60px;
+}
+/*終了・確認書印刷ボタン*/
+.logout-btn {
+    width: 100px;
+    height: 40px;
+    margin-top: 20px;
+    margin-left: 80px;
+    padding: 0 0 0 3px;
+    background: #e0f2f1;
+    font-size: medium;
+    line-height: 1px;
+}
+.print-btn {
+    width: 150px;
+    height: 40px;
+    margin-top: 5px;
+    margin-left: 30px;
+    padding-left: 30px;
+    padding-right: 30px;
+    background: #ffab91;
+    font-size: medium;
+    line-height: 1px;
+}
+.btn-panel h5 {
+    margin-top: 30px;
+    margin-left: 30px;
+}
+
+/*
+.panel {
+    width: 1150px;
+    height: 580px;
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    background: #ffffff;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    border: solid 3px #aaaaaa;
+    border-radius: 10px 10px;
+}
+*/
+/*
+.all-form ::ng-deep .mat-form-field-wrapper {
+	padding-bottom: 15px;
+}
+.all-form ::ng-deep .mat-form-field-infix {
+  border-top: 5;
+}
+.all-form ::ng-deep .mat-form-field-underline {
+	bottom: 18px;
+}
+.btns {
+    padding-left: 320px;
+}
+.btn {
+    height: 30px;
+    line-height: 1px;
+    margin-left: 30px;
+    width: 100px;
+}
+.search-btn-color {
+    background: #e0f2f1;
+}
+.clear-btn-color {
+    background: #e0f2f1;
+}
+.create-btn-color {
+    background: #9575cd;
+}
+.edit-btn-color {
+    background: #ffab91;
+}
+.delete-btn-color {
+    background: #fff176;
+}
+.close-btn-color {
+    background: #e0f2f1;
+}
+*/
+/* DataTable CSS */
+/*
+.list-container {
+    min-height: 300px;
+    width: 1100px;
+    margin-top: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1px;
+    background: #FFFFFF;
+    border: solid 1px;
+    border-radius: 5px 5px;
+  }
+.list {
+    min-height: 325px;
+    max-height: 325px;
+    width: 1090px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+table {
+    width: 1090px;
+}
+th, td {
+    font-size: x-small;
+}
+th {
+    font-weight: 900;
+}
+tr.mat-header-row {
+    height: 25px;
+}
+tr.mat-footer-row, tr.mat-row {
+    height: 30px;
+}
+.tr-row {
+    background-color: #EDE7F6;
+}
+.paginator {
+    width: 1090px;
+    margin: 0px;
+}
+*/
+/*入力フォーム*/
+/*
+.all-form {
+    font-size: smaller;
+    margin-left: 20px;
+}
+.user-id {
+    font-size: smaller;
+    margin-left: 15px;
+    width: 90px;
+}
+.password {
+    width: 130px;
+}
+.password-setdate {
+    width: 140px;
+}
+.kengen {
+    width: 60px;
+}
+.shimei {
+    width: 140px;
+}
+.kaisha {
+    width: 190px;
+}
+.busho {
+    width: 160px;
+}
+.kubun {
+    width: 40px;
+}
+*/
