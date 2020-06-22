@@ -20,6 +20,62 @@ import { PopupAlertComponent } from '../../popup/popup-alert/popup-alert.compone
   styleUrls: ['./main-ins.component.css']
 })
 export class MainInsComponent implements OnInit {
+  testData: KanriData[] = [
+    {status: 0,
+      id: 257001,
+      shoukenbango: '123456',
+      keiyakusha: '金子　丘',
+      kubun: '新規加入者',
+      shinseisha: '管理者ユーザー',
+      saishuhenshubi: '2020/06/19',
+      //seiho: number;
+      bikou: '備考特になし!!' },
+      {status: 0,
+        id: 257001,
+        shoukenbango: '123456',
+        keiyakusha: '金子　丘',
+        kubun: '新規加入者',
+        shinseisha: '管理者ユーザー',
+        saishuhenshubi: '2020/06/19',
+        //seiho: number;
+        bikou: '備考特になし!!' },
+        {status: 0,
+          id: 257001,
+          shoukenbango: '123456',
+          keiyakusha: '金子　丘',
+          kubun: '新規加入者',
+          shinseisha: '管理者ユーザー',
+          saishuhenshubi: '2020/06/19',
+          //seiho: number;
+          bikou: '備考特になし!!' },
+          {status: 0,
+            id: 257001,
+            shoukenbango: '123456',
+            keiyakusha: '金子　丘',
+            kubun: '新規加入者',
+            shinseisha: '管理者ユーザー',
+            saishuhenshubi: '2020/06/19',
+            //seiho: number;
+            bikou: '備考特になし!!' },
+            {status: 0,
+              id: 257001,
+              shoukenbango: '123456',
+              keiyakusha: '金子　丘',
+              kubun: '新規加入者',
+              shinseisha: '管理者ユーザー',
+              saishuhenshubi: '2020/06/19',
+              //seiho: number;
+              bikou: '備考特になし!!' },
+    {status: 0,
+      id: 257001,
+      shoukenbango: '123456',
+      keiyakusha: '金子　丘',
+      kubun: '新規加入者',
+      shinseisha: '管理者ユーザー',
+      saishuhenshubi: '2020/06/19',
+      //seiho: number;
+      bikou: '備考特になし!!' }
+  ]
 
   constructor(private kanriService: KanriService, private sessionService: SessionService, private dialog: MatDialog,
     private popupAlertDialog: MatDialog, private router: Router,
@@ -36,4 +92,17 @@ export class MainInsComponent implements OnInit {
     this.router.navigate(['/login-ins-jlx']);
   }
 
+}
+
+/*test delete this line */
+export interface KanriData {
+  status: number;
+  id: number;
+  shoukenbango: string;
+  keiyakusha: string;
+  kubun: string;
+  shinseisha: string;
+  saishuhenshubi: string;
+  //seiho: number;
+  bikou: string;
 }

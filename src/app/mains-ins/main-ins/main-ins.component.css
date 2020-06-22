@@ -37,17 +37,20 @@ select {
 .container {
     width: auto;
     height: 100%;
-    min-height: 740px;
+    /*min-height: 740px;*/
     margin-left: auto;
     margin-right: auto;
     background: -webkit-linear-gradient(to right, #00a9f4, #0277bd);
     background: linear-gradient(to right, #00a9f4, #0277bd);
     padding: 10px;
+    overflow-y: hidden;
+    overflow-x: hidden;
 }
 .main {
     width: 1200px;
-    height: 100%;
-    min-height: 690px;
+    /*height: 100%;
+    min-height: 690px;*/
+    height: 700px;
     margin-top: 0;
     margin-left: auto;
     margin-right: auto;
@@ -55,8 +58,7 @@ select {
     padding-left: 10px;
     padding-right: 10px;
     padding-bottom: 10px;
-    border: solid 1px #aaaaaa;
-    /*box-sizing: border-box;*/
+    /*border: solid 1px #aaaaaa;*/
   }
 /*保険会社　担当者*/
 .header {
@@ -86,10 +88,14 @@ select {
     border-radius: 5px 5px;
 }
 /* 条件選択パネル部 */
+.section1 {
+    height: 150px;
+}
 .select-panel {
-    width: 200px;
-    height: 180px;
-    background: #ffffff;
+    width: 210px;
+    height: 150px;
+    /*background: #ffffff;*/
+    background: #e0f2f1;
     border: solid 3px #aaaaaa;
     border-radius: 10px 10px;
     padding: 3px 0 0 0;
@@ -120,16 +126,33 @@ select {
 }
 .mat-radio-button {
     transform: scale(0.7); /* ラジオボタン大きさ */
-  }
-.mat-radio-margin {
-    margin-bottom: 0px;
-    font-size: normal;
 }
-.radio-col { /*ラジオボタン並び縦 */
+.mat-radio-margin,
+.mat-radio-margin-top {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-size: medium;
+    font-weight: bold;
+}
+.mat-radio-margin-top {
+    margin-left: 5px;
+}
+/*ラジオボタン並び縦 */
+/*
+.radio-col { 
     display: flex;
     flex-direction: column;
     margin-right: auto;
-    
+}*/
+.radio-col {
+    margin-left: 1px;
+}
+.radio-col table {
+    width: 195px;
+    margin-top: 0;
+    background: #e0f2f1;
+    border-collapse: separate;
+    border-spacing: 1px 1px;
 }
 .radio-col label {
     margin-bottom: 0px;
@@ -138,7 +161,7 @@ select {
 .announce-msg {
     display: block;
     width: 750px;
-    padding-top: 20px;
+    padding-top: 5px;
     padding-left: 80px;
 }
 .announce-msg h2 {
@@ -152,14 +175,15 @@ select {
 .status-guide {
     display: block;
     width: 600px;
-    height: 75px;
+    height: 55px;
     margin-top: 10px;
-    background: #ffffff;
+    /*background: #ffffff;*/
+    background: #e0f2f1;
     border: solid 3px #aaaaaa;
     border-radius: 10px 10px;
 }
 .status-guide h5 {
-    margin-top: 15px;
+    margin-top: 5px;
     margin-left: 60px;
 }
 /*終了・確認書印刷ボタン*/
@@ -185,138 +209,194 @@ select {
     line-height: 1px;
 }
 .btn-panel h5 {
-    margin-top: 30px;
+    margin-top: 20px;
     margin-left: 30px;
+    line-height: 8px;
 }
-
-/*
-.panel {
-    width: 1150px;
-    height: 580px;
-    margin-top: 30px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 20px;
-    background: #ffffff;
-    padding-top: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-bottom: 10px;
+/*申請者・区分選択、再印刷、確認済みに戻す、未確認に戻すボタン*/
+.section2 {
+    height: 45px;
+    padding-top: 5px;
+}
+.select-panel2 {
+    width: 510px;
+    height: 40px;
+    background: #e0f2f1;
     border: solid 3px #aaaaaa;
     border-radius: 10px 10px;
 }
-*/
-/*
-.all-form ::ng-deep .mat-form-field-wrapper {
-	padding-bottom: 15px;
+.kanri-shinseisha {
+    margin-left: 20px;
 }
-.all-form ::ng-deep .mat-form-field-infix {
-  border-top: 5;
+.kanri-kubun {
+    margin-left: 50px;
 }
-.all-form ::ng-deep .mat-form-field-underline {
-	bottom: 18px;
+.kanri-shinseisha label,
+.kanri-kubun label
+{
+    display: block;
+    float: left;
+    width: 50px;
+    padding-top: 10px;
+    text-align:left;
+    font-size: small;
 }
-.btns {
-    padding-left: 320px;
+.kanri-kubun label {
+    width: 40px;
 }
-.btn {
+.select-shinseisha {
+    width: 120px;
+}
+.select-kubun {
+    width: 200px;
+}
+.select-shinseisha ::ng-deep .mat-form-field-wrapper,
+.select-kubun ::ng-deep .mat-form-field-wrapper {
     height: 30px;
-    line-height: 1px;
-    margin-left: 30px;
-    width: 100px;
+    padding-bottom: 5px;
 }
-.search-btn-color {
-    background: #e0f2f1;
+.select-shinseisha ::ng-deep .mat-form-field-infix,
+.select-kubun ::ng-deep .mat-form-field-infix {
+    border-top: 0;
 }
-.clear-btn-color {
-    background: #e0f2f1;
+.select-shinseisha ::ng-deep .mat-form-field-underline,
+.select-kubun ::ng-deep .mat-form-field-underline {
+    bottom: 8px;
 }
-.create-btn-color {
-    background: #9575cd;
+.section2-btns {
+    margin-left: 260px;
 }
-.edit-btn-color {
-    background: #ffab91;
-}
-.delete-btn-color {
+.section2-btns button {
+    height: 35px;
+    margin-left: 20px;
     background: #fff176;
 }
-.close-btn-color {
-    background: #e0f2f1;
-}
+/*管理書類一覧
+* table幅1150px <---各td幅+列span1px(合計13px)
 */
-/* DataTable CSS */
-/*
-.list-container {
-    min-height: 300px;
-    width: 1100px;
-    margin-top: 15px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 1px;
-    background: #FFFFFF;
-    border: solid 1px;
-    border-radius: 5px 5px;
-  }
-.list {
-    min-height: 325px;
-    max-height: 325px;
-    width: 1090px;
+.list-header {
+    margin-top: 10px;
+    margin-bottom: 3px;
+}
+.list-header label {
+    line-height: 10px;
+    font-size: small;
+    font-weight: bold;
+    /*color: #e0f2f1;*/
+}
+.status-label {
+    margin-left: 5px;
+}
+.id-label {
+    margin-left: 19px;
+}
+.shoukenbango-label {
+    margin-left: 80px;
+}
+.keiyakusha-label {
+    margin-left: 55px;
+}
+.kubun-label {
+    margin-left: 70px;
+}
+.ok-shorui-label {
+    margin-left: 273px;
+}
+.fubi-shorui-label {
+    margin-left: 62px;
+}
+.hoken-bikou-label {
+    margin-left: 55px;
+}
+.kakuninbi-label {
+    margin-left: 25px;
+}
+.kanri-list {
+    width: 1170px;
+    height: 385px;
+    padding-left: 5px;
     overflow-y: auto;
     overflow-x: hidden;
 }
 table {
-    width: 1090px;
+    width: 1150px;
+    margin-top: 3px;
+    background: white;
+    border-collapse: separate;
+    border-spacing: 1px 8px;
 }
-th, td {
-    font-size: x-small;
+td {
+    font-size: small;
 }
-th {
-    font-weight: 900;
+.status {
+    border: solid 1px #aaaaaa;
+    border-radius: 2px 2px;
 }
-tr.mat-header-row {
-    height: 25px;
+.status, .shinseisha-label, .bikou-label {
+    width: 50px;
 }
-tr.mat-footer-row, tr.mat-row {
-    height: 30px;
+.shoukenbango {
+    width: 100px;
+    border: solid 1px #aaaaaa;
+    border-radius: 2px 2px;
 }
-.tr-row {
-    background-color: #EDE7F6;
+.id, .shinseisha {
+    width: 120px;
+    border: solid 1px #aaaaaa;
+    border-radius: 2px 2px;
 }
-.paginator {
-    width: 1090px;
-    margin: 0px;
+.keiyakusha {
+    width: 120px;
+    border: solid 1px #aaaaaa;
+    border-radius: 2px 2px;
 }
-*/
-/*入力フォーム*/
-/*
-.all-form {
-    font-size: smaller;
-    margin-left: 20px;
-}
-.user-id {
-    font-size: smaller;
-    margin-left: 15px;
-    width: 90px;
-}
-.password {
-    width: 130px;
-}
-.password-setdate {
-    width: 140px;
-}
-.kengen {
-    width: 60px;
-}
-.shimei {
-    width: 140px;
-}
-.kaisha {
-    width: 190px;
-}
-.busho {
-    width: 160px;
+.seiho-label {
+    width: 35px;
 }
 .kubun {
-    width: 40px;
+    width: 327px;
+    border: solid 1px #aaaaaa;
+    border-radius: 2px 2px;
 }
-*/
+.saishuhenshubi {
+    padding: 5px 10px 5px 10px ;
+    border: solid 1px #aaaaaa;
+    border-radius: 2px 2px;
+}
+.shinseisha-label, .saishuhenshubi-label, .seiho-label, .bikou-label, .shorui-maisu-label {
+    font-weight: bold;
+}
+.ok-shorui, .fubi-shorui, .hoken-bikou, .kakuninbi-maisu {
+    width: 100px;
+    border: solid 1px #aaaaaa;
+    border-radius: 2px 2px;
+}
+.kakuninbi {
+}
+.shorui-maisu-label {
+    padding: 2px 10px 2px 10px ;
+    border: solid 1px #aaaaaa;
+    border-radius: 2px 2px;
+}
+.shorui-maisu {
+    padding: 1px 20px 1px 20px ;
+    border: solid 1px #aaaaaa;
+    border-radius: 2px 2px;
+}
+.chk-btn {
+    width: 115px;
+}
+.shorui-chk-btn {
+    width: 110px;
+    height: 50px;
+    /*background: #e0f2f1;*/
+    font-size: small;
+    line-height: 1px;
+}
+.chkbox {
+    width: 20px;
+}
+.bikou {
+    border: solid 1px #aaaaaa;
+    border-radius: 2px 2px;
+}

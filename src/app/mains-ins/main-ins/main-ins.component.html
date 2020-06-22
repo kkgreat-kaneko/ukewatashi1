@@ -29,23 +29,28 @@
                     </mat-form-field>
                 </div>
                 <mat-radio-group class="radio-col" name="status">
-                    <mat-radio-button class="mat-radio-margin" value="1">郵送</mat-radio-button>
-                    <mat-radio-button class="mat-radio-margin" value="2">印刷済分</mat-radio-button>
-                    <mat-radio-button class="mat-radio-margin" value="3">確認済分</mat-radio-button>
-                    <mat-radio-button class="mat-radio-margin" value="4">未確認分</mat-radio-button>
+                    <table>
+                        <tr>
+                            <td><mat-radio-button class="mat-radio-margin-top" value="1">郵送</mat-radio-button></td>
+                            <td><mat-radio-button class="mat-radio-margin" value="2">印刷済分</mat-radio-button></td>
+                        </tr>
+                        <tr>
+                            <td><mat-radio-button class="mat-radio-margin" value="3">確認済分</mat-radio-button></td>
+                            <td><mat-radio-button class="mat-radio-margin" value="4">未確認分</mat-radio-button></td>
+                        </tr>
+                    </table>
                 </mat-radio-group>
-                
             </div>
             <div class="announce-msg" fxLayout="column">
                 <h2>下記の保険案件の書類のチェック・確認をお願いします。</h2>
                 <h5>書類の状況はStatusで確認できます。</h5>
                 <section class="status-guide">
                     <h5>
-                        書類受渡前＝<span class="mgl-20 mgr-10 color-red txt-bold">０</span>
-                        保険会社側書類確認済・確認書印刷前＝<span class="mgl-20 mgr-10 color-red txt-bold">１</span><br>
-                        書類不備＝<span class="mgl-20 mgr-10 color-red txt-bold">３</span>
-                        保険会社側確認書印刷完了＝<span class="mgl-20 mgr-10 color-red txt-bold">２</span>
-                        郵送＝<span class="mgl-20 mgr-10 color-red txt-bold">−１</span>
+                        書類受渡前＝<span class="mgl-10 mgr-20 color-red txt-bold">０</span>
+                        保険会社側書類確認済・確認書印刷前＝<span class="mgl-10 mgr-20 color-red txt-bold">１</span><br>
+                        書類不備＝<span class="mgl-10 mgr-20 color-red txt-bold">３</span>
+                        保険会社側確認書印刷完了＝<span class="mgl-10 mgr-20 color-red txt-bold">２</span>
+                        郵送＝<span class="mgl-10 mgr-20 color-red txt-bold">−１</span>
                     </h5>
                 </section>
             </div>
@@ -58,6 +63,106 @@
                     <button type="button" mat-raised-button class="print-btn" (click)="logout()">確認書印刷</button>
                 </div>
             </div>
+        </div>
+        <div class=" section2" fxLayout="row">
+            <div class="select-panel2" fxLayout="row">
+                <div class="kanri-shinseisha" fxLayout="row">
+                    <label>申請者</label>
+                    <mat-form-field class="select-shinseisha">
+                      <select matNativeControl>
+                        <option value="all">すべて</option>
+                        <option value="2000">2000</option>
+                        <option value="5000">5000</option>
+                        <option value="10000">10000</option>
+                      </select>
+                    </mat-form-field>
+                </div>
+                <div class="kanri-kubun" fxLayout="row">
+                    <label>区分</label>
+                    <mat-form-field class="select-kubun">
+                      <select matNativeControl>
+                        <option value="all">すべて</option>
+                        <option value="2000">2000</option>
+                        <option value="5000">5000</option>
+                        <option value="10000">10000</option>
+                      </select>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="section2-btns" fxLayout="row">
+                <div class="">
+                    <button type="button" mat-raised-button>再印刷</button>
+                </div>
+                <div class="">
+                    <button type="button" mat-raised-button>確認済みに戻す</button>
+                </div>
+                <div class="">
+                    <button type="button" mat-raised-button>未確認に戻す</button>
+                </div>
+            </div>
+        </div>
+        <div class="list-header" fxLayout="row">
+            <label class="status-label">Status</label>
+            <label class="id-label">管理No.</label>
+            <label class="shoukenbango-label">証券番号</label>
+            <label class="keiyakusha-label">契約者名</label>
+            <label class="kubun-label">区分</label>
+            <label class="ok-shorui-label">OK書類</label>
+            <label class="fubi-shorui-label">不備書類</label>
+            <label class="hoken-bikou-label">保険会社備考</label>
+            <label class="kakuninbi-label">確認日</label>
+        </div>
+        <div class="kanri-list" >
+            <table>
+                <ng-container *ngFor="let kanri of testData">
+                <tr>
+                    <td class="status"><label>0</label></td>
+                    <td class="id"><label>257105</label></td>
+                    <td class="shoukenbango"><label>111111111</label></td>
+                    <td class="keiyakusha"><label>金子　丘</label></td>
+                    <td colspan="4" class="kubun"><label>新規保険加入vvvvvvvvvvvvvvvvvvvvvvvv</label></td>
+                    <td rowspan="3" class="ok-shorui"></td>
+                    <td rowspan="3" class="fubi-shorui"></td>
+                    <td rowspan="3" class="hoken-bikou"></td>
+                    <td rowspan="3" class="kakuninbi-maisu">
+                        <label class="kakuninbi">2020/06/22</label><br>
+                        <label class="shorui-maisu-label">書類枚数</label><br>
+                        <label class="shorui-maisu">0</label>
+                    </td>
+                    <td rowspan="3" class="chkbox">
+                        <!--
+                        <mat-checkbox (click)="$event.stopPropagation()"
+                            (change)="selection.toggle(element)"
+                            [checked]="selection.isSelected(element)"
+                        >
+                        -->
+                        <mat-checkbox>
+                        </mat-checkbox>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="shinseisha-label"><label>申請者</label></td>
+                    <td class="shinseisha"><label>申請者ユーザー</label></td>
+                    <td colspan="3">
+                        <label class="saishuhenshubi-label">最終編集日　</label>
+                        <label class="saishuhenshubi">2020/06/19</label>
+                    </td>
+                    <td class="seiho-label"><label>生保</label></td>
+                    <td class="seiho">
+                        <mat-checkbox disabled="true">
+                        </mat-checkbox>
+                    </td>
+                    <td class="chk-btn" rowspan="2">
+                        <button type="button" mat-raised-button class="shorui-chk-btn" color="primary" (click)="logout()">書類チェック</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bikou-label"><label>備考</label></td>
+                    <td colspan="6" class="bikou"></td>
+                </tr>
+                </ng-container>
+            </table>
         </div>
     </div>
 </form>
