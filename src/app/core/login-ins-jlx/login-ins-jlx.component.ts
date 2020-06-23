@@ -22,7 +22,8 @@ export class LoginInsJlxComponent implements OnInit {
     sessionStorage.clear();
     this.loginControl = new FormGroup({
       userId: new FormControl('', { validators: [Validators.required] }),
-      password: new FormControl('', { validators: [Validators.required] }),
+      //password: new FormControl('', { validators: [Validators.required] }),
+      password: new FormControl(''),
     });
   }
 
