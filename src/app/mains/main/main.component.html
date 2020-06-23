@@ -360,7 +360,7 @@
         <div class="csv-output">
           <button type="button" mat-raised-button class="active-btn" (click)="outputKanriCsv()">管理データCSV出力</button>
         </div>
-        <mat-paginator [pageSizeOptions]="[1000,500,100,10]" showFirstLastButtons></mat-paginator>
+        <mat-paginator [pageSizeOptions]="[10,20,50,100,500,1000]" [pageSize]="100" showFirstLastButtons></mat-paginator>
       </div>
     </div>
     <div class="footer">
