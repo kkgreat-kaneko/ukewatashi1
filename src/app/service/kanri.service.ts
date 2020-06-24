@@ -309,6 +309,16 @@ export class KanriService {
     );
   }
 
+  /*
+  * 保険会社メイン画面 書類一覧用
+  */
+  public async getListByHokengaisha(kanri: Kanri): Promise<Kanri[]> {
+    const headers = this.session.setTkHeaders();
+    this.res = await this.http.post( Const.WWW_ROOT + 'kanri/getlistbyhokengaisha', kanri, {headers: headers})
+    .toPromise();
+    return this.res;
+  }
+
 }
 
 /*----------------------------------------------------------

@@ -48,8 +48,6 @@ select {
 }
 .main {
     width: 1200px;
-    /*height: 100%;
-    min-height: 690px;*/
     height: 700px;
     margin-top: 0;
     margin-left: auto;
@@ -58,11 +56,16 @@ select {
     padding-left: 10px;
     padding-right: 10px;
     padding-bottom: 10px;
-    /*border: solid 1px #aaaaaa;*/
-  }
+}
 /*保険会社　担当者*/
 .header {
-    margin: 5px 5px 5px 220px;
+    margin: 5px 5px 5px 5px;
+}
+.hokengaisha-title{
+    margin-left: 80px;
+}
+.hokengaisha-title, .tantousha-title {
+    line-height: 27px;
 }
 .header h4{
     margin: 0 10px 0 10px;
@@ -94,7 +97,6 @@ select {
 .select-panel {
     width: 210px;
     height: 150px;
-    /*background: #ffffff;*/
     background: #e0f2f1;
     border: solid 3px #aaaaaa;
     border-radius: 10px 10px;
@@ -221,7 +223,8 @@ select {
 .select-panel2 {
     width: 510px;
     height: 40px;
-    background: #e0f2f1;
+    /*background: #e0f2f1;*/
+    background: #ffffff;
     border: solid 3px #aaaaaa;
     border-radius: 10px 10px;
 }
@@ -282,7 +285,7 @@ select {
     line-height: 10px;
     font-size: small;
     font-weight: bold;
-    /*color: #e0f2f1;*/
+    color: #000051;
 }
 .status-label {
     margin-left: 5px;
@@ -291,25 +294,25 @@ select {
     margin-left: 19px;
 }
 .shoukenbango-label {
-    margin-left: 80px;
-}
-.keiyakusha-label {
-    margin-left: 55px;
-}
-.kubun-label {
     margin-left: 70px;
 }
+.keiyakusha-label {
+    margin-left: 60px;
+}
+.kubun-label {
+    margin-left: 125px;
+}
 .ok-shorui-label {
-    margin-left: 273px;
+    margin-left: 235px;
 }
 .fubi-shorui-label {
-    margin-left: 62px;
+    margin-left: 68px;
 }
 .hoken-bikou-label {
-    margin-left: 55px;
+    margin-left: 56px;
 }
 .kakuninbi-label {
-    margin-left: 25px;
+    margin-left: 30px;
 }
 .kanri-list {
     width: 1170px;
@@ -319,7 +322,7 @@ select {
     overflow-x: hidden;
     background: white;
 }
-table {
+.kanri-list table {
     width: 1150px;
     margin-top: 3px;
     padding-left: 3px;
@@ -330,7 +333,12 @@ table {
 td {
     font-size: small;
 }
+.label-color {
+    color: #000051;
+}
 .status {
+    text-align: center;
+    background: #eceff1;
     border: solid 1px #aaaaaa;
     border-radius: 2px 2px;
 }
@@ -338,17 +346,20 @@ td {
     width: 50px;
 }
 .shoukenbango {
-    width: 100px;
+    width: 110px;
+    background: #eceff1;
     border: solid 1px #aaaaaa;
     border-radius: 2px 2px;
 }
 .id, .shinseisha {
-    width: 120px;
+    width: 110px;
+    background: #eceff1;
     border: solid 1px #aaaaaa;
     border-radius: 2px 2px;
 }
 .keiyakusha {
-    width: 120px;
+    width: 170px;
+    background: #eceff1;
     border: solid 1px #aaaaaa;
     border-radius: 2px 2px;
 }
@@ -356,12 +367,14 @@ td {
     width: 35px;
 }
 .kubun {
-    width: 327px;
+    width: 360px;
+    background: #eceff1;
     border: solid 1px #aaaaaa;
     border-radius: 2px 2px;
 }
 .saishuhenshubi {
     padding: 5px 10px 5px 10px ;
+    background: #eceff1;
     border: solid 1px #aaaaaa;
     border-radius: 2px 2px;
 }
@@ -369,16 +382,13 @@ td {
     font-weight: bold;
 }
 .ok-shorui, .fubi-shorui, .hoken-bikou, .kakuninbi-maisu {
-    width: 100px;
+    width: 105px;
+    background: #eceff1;
     border: solid 1px #aaaaaa;
     border-radius: 2px 2px;
 }
-.kakuninbi {
-}
-.shorui-maisu-label {
-    padding: 2px 10px 2px 10px ;
-    border: solid 1px #aaaaaa;
-    border-radius: 2px 2px;
+.kakuninbi-maisu {
+    width: 70px;
 }
 .shorui-maisu {
     padding: 1px 20px 1px 20px ;
@@ -396,9 +406,10 @@ td {
     line-height: 1px;
 }
 .chkbox {
-    width: 20px;
+    width: 15px;
 }
 .bikou {
+    background: #eceff1;
     border: solid 1px #aaaaaa;
     border-radius: 2px 2px;
 }

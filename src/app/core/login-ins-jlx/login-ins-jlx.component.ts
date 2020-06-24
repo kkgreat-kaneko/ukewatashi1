@@ -38,7 +38,7 @@ export class LoginInsJlxComponent implements OnInit {
     this.loginService.authenticateIns(this.hokengaisha)
     .then( res => {
       sessionStorage.setItem('token', res.token);                         // バックエンドから受け取りアクセストークン
-      sessionStorage.setItem('userId', res.hokengaisha.userId);           // 担当者ID
+      sessionStorage.setItem('userIdHoken', res.hokengaisha.userId);      // 担当者ID
       sessionStorage.setItem('kakuninsha', res.hokengaisha.kakuninsha);   // 担当者氏名
       sessionStorage.setItem('hokengaisha', res.hokengaisha.hokengaisha); // 担当者保険会社名
       sessionStorage.setItem('insJlx', 'true');                           // JLX保険会社モードON

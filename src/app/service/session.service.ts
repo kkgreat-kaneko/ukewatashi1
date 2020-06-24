@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
 import { Tantousha } from '../class/tantousha';
+import { Hokengaisha } from '../class/hokengaisha';
+import { Const } from '../class/const';
 
 @Injectable({
   providedIn: 'root'
@@ -84,6 +86,29 @@ export class SessionService {
       strNum = '0' + strNum;
     }
     return strNum;
+  }
+
+  /*
+  *  保険会社ログイン情報を返す
+  */
+  public getHokenLoginTantou(): Hokengaisha {
+    const hokengaisha = new Hokengaisha();
+    hokengaisha.userId = sessionStorage.getItem('userIdHoken');
+    hokengaisha.kakuninsha = sessionStorage.getItem('kakuninsha');
+    hokengaisha.hokengaisha = sessionStorage.getItem('hokengaisha');
+    return hokengaisha;
+  }
+
+  /*
+  *  保険会社ログイン JLX/JLXHS向けどちらのログインか返す
+  */
+  public getHokenLoginKaisha(): string{
+    const kaisha = sessionStorage.getItem('insJlx');
+    if(kaisha) {
+      return Const.JLX_HOKEN;
+    } else {
+      return Const.JLX_HS_HOKEN;
+    }
   }
 
 // -----------------------------------------------------------------------------

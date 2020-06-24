@@ -1,26 +1,27 @@
 <div class="container">
-<form>
+<form [formGroup]="formGroup">
     <div class="main" fxLayout="column">
-        <h3>保険会社確認フォーム</h3>
         <div class="header" fxLayout="row">
-            <h5>保険会社</h5>
-            <h4 class="kaisha">AFLAC</h4>
-            <h5 class="mgl-30">担当者</h5>
-            <h4 class="tantou">有賀　豪</h4>
+            <h3 class="label-color">保険会社確認フォーム</h3>
+            <h5 class="hokengaisha-title label-color">保険会社</h5>
+            <h4 class="kaisha">{{loginUser.hokengaisha}}</h4>
+            <h5 class="tantousha-title mgl-30 label-color">担当者</h5>
+            <h4 class="tantou">{{loginUser.kakuninsha}}</h4>
         </div>
         <div class="section1" fxLayout="row">
             <div class="select-panel" fxLayout="column">
                 <div class="kanri-no-limit">
                     <label>管理No.</label>
                     <mat-form-field class="limit" appearance="legacy">
-                    <input type="number" matInput matType="number" placeholder="">
+                    <input type="number" matInput matType="number" placeholder="" formControlName="beforeKanriNo" 
+                        (change)="getListByHokengaisha()">
                     </mat-form-field>
                     <span style="font-size:small">以前</span>
                 </div>
                 <div class="kanri-no-limit">
                     <label>表示件数</label>
                     <mat-form-field class="limit">
-                      <select matNativeControl>
+                      <select matNativeControl formControlName="limit" (change)="getListByHokengaisha()">
                         <option value="1000">1000</option>
                         <option value="2000">2000</option>
                         <option value="5000">5000</option>
@@ -28,15 +29,15 @@
                       </select>
                     </mat-form-field>
                 </div>
-                <mat-radio-group class="radio-col" name="status">
+                <mat-radio-group class="radio-col" name="status" formControlName="status" (change)="getListByHokengaisha()">
                     <table>
                         <tr>
-                            <td><mat-radio-button class="mat-radio-margin-top" value="1">郵送</mat-radio-button></td>
-                            <td><mat-radio-button class="mat-radio-margin" value="2">印刷済分</mat-radio-button></td>
+                            <td><mat-radio-button class="mat-radio-margin-top" value="{{frmStatusDlvry}}">郵送</mat-radio-button></td>
+                            <td><mat-radio-button class="mat-radio-margin" value="{{frmStatusEnd}}">印刷済分</mat-radio-button></td>
                         </tr>
                         <tr>
-                            <td><mat-radio-button class="mat-radio-margin" value="3">確認済分</mat-radio-button></td>
-                            <td><mat-radio-button class="mat-radio-margin" value="4">未確認分</mat-radio-button></td>
+                            <td><mat-radio-button class="mat-radio-margin" value="{{frmStatusOk}}">確認済分</mat-radio-button></td>
+                            <td><mat-radio-button class="mat-radio-margin" value="{{frmStatusNot}}">未確認分</mat-radio-button></td>
                         </tr>
                     </table>
                 </mat-radio-group>
@@ -69,22 +70,20 @@
                 <div class="kanri-shinseisha" fxLayout="row">
                     <label>申請者</label>
                     <mat-form-field class="select-shinseisha">
-                      <select matNativeControl>
+                      <select matNativeControl formControlName="shinseisha" (change)="searchShinseiKubun()">
                         <option value="all">すべて</option>
-                        <option value="2000">2000</option>
-                        <option value="5000">5000</option>
-                        <option value="10000">10000</option>
+                        <option [value]="shinseisha" *ngFor="let shinseisha of frmShinseisha"
+                            >{{shinseisha}}</option>
                       </select>
                     </mat-form-field>
                 </div>
                 <div class="kanri-kubun" fxLayout="row">
                     <label>区分</label>
                     <mat-form-field class="select-kubun">
-                      <select matNativeControl>
+                      <select matNativeControl formControlName="kubun" (change)="searchShinseiKubun()">
                         <option value="all">すべて</option>
-                        <option value="2000">2000</option>
-                        <option value="5000">5000</option>
-                        <option value="10000">10000</option>
+                        <option [value]="kubun" *ngFor="let kubun of frmKubun"
+                            >{{kubun}}</option>
                       </select>
                     </mat-form-field>
                 </div>
@@ -115,42 +114,40 @@
         </div>
         <div class="kanri-list" >
             <table>
-                <ng-container *ngFor="let kanri of testData">
+                <ng-container *ngFor="let kanri of kanriList; index as i">
                 <tr>
-                    <td class="status"><label>0</label></td>
-                    <td class="id"><label>257105</label></td>
-                    <td class="shoukenbango"><label>111111111</label></td>
-                    <td class="keiyakusha"><label>金子　丘</label></td>
-                    <td colspan="4" class="kubun"><label>新規保険加入vvvvvvvvvvvvvvvvvvvvvvvv</label></td>
-                    <td rowspan="3" class="ok-shorui"></td>
-                    <td rowspan="3" class="fubi-shorui"></td>
-                    <td rowspan="3" class="hoken-bikou"></td>
+                    <td class="status">{{kanri.status}}</td>
+                    <td class="id">{{kanri.id}}</td>
+                    <td class="shoukenbango">{{kanri.shoukenbango}}</td>
+                    <td class="keiyakusha">{{kanri.keiyakusha}}</td>
+                    <td colspan="4" class="kubun">{{kanri.kubun}}</td>
+                    <td rowspan="3" class="ok-shorui">{{kanri.okShoruiIchiran}}</td>
+                    <td rowspan="3" class="fubi-shorui">{{kanri.fubiShoruiIchiran}}</td>
+                    <td rowspan="3" class="hoken-bikou">{{kanri.hokenBikou}}</td>
                     <td rowspan="3" class="kakuninbi-maisu">
-                        <label class="kakuninbi">2020/06/22</label><br>
-                        <label class="shorui-maisu-label">書類枚数</label><br>
-                        <label class="shorui-maisu">0</label>
+                        <label class="kakuninbi">{{kanri.sakuseibi.substr(0,10)}}</label><br>
+                        <label class="shorui-maisu-label label-color">書類枚数</label><br>
+                        <label class="shorui-maisu">{{kanri.shoruiMaisu}}</label>
                     </td>
                     <td rowspan="3" class="chkbox">
-                        <!--
-                        <mat-checkbox (click)="$event.stopPropagation()"
-                            (change)="selection.toggle(element)"
+                        <mat-checkbox  name="chkbox{{i}}" (click)="$event.stopPropagation()"
+                        (change)="selection.toggle(kanri)">
+                         <!--
                             [checked]="selection.isSelected(element)"
-                        >
                         -->
-                        <mat-checkbox>
                         </mat-checkbox>
                     </td>
                 </tr>
                 <tr>
-                    <td class="shinseisha-label"><label>申請者</label></td>
-                    <td class="shinseisha"><label>申請者ユーザー</label></td>
+                    <td class="shinseisha-label label-color">申請者</td>
+                    <td class="shinseisha">{{kanri.shinseisha}}</td>
                     <td colspan="3">
-                        <label class="saishuhenshubi-label">最終編集日　</label>
-                        <label class="saishuhenshubi">2020/06/19</label>
+                        <label class="saishuhenshubi-label label-color">最終編集日</label>
+                        <label class="saishuhenshubi">{{kanri.saishuHenshubi.substr(0,10)}}</label>
                     </td>
-                    <td class="seiho-label"><label>生保</label></td>
+                    <td class="seiho-label label-color">生保</td>
                     <td class="seiho">
-                        <mat-checkbox disabled="true">
+                        <mat-checkbox disabled="true" [checked]="kanri.seiho">
                         </mat-checkbox>
                     </td>
                     <td class="chk-btn" rowspan="2">
@@ -158,8 +155,8 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="bikou-label"><label>備考</label></td>
-                    <td colspan="6" class="bikou"></td>
+                    <td class="bikou-label label-color">備考</td>
+                    <td colspan="6" class="bikou">{{kanri.bikou}}</td>
                 </tr>
                 </ng-container>
             </table>

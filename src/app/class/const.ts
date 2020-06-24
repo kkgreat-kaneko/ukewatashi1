@@ -34,6 +34,14 @@ export class Const {
   static readonly STATUS_END: number = 2;                     // 保険会社確認済・確認印刷済 (確認完了分)
   static readonly STATUS_NG: number = 3;                      // 書類不備（未確認分すべて) (書類不備)
 
+  // 書類STATUS フォーム用定数(ラジオボタン) バックエンド側と紐付け有り変更時注意
+  static readonly FRM_STATUS_ALL = 1;                         // 全て
+  static readonly FRM_STATUS_DLVRY = 2;                       // 郵送
+  static readonly FRM_STATUS_OK = 3;                          // 確認済分
+  static readonly FRM_STATUS_NOT = 4;                         // 未確認分
+  static readonly FRM_STATUS_NG = 5;                          // 不備書類
+  static readonly FRM_STATUS_END = 6;                         // 印刷済分
+
   // 承認STATUS
   static readonly APP_STATUS_NOT: number = 0;                 // 未承認
   static readonly APP_STATUS_OK: number = 10;                 // 承認済
