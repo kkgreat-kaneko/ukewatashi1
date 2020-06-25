@@ -123,7 +123,7 @@ export class DataHokenPrintModalComponent implements OnInit {
   public printHokenConfirm() {
 
     const kanri = new Kanri();
-    kanri.tantoushaKaisha = this.loginUser.kaisha;
+    kanri.shinseishaKaisha = this.loginUser.kaisha;
     kanri.hokengaisha = this.hokengaisha.value;
     /*印刷データ有無の事前チェック*/
     this.kanriService.chkHokenConfirm(kanri)
