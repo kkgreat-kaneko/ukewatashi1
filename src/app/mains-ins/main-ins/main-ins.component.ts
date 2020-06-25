@@ -22,6 +22,7 @@ import { Hokengaisha } from '../../class/hokengaisha';
 })
 export class MainInsComponent implements OnInit {
   message: string;                                                    // 処理エラーメッセージ用
+  msg: string[];                                                      // popupメッセージ本文
   loginUser = new Hokengaisha();                                      // ログインユーザー情報用
   kanriList: Kanri[];                                                 // 一覧データ
   resetKanriList: Kanri[];                                            // 一覧データ復元用(申請者区分検索データから元データ復元用)
@@ -64,7 +65,8 @@ export class MainInsComponent implements OnInit {
       shinseisha: this.shinseisha,                                    // 申請者
       kubun: this.kubun                                               // 区分
     });
-    this.getListByHokengaisha();
+    
+    this.getListByHokengaisha();                                      // 書類一覧検索出力処理
     
     this.cbEmmiter.subscribe(cb => {
       if (cb.source.selected.length > 0) {
@@ -74,8 +76,14 @@ export class MainInsComponent implements OnInit {
         // nothing any
       }
     });
+
+    this.getCheckByHokengaisha();                                     // 初期化書類データstatus別チェックMSG出力処理
   }
 
+  /*
+  *  書類一覧用データ検索処理
+  *
+  */
   public getListByHokengaisha() {
     /*
     *  検索値セット　バックエンドへ渡す固定値(JLXorJLXHX、保険会社、*承認済statusバックエンド固定)と
@@ -164,10 +172,48 @@ export class MainInsComponent implements OnInit {
   }
 
   /*
-  *  一覧チェックボックスイベント処理
+  *  保険会社初期化チェック処理
+  *  未確認分(status:0,3)の有無、不備書類(status:3)の有無、確認済分(status:1)の有無を
+  *  各データ件数よりチェックして条件別にMSGをセット出力する
   */
-  public clickChkBox(event: any) {
-    console.log(event);
+  public getCheckByHokengaisha() {
+    console.log('test');
+    
+    const kanri = new Kanri();
+    kanri.sKaisha = [this.kaisha];
+    kanri.hokengaisha = this.loginUser.hokengaisha;
+    this.msg = [];
+    this.kanriService.getCheckByHokengaisha(kanri)
+    .then(res => {
+      const statusNot = res[0].paramLongs[0];
+      const statusNg = res[0].paramLongs[1];
+      const statusOk = res[0].paramLongs[2];
+      if (statusNot === 0 && statusOk === 0) {
+        this.msg.push('現在のところ御社向けの受渡し書類はありません。');
+      }
+      if (statusNg > 0) {
+        this.msg.push('書類不備の案件があります。');
+      }
+      if (statusOk > 0) {
+        this.msg.push('確認済みで確認書を印刷していない案件があります。');
+      }
+      if (this.msg.length > 0) {
+        const msg = {
+          title: '',
+          message: this.msg,
+        };
+        this.showAlert(msg);
+      }
+
+    })
+    .catch(err => {
+      console.log(`login fail: ${err}`);
+      this.message = 'データの取得に失敗しました。';
+    })
+    .then(() => {
+      // anything finally method
+    });
+    
   }
 
   /*
@@ -178,17 +224,38 @@ export class MainInsComponent implements OnInit {
     this.router.navigate(['/login-ins-jlx']);
   }
 
+  /*
+  * POPUPメッセージ
+  * 引数インターフィイスMsg　ソース最後に宣言
+  */
+  public showAlert(msg: Msg) {
+    const dialogRef = this.popupAlertDialog.open(PopupAlertComponent, {
+      data: msg,
+      disableClose: true,
+      restoreFocus: false,                  // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
+      // autoFocus: false,                  // ダイアログ開いた時の自動フォーカス無効
+    });
+    // ダイアログ終了後処理
+    dialogRef.afterClosed()
+    .subscribe(
+      data => {
+        // nullデータ戻りチェック必須（無いとプログラムエラー)
+        if (data) {
+        }
+      },
+      error => {
+        console.log('error');
+      }
+    );
+  }
 }
 
-/*test delete this line */
-export interface KanriData {
-  status: number;
-  id: number;
-  shoukenbango: string;
-  keiyakusha: string;
-  kubun: string;
-  shinseisha: string;
-  saishuhenshubi: string;
-  //seiho: number;
-  bikou: string;
+/* --------------------------------------------------------------------------------- */
+/*
+*  POPUPダイアログメッセージ用インターフェイス
+*/
+export interface Msg {
+  title: string;          // ダイアログタイトル名をセット
+  message: string[];        // ダイアログメッセージをセット
 }
+

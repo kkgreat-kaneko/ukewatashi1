@@ -319,6 +319,16 @@ export class KanriService {
     return this.res;
   }
 
+  /*
+  * 保険会社メイン画面 初期化チェック処理
+  */
+  public async getCheckByHokengaisha(kanri: Kanri): Promise<RequestDto[]> {
+    const headers = this.session.setTkHeaders();
+    this.res = await this.http.post( Const.WWW_ROOT + 'kanri/getcheckbyhokengaisha', kanri, {headers: headers})
+    .toPromise();
+    return this.res;
+  }
+
 }
 
 /*----------------------------------------------------------
