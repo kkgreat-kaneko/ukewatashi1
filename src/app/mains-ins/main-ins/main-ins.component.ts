@@ -55,9 +55,14 @@ export class MainInsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    /* ブラウザ戻るボタン禁止 */
+    history.pushState(null, null, location.href);
+    window.addEventListener('popstate', (e) => {
+      history.go(1);
+    });
+    
     this.loginUser = this.sessionService.getHokenLoginTantou();
     this.kaisha = this.sessionService.getHokenLoginKaisha();
-    /*debug*///console.log(this.loginUser);
     this.formGroup = this.fb.group({                                  // フォームグループ初期化
       status: this.status,                                            // 書類ステータス
       beforeKanriNo: this.beforeKanriNo,                              // 管理No
@@ -71,7 +76,7 @@ export class MainInsComponent implements OnInit {
     this.cbEmmiter.subscribe(cb => {
       if (cb.source.selected.length > 0) {
         this.selectedKanriList = cb.source.selected;
-        /*debug*/console.log(this.selectedKanriList);
+        /*debug*/ //console.log(this.selectedKanriList);
       } else {
         // nothing any
       }
@@ -177,8 +182,6 @@ export class MainInsComponent implements OnInit {
   *  各データ件数よりチェックして条件別にMSGをセット出力する
   */
   public getCheckByHokengaisha() {
-    console.log('test');
-    
     const kanri = new Kanri();
     kanri.sKaisha = [this.kaisha];
     kanri.hokengaisha = this.loginUser.hokengaisha;

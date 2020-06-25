@@ -145,6 +145,12 @@ export class MainComponent implements OnInit {
   *   
   */
   ngOnInit() {
+    /* ブラウザ戻るボタン禁止 */
+    history.pushState(null, null, location.href);
+    window.addEventListener('popstate', (e) => {
+      history.go(1);
+    });
+
     this.loginUser = this.sessionService.setLoginUser();
     /*
     * 一覧の複数選択と単一選択可能を権限別に設定、選択時changeイベント登録
