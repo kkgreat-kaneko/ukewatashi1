@@ -67,6 +67,12 @@ export class MstTantoushaComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    /* ブラウザ戻るボタン禁止 */
+    history.pushState(null, null, location.href);
+    window.addEventListener('popstate', (e) => {
+      history.go(1);
+    });
+    
     this.setFormGroup();                                      // フォーム初期化
     this.getTantoushaList();
     /*
