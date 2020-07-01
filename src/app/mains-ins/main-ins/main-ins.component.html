@@ -125,7 +125,7 @@
                     <td rowspan="3" class="fubi-shorui">{{kanri.fubiShoruiIchiran}}</td>
                     <td rowspan="3" class="hoken-bikou">{{kanri.hokenBikou}}</td>
                     <td rowspan="3" class="kakuninbi-maisu">
-                        <label class="kakuninbi">{{kanri.sakuseibi.substr(0,10)}}</label><br>
+                        <label class="kakuninbi">{{kanri.saishuKakuninbi.substr(0,10)}}</label><br>
                         <label class="shorui-maisu-label label-color">書類枚数</label><br>
                         <label class="shorui-maisu">{{kanri.shoruiMaisu}}</label>
                     </td>
@@ -151,7 +151,8 @@
                         </mat-checkbox>
                     </td>
                     <td class="chk-btn" rowspan="2">
-                        <button type="button" mat-raised-button class="shorui-chk-btn" color="primary" (click)="logout()">書類チェック</button>
+                        <button type="button" mat-raised-button class="shorui-chk-btn" color="primary" 
+                            (click)="showCheckKanri(kanri)" [disabled]="shoruiCheckBtnDisabled">書類チェック</button>
                     </td>
                 </tr>
                 <tr>

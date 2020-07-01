@@ -13,6 +13,7 @@ import { SessionService } from '../../service/session.service';
 import { KanriService } from '../../service/kanri.service';
 import { PopupAlertComponent } from '../../popup/popup-alert/popup-alert.component';
 import { Hokengaisha } from '../../class/hokengaisha';
+import { DataCheckModalComponent } from '../data-check-modal/data-check-modal.component';
 
 
 @Component({
@@ -46,8 +47,10 @@ export class MainInsComponent implements OnInit {
   frmShinseisha: string[];                                            // 申請者選択用データ
   frmKubun: string[];                                                 // 区分選択用データ
 
-  selection = new SelectionModel<Kanri>(true, []);
-  private cbEmmiter = this.selection.onChange.asObservable();
+  selection = new SelectionModel<Kanri>(true, []);                    // リストチェックボックス用セレクション true=複数選択可
+  private cbEmmiter = this.selection.onChange.asObservable();         // セレクションChangeイベント登録
+
+  shoruiCheckBtnDisabled = false;                                     // 書類チェックボタンdisable設定用（初期値解除 未確認分表示の為)
 
 
   constructor(private kanriService: KanriService, private sessionService: SessionService, private dialog: MatDialog,
@@ -73,12 +76,12 @@ export class MainInsComponent implements OnInit {
     
     this.getListByHokengaisha();                                      // 書類一覧検索出力処理
     
-    this.cbEmmiter.subscribe(cb => {
+    this.cbEmmiter.subscribe(cb => {                                  // 一覧チェックボックスイベント発火購読サブスク処理
       if (cb.source.selected.length > 0) {
-        this.selectedKanriList = cb.source.selected;
-        /*debug*/ //console.log(this.selectedKanriList);
-      } else {
-        // nothing any
+        this.selectedKanriList = cb.source.selected;                  // チェック有り--->すべてリスト保持(配列)
+
+      } else {                                                        // チェック無し--->保持リスト初期化
+        this.selectedKanriList = null;
       }
     });
 
@@ -87,7 +90,7 @@ export class MainInsComponent implements OnInit {
 
   /*
   *  書類一覧用データ検索処理
-  *
+  *  statusの選択値によって書類チェックボタンdisabled設定含む
   */
   public getListByHokengaisha() {
     /*
@@ -110,6 +113,12 @@ export class MainInsComponent implements OnInit {
       this.setShinseishaAndKubun(this.kanriList);                     // 検索用申請者、区分のセレクトOption値をセット
       this.shinseisha.reset('all');                                   // 検索用申請者の選択状態をリセット--->すべて
       this.kubun.reset('all');                                        // 検索用区分の選択状態をリセット--->すべて
+      if (this.status.value === String(Const.FRM_STATUS_DLVRY)        // 書類チェックボタンdisabled設定
+           || this.status.value === String(Const.FRM_STATUS_END)) {
+        this.shoruiCheckBtnDisabled = true;
+      } else {
+        this.shoruiCheckBtnDisabled = false;
+      }
     })
     .catch(err => {
       console.log(`login fail: ${err}`);
@@ -217,6 +226,33 @@ export class MainInsComponent implements OnInit {
       // anything finally method
     });
     
+  }
+
+  /*
+  *  書類チェックボタン処理
+  *
+  */
+  public showCheckKanri(kanri: Kanri) {
+    const dialogRef = this.dialog.open(DataCheckModalComponent, {
+      data: kanri,                    // モーダルコンポーネントにInjectするデータ 戻り処理ないがインスタンス渡し必要(ダミー的な)
+      disableClose: true,             // モーダル外クリック時画面を閉じる機能無効
+      restoreFocus: false,            // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
+      autoFocus: false,               // ダイアログ開いた時の自動フォーカス無効
+      height: '670px',                // default maxHeightサイズ500px超え maxHeigth指定必要
+      maxHeight: '670px',             // maxHeith　デフォルト値変更　*コンポーネント側CSS mat-dialog-contentの指定も必要
+    });
+    // ダイアログ終了後処理
+    dialogRef.afterClosed()
+    .subscribe(
+      data => {
+        if (data) {
+        }
+        this.getListByHokengaisha();               // 書類一覧更新表示
+      },
+      error => {
+        console.log('error');
+      }
+    );
   }
 
   /*

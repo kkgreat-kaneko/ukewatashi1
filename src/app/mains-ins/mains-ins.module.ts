@@ -17,10 +17,11 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDialogModule } from '@angular/material';
 import { PopupModule } from '../popup/popup.module';
 import { MainInsComponent } from './main-ins/main-ins.component';
+import { DataCheckModalComponent } from './data-check-modal/data-check-modal.component';
 
 
 @NgModule({
-  declarations: [MainInsComponent],
+  declarations: [MainInsComponent, DataCheckModalComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -42,6 +43,7 @@ import { MainInsComponent } from './main-ins/main-ins.component';
     PopupModule,
   ],
   entryComponents: [
+    DataCheckModalComponent
   ],
   exports: [
     MainInsComponent

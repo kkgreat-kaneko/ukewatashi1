@@ -387,6 +387,9 @@ td {
     border: solid 1px #aaaaaa;
     border-radius: 2px 2px;
 }
+.ok-shorui, .fubi-shorui, .hoken-bikou {
+    font-size: xx-small;
+}
 .kakuninbi-maisu {
     width: 70px;
 }

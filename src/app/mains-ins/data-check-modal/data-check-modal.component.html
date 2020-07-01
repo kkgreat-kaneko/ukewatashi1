@@ -1,0 +1,175 @@
+<!--mat-dialog-content [formGroup]="formGroup"-->
+<mat-dialog-content [formGroup]="formGroup" fxLayout="column">
+    <div class="section1" fxLayout="row">
+        <!--row1-->
+        <div class="" fxLayout="column">
+            <h4>書類チェック画面</h4>
+            <table>
+                <tr>
+                    <th class="id-label">管理No.</th>
+                    <td class="id">{{data.id}}</td>
+                    <th class="shoukenbango-label">証券番号</th>
+                    <td class="shoukenbango" colspan="4">{{data.shoukenbango}}</td>
+                    <td class="blank3"></td>
+                </tr>
+                <tr>
+                    <th class="keiyakusha-label">契約者名</th>
+                    <td class="keiyakusha" colspan="6">{{data.keiyakusha}}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th class="bikou-label">備考</th>
+                    <td class="bikou" colspan="7">{{data.bikou}}</td>
+                </tr>
+                <tr>
+                    <th class="hoken-bikou-label">保険会社備考</th>
+                    <td class="hoken-bikou" colspan="7">{{data.hokenBikou}}</td>
+                </tr>
+                <tr>
+                    <th class="kubun-label">区分</th>
+                    <td class="kubun" colspan="3">{{data.kubun}}</td>
+                    <th class="shorui-maisu-label" colspan="2">書類枚数</th>
+                    <td class="shorui-maisu">{{data.shoruiMaisu}}</td>
+                    <td></td>
+                </tr>
+
+            </table>
+        </div>
+        <!--row2-->
+        <div class="cancel-save-btns" fxLayout="column">
+            <button type="button" mat-raised-button class="cancel-btn" color="" 
+                (click)="cancel()">キャンセルして閉じる</button>
+            <button type="button" mat-raised-button class="save-btn" color="" 
+                (click)="save()">保存して閉じる</button>
+        </div>
+    </div>
+    <div class="section2" fxLayout="column">
+        <table>
+            <tr>
+                <th></th>
+                <th class="shorui-title">書類名</th>
+                <td class="td-ok-btn"><button type="button" mat-raised-button class="ok-btn" color="" 
+                    (click)="setOkAll()">すべてOK</button>
+                </td>
+                <th class="fubi-header">不備理由</th>
+            </tr>
+            <tr>
+                <th class="shorui-label">書類1</th>
+                <td class="shorui1">{{shorui1}}</td>
+                <td class="ok-ng-select">
+                    <mat-radio-group class="radio-col" name="okng1" formControlName="okng1" (change)="checkedOkNg(okng1.value, fubi1)">
+                        <mat-radio-button class="mat-radio-margin" value="{{viewOkShorui}}">OK</mat-radio-button>
+                        <mat-radio-button class="mat-radio-margin" value="{{viewNgShorui}}">NG</mat-radio-button>
+                    </mat-radio-group>
+                </td>
+                <td>
+                    <input mat-input type="text" class="fubi" formControlName="fubi1">
+                </td>
+            </tr>
+            <tr>
+                <th class="shorui-label">書類2</th>
+                <td class="shorui2">{{data.shorui2}}</td>
+                <td class="ok-ng-select">
+                    <mat-radio-group class="radio-col" name="okng2" formControlName="okng2" (change)="checkedOkNg(okng2.value, fubi2)">
+                        <mat-radio-button class="mat-radio-margin" value="{{viewOkShorui}}">OK</mat-radio-button>
+                        <mat-radio-button class="mat-radio-margin" value="{{viewNgShorui}}">NG</mat-radio-button>
+                    </mat-radio-group>
+                </td>
+                <td>
+                    <input type="text" class="fubi" formControlName="fubi2">
+                </td>
+            </tr>
+            <tr>
+                <th class="shorui-label">書類3</th>
+                <td class="shorui3">{{data.shorui3}}</td>
+                <td class="ok-ng-select">
+                    <mat-radio-group class="radio-col" name="okng3" formControlName="okng3" (change)="checkedOkNg(okng3.value, fubi3)">
+                        <mat-radio-button class="mat-radio-margin" value="{{viewOkShorui}}">OK</mat-radio-button>
+                        <mat-radio-button class="mat-radio-margin" value="{{viewNgShorui}}">NG</mat-radio-button>
+                    </mat-radio-group>
+                </td>
+                <td>
+                    <input type="text" class="fubi" formControlName="fubi3">
+                </td>
+            </tr>
+            <tr>
+                <th class="shorui-label">書類4</th>
+                <td class="shorui4">{{data.shorui4}}</td>
+                <td class="ok-ng-select">
+                    <mat-radio-group class="radio-col" name="okng4" formControlName="okng4" (change)="checkedOkNg(okng4.value, fubi4)">
+                        <mat-radio-button class="mat-radio-margin" value="{{viewOkShorui}}">OK</mat-radio-button>
+                        <mat-radio-button class="mat-radio-margin" value="{{viewNgShorui}}">NG</mat-radio-button>
+                    </mat-radio-group>
+                </td>
+                <td>
+                    <input type="text" class="fubi" formControlName="fubi4">
+                </td>
+            </tr>
+            <tr>
+                <th class="shorui-label">書類5</th>
+                <td class="shorui5">{{data.shorui5}}</td>
+                <td class="ok-ng-select">
+                    <mat-radio-group class="radio-col" name="okng5" formControlName="okng5" (change)="checkedOkNg(okng5.value, fubi5)">
+                        <mat-radio-button class="mat-radio-margin" value="{{viewOkShorui}}">OK</mat-radio-button>
+                        <mat-radio-button class="mat-radio-margin" value="{{viewNgShorui}}">NG</mat-radio-button>
+                    </mat-radio-group>
+                </td>
+                <td>
+                    <input type="text" class="fubi" formControlName="fubi5">
+                </td>
+            </tr>
+            <tr>
+                <th class="shorui-label">書類6</th>
+                <td class="shorui6">{{data.shorui6}}</td>
+                <td class="ok-ng-select">
+                    <mat-radio-group class="radio-col" name="okng6" formControlName="okng6" (change)="checkedOkNg(okng6.value, fubi6)">
+                        <mat-radio-button class="mat-radio-margin" value="{{viewOkShorui}}">OK</mat-radio-button>
+                        <mat-radio-button class="mat-radio-margin" value="{{viewNgShorui}}">NG</mat-radio-button>
+                    </mat-radio-group>
+                </td>
+                <td>
+                    <input type="text" class="fubi" formControlName="fubi6">
+                </td>
+            </tr>
+            <tr>
+                <th class="shorui-label">書類7</th>
+                <td class="shorui7">{{data.shorui7}}</td>
+                <td class="ok-ng-select">
+                    <mat-radio-group class="radio-col" name="okng7" formControlName="okng7" (change)="checkedOkNg(okng7.value, fubi7)">
+                        <mat-radio-button class="mat-radio-margin" value="{{viewOkShorui}}">OK</mat-radio-button>
+                        <mat-radio-button class="mat-radio-margin" value="{{viewNgShorui}}">NG</mat-radio-button>
+                    </mat-radio-group>
+                </td>
+                <td>
+                    <input type="text" class="fubi" formControlName="fubi7">
+                </td>
+            </tr>
+            <tr>
+                <th class="shorui-label">書類8</th>
+                <td class="shorui8">{{data.shorui8}}</td>
+                <td class="ok-ng-select">
+                    <mat-radio-group class="radio-col" name="okng8" formControlName="okng8" (change)="checkedOkNg(okng8.value, fubi8)">
+                        <mat-radio-button class="mat-radio-margin" value="{{viewOkShorui}}">OK</mat-radio-button>
+                        <mat-radio-button class="mat-radio-margin" value="{{viewNgShorui}}">NG</mat-radio-button>
+                    </mat-radio-group>
+                </td>
+                <td>
+                    <input type="text" class="fubi" formControlName="fubi8">
+                </td>
+            </tr>
+            <tr>
+                <th class="shorui-label">書類9</th>
+                <td class="shorui9">{{data.shorui9}}</td>
+                <td class="ok-ng-select">
+                    <mat-radio-group class="radio-col" name="okng9" formControlName="okng9" (change)="checkedOkNg(okng9.value, fubi9)">
+                        <mat-radio-button class="mat-radio-margin" value="{{viewOkShorui}}">OK</mat-radio-button>
+                        <mat-radio-button class="mat-radio-margin" value="{{viewNgShorui}}">NG</mat-radio-button>
+                    </mat-radio-group>
+                </td>
+                <td>
+                    <input type="text" class="fubi" formControlName="fubi9">
+                </td>
+            </tr>
+        </table>
+    </div>
+</mat-dialog-content>

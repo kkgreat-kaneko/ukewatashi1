@@ -65,7 +65,7 @@ export class Const {
 
   // 書類OK/NG
   static readonly SHORUI_OK: number = 0;
-  // static readonly SHORUI_NG: number = 1; 未確認
+  static readonly SHORUI_NG: number = 1;
 
   // 添付書類 有/無
   static readonly SHORUI_NO: number = 0;
