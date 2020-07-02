@@ -125,7 +125,7 @@
                     <td rowspan="3" class="fubi-shorui">{{kanri.fubiShoruiIchiran}}</td>
                     <td rowspan="3" class="hoken-bikou">{{kanri.hokenBikou}}</td>
                     <td rowspan="3" class="kakuninbi-maisu">
-                        <label class="kakuninbi">{{kanri.saishuKakuninbi.substr(0,10)}}</label><br>
+                        <label class="kakuninbi">{{kanri.saishuKakuninbi ? kanri.saishuKakuninbi.substr(0,10) : ''}}</label><br>
                         <label class="shorui-maisu-label label-color">書類枚数</label><br>
                         <label class="shorui-maisu">{{kanri.shoruiMaisu}}</label>
                     </td>
