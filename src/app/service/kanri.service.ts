@@ -287,7 +287,7 @@ export class KanriService {
   }
 
   /*
-  *   確認書印刷
+  *   確認書印刷JLX画面
   */
   public printHokenConfirm(kanri: Kanri) {
     const headers = this.session.setTkHeaders();
@@ -307,6 +307,17 @@ export class KanriService {
         console.log('error print checkSheet');
       }
     );
+  }
+
+  /*
+  *   確認書印刷保険会社画面
+  *   同期処理が必要の為、JLX画面用と異なる。(処理後の一覧更新のタイミングが異なる為)
+  */
+  public async printHokenConfirm2(kanri: Kanri): Promise<any> {
+    const headers = this.session.setTkHeaders();
+    const res = await this.http.post( Const.WWW_ROOT + 'kanri/printhokenconfirm', kanri, { responseType: 'blob', headers: headers })
+    .toPromise();
+    return res;
   }
 
   /*

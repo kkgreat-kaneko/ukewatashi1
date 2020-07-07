@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { saveAs } from 'file-saver';
 import { FormControl, FormGroup, FormBuilder} from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -7,13 +8,14 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Const } from '../../class/const';
-import { Tantousha } from '../../class/tantousha';
 import { Kanri } from '../../class/kanri';
 import { SessionService } from '../../service/session.service';
 import { KanriService } from '../../service/kanri.service';
 import { PopupAlertComponent } from '../../popup/popup-alert/popup-alert.component';
+import { PopupAlertYesNoComponent } from '../../popup/popup-alert-yes-no/popup-alert-yes-no.component';
 import { Hokengaisha } from '../../class/hokengaisha';
 import { DataCheckModalComponent } from '../data-check-modal/data-check-modal.component';
+import { PwdPrtConfirmModalComponent } from '../pwd-prt-confirm-modal/pwd-prt-confirm-modal.component';
 
 
 @Component({
@@ -31,7 +33,7 @@ export class MainInsComponent implements OnInit {
   searchedKanriList: Kanri[];                                         // 申請者、区分検索用一覧データ
   selectedKanriList: Kanri[]                                          // 一覧チェック済データ用リスト
 
-  /*status選択value　バックエンド処理と紐付き有り。変更注意*/
+  /*status選択value　バックエンド処理と紐付き有り。変更注意 View側でConst定数を使用できないので代入*/
   frmStatusDlvry = Const.FRM_STATUS_DLVRY;                            // 郵送分
   frmStatusEnd = Const.FRM_STATUS_END;                                // 印刷済分
   frmStatusOk = Const.FRM_STATUS_OK;                                  // 確認済分
@@ -54,7 +56,7 @@ export class MainInsComponent implements OnInit {
 
 
   constructor(private kanriService: KanriService, private sessionService: SessionService, private dialog: MatDialog,
-    private popupAlertDialog: MatDialog, private router: Router, private fb: FormBuilder,
+    private popupAlertDialog: MatDialog, private popupAlertYesNoDialog: MatDialog, private router: Router, private fb: FormBuilder,
   ) { }
 
   ngOnInit() {
@@ -65,7 +67,7 @@ export class MainInsComponent implements OnInit {
     });
     
     this.loginUser = this.sessionService.getHokenLoginTantou();
-    this.kaisha = this.sessionService.getHokenLoginKaisha();
+    this.kaisha = this.sessionService.getHokenLoginKaisha();          // 保険会社ログイン JLX/JLXHS向けどちらのログインか返す
     this.formGroup = this.fb.group({                                  // フォームグループ初期化
       status: this.status,                                            // 書類ステータス
       beforeKanriNo: this.beforeKanriNo,                              // 管理No
@@ -256,11 +258,141 @@ export class MainInsComponent implements OnInit {
   }
 
   /*
+  *  確認書印刷ボタン処理
+  *  印刷認証処理を行い、OKなら出力確認処理を実行
+  */
+  public showPwdPrtConfirm() {
+    const kanri = new Kanri();
+    kanri.shinseishaKaisha = this.kaisha;
+    kanri.hokengaisha = this.loginUser.hokengaisha;
+    /*印刷データ有無の事前チェック*/
+    this.kanriService.chkHokenConfirm(kanri)
+    .then(res => {
+      if(!res) {
+        let message = ['確認済の案件はありません。'];
+        const msg = {
+          title: '',
+          message: message,
+        };
+        this.showAlert(msg);
+      }else {
+        const dialogRef = this.dialog.open(PwdPrtConfirmModalComponent, {
+          data: kanri,                    // モーダルコンポーネントにInjectするデータ 戻り処理ないがインスタンス渡し必要(ダミー的な)
+          disableClose: true,             // モーダル外クリック時画面を閉じる機能無効
+          restoreFocus: false,            // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
+          autoFocus: false,               // ダイアログ開いた時の自動フォーカス無効
+        });
+        // ダイアログ終了後処理 
+        dialogRef.afterClosed()
+        .subscribe(
+          data => {
+            if (data) {
+              let message = ['印刷すると、確認日時の入った案件については修正が', 'できなくなります。印刷してもよろしいですか?'];
+              const msg = {
+                title: '',
+                message: message,
+              };
+              this.yesNoPrtConfirm(msg);
+            }
+          },
+          error => {
+            console.log('error');
+          }
+        );
+      }
+
+    })
+    .catch(err => {
+      console.log(`login fail: ${err}`);
+      this.message = 'データの取得に失敗しました。';
+    })
+    .then(() => {
+      // anything finally method
+    });
+  }
+
+  /*
   *  終了ボタン
   *  保険会社JLXログインへ移動
   */
   public logout() {
     this.router.navigate(['/login-ins-jlx']);
+  }
+
+  /*
+  * POPUPメッセージ 確認印刷最終メッセージはい、いいえ
+  * はいの時、印刷処理を行う。(再度POPUPメッセージ「確認書をダウンロードします。」の後で...POPUP地獄)
+  */
+  public yesNoPrtConfirm(msg: Msg) {
+    const dialogRef = this.popupAlertYesNoDialog.open(PopupAlertYesNoComponent, {
+      data: msg,
+      disableClose: true,
+      restoreFocus: false,                  // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
+      // autoFocus: false,                  // ダイアログ開いた時の自動フォーカス無効
+    });
+    // ダイアログ終了後処理
+    dialogRef.afterClosed()
+    .subscribe(
+      data => {
+        // nullデータ戻りチェック必須（無いとプログラムエラー)
+        // !dataがはい選択 
+        if (!data) {
+          let message = ['確認書をダウンロードします。'];
+          const msg = {
+            title: '',
+            message: message,
+          };
+          this.printConfirm(msg);
+        }
+      },
+      error => {
+        console.log('error');
+      }
+    );
+  }
+
+  /*
+  *  確認書印刷最終POPUPメッセージ　非同期処理ゆえのPOPUP地獄
+  *  ついに印刷処理（完結編)
+  */
+  public printConfirm(msg: Msg) {
+    const dialogRef = this.popupAlertDialog.open(PopupAlertComponent, {
+      data: msg,
+      disableClose: true,
+      restoreFocus: false,                                      // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
+      // autoFocus: false,                                      // ダイアログ開いた時の自動フォーカス無効
+    });
+    // ダイアログ終了後処理
+    dialogRef.afterClosed()
+    .subscribe(
+      data => {
+        // nullデータ戻りチェック必須（無いとプログラムエラー) OKボタンのみなのでここでは結果処理無視
+        if (data) {
+        }
+        const kanri = new Kanri();
+        kanri.shinseishaKaisha = this.kaisha;
+        kanri.hokengaisha = this.loginUser.hokengaisha;
+        this.kanriService.printHokenConfirm2(kanri)
+        .then(res => {
+            const hokenConfirmPdf = new Blob([res], { type: 'application/pdf' } );
+            // ゲットしたBlobデータ(PDF)を別ウィンドウでダウンロードせず開く
+            const url1 = URL.createObjectURL(hokenConfirmPdf);
+            if (window.navigator.msSaveBlob) {
+              saveAs(hokenConfirmPdf, 'hokenConfirm.pdf');          // IEの時はBlobデータが開けないのでダウンロードする(IE未推奨)
+            } else {
+              window.open(url1);
+            }         
+            this.getListByHokengaisha();                            // 書類一覧更新表示
+          },
+          error => {
+            console.log('error print confirmSheet');
+          }
+        );
+      },
+      error => {
+        console.log('error');
+      }
+    );
   }
 
   /*

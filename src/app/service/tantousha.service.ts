@@ -122,4 +122,14 @@ export class TantoushaService {
     return this.res;
   }
 
+  /*
+  *  保険会社　確認書印刷前認証処理
+  *　印刷用ユーザー(JLX/JLXHS用2ユーザー)を使用してパスワード認証を行う
+  */
+  public async prtAuth(tantousha: Tantousha): Promise<number> {
+    const headers = this.session.setTkHeaders();
+    this.res = await this.http.post( Const.WWW_ROOT + 'tantousha/prtauth/', tantousha, {headers: headers})
+    .toPromise();
+    return this.res;
+  }
 }

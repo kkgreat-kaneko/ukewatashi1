@@ -27,6 +27,14 @@ export class Const {
   static readonly JLX_HOKEN: string = '株式会社JALUX保険部';
   static readonly JLX_HS_HOKEN: string = '株式会社JALUX保険サービス';
 
+  // 担当部署名（JLX/JLXHS)
+  static readonly JLX_HOKEN_BUSHO: string = '株式会社JALUX保険部/業務チーム';
+  static readonly JLX_HS_HOKEN_BUSHO: string = '株式会社JALUX保険サービス/業務チーム';
+
+  // 印刷認証用ユーザー (JLX/JLXHS)
+  static readonly PRINT_JLX_HOKEN_USER: string = 'print_user_JLX';
+  static readonly PRINT_JLXHS_HOKEN_USER: string = 'print_user_JLXHS';
+
   // 書類STATUS 全件(-1~3)
   static readonly STATUS_DLVRY: number = -1;                  // 郵送 （郵送）
   static readonly STATUS_NOT_CHECK: number = 0;               // 書類受渡前（未確認分すべて)

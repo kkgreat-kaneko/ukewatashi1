@@ -18,10 +18,11 @@ import { MatDialogModule } from '@angular/material';
 import { PopupModule } from '../popup/popup.module';
 import { MainInsComponent } from './main-ins/main-ins.component';
 import { DataCheckModalComponent } from './data-check-modal/data-check-modal.component';
+import { PwdPrtConfirmModalComponent } from './pwd-prt-confirm-modal/pwd-prt-confirm-modal.component';
 
 
 @NgModule({
-  declarations: [MainInsComponent, DataCheckModalComponent],
+  declarations: [MainInsComponent, DataCheckModalComponent, PwdPrtConfirmModalComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -43,7 +44,8 @@ import { DataCheckModalComponent } from './data-check-modal/data-check-modal.com
     PopupModule,
   ],
   entryComponents: [
-    DataCheckModalComponent
+    DataCheckModalComponent,
+    PwdPrtConfirmModalComponent
   ],
   exports: [
     MainInsComponent
