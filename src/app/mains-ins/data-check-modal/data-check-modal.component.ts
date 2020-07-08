@@ -187,16 +187,17 @@ export class DataCheckModalComponent implements OnInit {
       return;
     }
     // Kanriデータセット処理
-    if (this.isSelectedNg()) {
-      this.data.status = Const.STATUS_NG;                         // 不備書類status:3
-    } else {
-      this.data.status = Const.STATUS_CHECK;                      // 確認済status:1　OK選択もしくは添付書類なし
-    }
-    this.data.kakuninsha = this.loginUser.kakuninsha              // 確認者(ログイン保険担当者名)
-    if (!this.data.kakuninbi) {                                   // 確認日（未登録の時、初回のみ)
+    if (this.data.status === Const.STATUS_NOT_CHECK) {            // 確認日（status:0の時毎回更新、未確認に戻す処理ケースある為)
       this.data.kakuninbi = this.sessionService.getToday();
     }
-    this.data.saishuKakuninbi = this.sessionService.getToday();    // 最終確認日
+    if (this.isSelectedNg()) {
+      this.data.status = Const.STATUS_NG;                         // 不備書類status:3セット
+    } else {
+      this.data.status = Const.STATUS_CHECK;                      // 確認済status:1セット　OK選択もしくは添付書類なし
+    }
+    this.data.kakuninsha = this.loginUser.kakuninsha              // 確認者(ログイン保険担当者名)
+    
+    this.data.saishuKakuninbi = this.sessionService.getToday();   // 最終確認日
     this.setOkNgData();                                           // okng1~9、OK書類一覧、不備書類一覧、保険会社備考をセット
     if (this.data.shoruiUmu === Const.SHORUI_NO) {                // 添付書類なしの時 OK書類一覧にセット
       this.data.okShoruiIchiran = '[添付書類なし]';
