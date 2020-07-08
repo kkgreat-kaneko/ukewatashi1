@@ -340,6 +340,16 @@ export class KanriService {
     return this.res;
   }
 
+  /*
+  *  保険会社メイン画面 確認済みに戻す処理
+  */
+  public async undoStatusToOk(requestDto: RequestDto): Promise<number> {
+    const headers = this.session.setTkHeaders();
+    this.res = await this.http.post( Const.WWW_ROOT + 'kanri/undostatustook', requestDto, {headers: headers})
+    .toPromise();
+    return this.res;
+  }
+
 }
 
 /*----------------------------------------------------------

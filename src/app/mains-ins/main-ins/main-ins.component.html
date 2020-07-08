@@ -94,10 +94,10 @@
                     <button type="button" mat-raised-button>再印刷</button>
                 </div>
                 <div class="">
-                    <button type="button" mat-raised-button>確認済みに戻す</button>
+                    <button type="button" mat-raised-button (click)="undoStatusToOk()">確認済みに戻す</button>
                 </div>
                 <div class="">
-                    <button type="button" mat-raised-button>未確認に戻す</button>
+                    <button type="button" mat-raised-button (click)="undoStatusToNot()">未確認に戻す</button>
                 </div>
             </div>
         </div>
@@ -131,7 +131,7 @@
                     </td>
                     <td rowspan="3" class="chkbox">
                         <mat-checkbox  name="chkbox{{i}}" (click)="$event.stopPropagation()"
-                        (change)="selection.toggle(kanri)">
+                        (change)="selection.toggle(kanri)" [disabled]="kanri.status === -1 ? true : false">
                          <!--
                             [checked]="selection.isSelected(element)"
                         -->

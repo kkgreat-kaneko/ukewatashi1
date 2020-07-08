@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Const } from '../../class/const';
 import { Kanri } from '../../class/kanri';
+import { RequestDto } from '../../class/request-dto';
 import { SessionService } from '../../service/session.service';
 import { KanriService } from '../../service/kanri.service';
 import { PopupAlertComponent } from '../../popup/popup-alert/popup-alert.component';
@@ -16,6 +17,7 @@ import { PopupAlertYesNoComponent } from '../../popup/popup-alert-yes-no/popup-a
 import { Hokengaisha } from '../../class/hokengaisha';
 import { DataCheckModalComponent } from '../data-check-modal/data-check-modal.component';
 import { PwdPrtConfirmModalComponent } from '../pwd-prt-confirm-modal/pwd-prt-confirm-modal.component';
+import { PwdUndoStatusToOkModalComponent } from '../pwd-undo-status-to-ok-modal/pwd-undo-status-to-ok-modal.component';
 
 
 @Component({
@@ -312,14 +314,6 @@ export class MainInsComponent implements OnInit {
   }
 
   /*
-  *  終了ボタン
-  *  保険会社JLXログインへ移動
-  */
-  public logout() {
-    this.router.navigate(['/login-ins-jlx']);
-  }
-
-  /*
   * POPUPメッセージ 確認印刷最終メッセージはい、いいえ
   * はいの時、印刷処理を行う。(再度POPUPメッセージ「確認書をダウンロードします。」の後で...POPUP地獄)
   */
@@ -393,6 +387,82 @@ export class MainInsComponent implements OnInit {
         console.log('error');
       }
     );
+  }
+
+  /*
+  *  確認済みに戻すボタン
+  *  印刷用ユーザーパスワード入力認証後、処理実行
+  */
+  public undoStatusToOk() {
+    if (this.status.value !== String(Const.FRM_STATUS_END)) {
+      let message = ['ステータス:印刷済分から選択してください。'];
+      const msg = {
+        title: '',
+        message: message,
+      };
+      this.showAlert(msg);
+      return 0;
+    }
+
+    if (!this.selectedKanriList) {
+      let message = ['戻す案件が選択されていません。'];
+      const msg = {
+        title: '',
+        message: message,
+      };
+      this.showAlert(msg);
+      return 0;
+    }
+    // 認証ダイアログ表示
+    const dialogRef = this.dialog.open(PwdUndoStatusToOkModalComponent, {
+      data: 1,                        // モーダルコンポーネントにInjectするデータ 戻り処理用として設定
+      disableClose: true,             // モーダル外クリック時画面を閉じる機能無効
+      restoreFocus: false,            // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
+      autoFocus: false,               // ダイアログ開いた時の自動フォーカス無効
+    });
+    // ダイアログ終了後 Status:1確認済みに変更処理
+    dialogRef.afterClosed()
+    .subscribe(
+      data => {
+        if (data) {
+          const updateIds = [];
+          this.selectedKanriList.forEach(kanri => {
+            updateIds.push(kanri.id);
+          });
+          const requestDto = new RequestDto();
+          requestDto.paramLongs = updateIds;
+          this.kanriService.undoStatusToOk(requestDto)
+          .then(res => {
+            this.getListByHokengaisha();                            // 書類一覧更新表示
+          },
+          error => {
+            console.log('error undoStatusToOk');
+          });
+        }
+      },
+      error => {
+        console.log('error');
+      }
+    );
+  }
+
+  /*
+  *  未確認分に戻すボタン
+  *
+  */
+  public undoStatusToNot() {
+  }
+
+  /*
+  *  終了ボタン
+  *  保険会社JLXログインへ移動
+  */
+  public logout() {
+    if (this.kaisha === Const.JLX_HOKEN) {
+      this.router.navigate(['/login-ins-jlx']);
+    } else {
+      this.router.navigate(['/login-ins-jlxhs']);
+    }
   }
 
   /*
