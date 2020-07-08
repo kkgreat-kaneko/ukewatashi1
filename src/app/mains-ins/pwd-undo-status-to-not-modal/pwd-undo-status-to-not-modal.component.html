@@ -1,0 +1,23 @@
+<mat-dialog-content [formGroup]="formGroup" fxLayout="column">
+    <div class="msg-section" fxLayout="row">
+        <h2>選択した案件の確認状況を<br>
+            未確認に戻します。
+        </h2>
+        <button type="button" mat-raised-button class="close-btn" color="" 
+                (click)="close()">閉じる</button>
+    </div>
+    <div class="pwd-section" fxLayout="column">
+        <h4>弊社担当者による印刷用パスワード入力</h4>
+        <div class="" fxLayout="row">
+            <mat-form-field class="passowrd" appearance="legacy">
+                <input type="password" matInput placeholder="半角英数字記号" formControlName="password" (keydown)="chkIme($event)">
+            </mat-form-field>
+            <button type="button" mat-raised-button class="ok-btn" color="" 
+                    (click)="prtAuth()">OK</button>
+        </div>
+        <h6>{{errorMsg}}</h6>
+    </div>
+</mat-dialog-content>
+
+
+

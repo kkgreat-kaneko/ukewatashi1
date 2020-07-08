@@ -18,6 +18,7 @@ import { Hokengaisha } from '../../class/hokengaisha';
 import { DataCheckModalComponent } from '../data-check-modal/data-check-modal.component';
 import { PwdPrtConfirmModalComponent } from '../pwd-prt-confirm-modal/pwd-prt-confirm-modal.component';
 import { PwdUndoStatusToOkModalComponent } from '../pwd-undo-status-to-ok-modal/pwd-undo-status-to-ok-modal.component';
+import { PwdUndoStatusToNotModalComponent } from '../pwd-undo-status-to-not-modal/pwd-undo-status-to-not-modal.component';
 
 
 @Component({
@@ -433,6 +434,7 @@ export class MainInsComponent implements OnInit {
           requestDto.paramLongs = updateIds;
           this.kanriService.undoStatusToOk(requestDto)
           .then(res => {
+            this.selection.clear();
             this.getListByHokengaisha();                            // 書類一覧更新表示
           },
           error => {
@@ -448,9 +450,50 @@ export class MainInsComponent implements OnInit {
 
   /*
   *  未確認分に戻すボタン
-  *
+  *  Status--->0、kakuninsha、saishu_kakuninbi、ok_shorui_ichiran、fubi_shorui_ichiran、hoken_bikou --->空文字
   */
   public undoStatusToNot() {
+    if (!this.selectedKanriList) {
+      let message = ['戻す案件が選択されていません。'];
+      const msg = {
+        title: '',
+        message: message,
+      };
+      this.showAlert(msg);
+      return 0;
+    }
+    // 認証ダイアログ表示
+    const dialogRef = this.dialog.open(PwdUndoStatusToNotModalComponent, {
+      data: 1,                        // モーダルコンポーネントにInjectするデータ 戻り処理用として設定
+      disableClose: true,             // モーダル外クリック時画面を閉じる機能無効
+      restoreFocus: false,            // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
+      autoFocus: false,               // ダイアログ開いた時の自動フォーカス無効
+    });
+    // ダイアログ終了後 未確認分に変更処理
+    dialogRef.afterClosed()
+    .subscribe(
+      data => {
+        if (data) {
+          const updateIds = [];
+          this.selectedKanriList.forEach(kanri => {
+            updateIds.push(kanri.id);
+          });
+          const requestDto = new RequestDto();
+          requestDto.paramLongs = updateIds;
+          this.kanriService.undoStatusToNot(requestDto)
+          .then(res => {
+            this.selection.clear();
+            this.getListByHokengaisha();                            // 書類一覧更新表示
+          },
+          error => {
+            console.log('error undoStatusToOk');
+          });
+        }
+      },
+      error => {
+        console.log('error');
+      }
+    );
   }
 
   /*

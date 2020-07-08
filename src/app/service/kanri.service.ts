@@ -350,6 +350,16 @@ export class KanriService {
     return this.res;
   }
 
+  /*
+  *  保険会社メイン画面 未確認に戻す処理
+  */
+  public async undoStatusToNot(requestDto: RequestDto): Promise<number> {
+    const headers = this.session.setTkHeaders();
+    this.res = await this.http.post( Const.WWW_ROOT + 'kanri/undostatustonot', requestDto, {headers: headers})
+    .toPromise();
+    return this.res;
+  }
+
 }
 
 /*----------------------------------------------------------
