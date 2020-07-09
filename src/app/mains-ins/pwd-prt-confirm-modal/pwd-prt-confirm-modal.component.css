@@ -24,6 +24,7 @@ mat-dialog-content {
     margin-left: auto;
     background: #e0f2f1;
     height: 30px;
+    width: 100px;
     line-height: 1px;
     color: #000051;
     font-weight: bold;
