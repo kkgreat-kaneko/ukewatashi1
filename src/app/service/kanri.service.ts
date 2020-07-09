@@ -321,6 +321,17 @@ export class KanriService {
   }
 
   /*
+  *   確認書「再印刷」保険会社画面　再印刷データ指定
+  *   同期処理が必要の為、JLX画面用と異なる。(処理後の一覧更新のタイミングが異なる為)
+  */
+  public async rePrintHokenConfirm(kanri: Kanri): Promise<any> {
+    const headers = this.session.setTkHeaders();
+    const res = await this.http.post( Const.WWW_ROOT + 'kanri/reprinthokenconfirm', kanri, { responseType: 'blob', headers: headers })
+    .toPromise();
+    return res;
+  }
+
+  /*
   * 保険会社メイン画面 書類一覧用
   */
   public async getListByHokengaisha(kanri: Kanri): Promise<Kanri[]> {

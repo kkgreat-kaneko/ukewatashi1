@@ -21,10 +21,11 @@ import { DataCheckModalComponent } from './data-check-modal/data-check-modal.com
 import { PwdPrtConfirmModalComponent } from './pwd-prt-confirm-modal/pwd-prt-confirm-modal.component';
 import { PwdUndoStatusToOkModalComponent } from './pwd-undo-status-to-ok-modal/pwd-undo-status-to-ok-modal.component';
 import { PwdUndoStatusToNotModalComponent } from './pwd-undo-status-to-not-modal/pwd-undo-status-to-not-modal.component';
+import { PwdReprtConfirmModalComponent } from './pwd-reprt-confirm-modal/pwd-reprt-confirm-modal.component';
 
 
 @NgModule({
-  declarations: [MainInsComponent, DataCheckModalComponent, PwdPrtConfirmModalComponent, PwdUndoStatusToOkModalComponent, PwdUndoStatusToNotModalComponent],
+  declarations: [MainInsComponent, DataCheckModalComponent, PwdPrtConfirmModalComponent, PwdUndoStatusToOkModalComponent, PwdUndoStatusToNotModalComponent, PwdReprtConfirmModalComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -49,7 +50,8 @@ import { PwdUndoStatusToNotModalComponent } from './pwd-undo-status-to-not-modal
     DataCheckModalComponent,
     PwdPrtConfirmModalComponent,
     PwdUndoStatusToOkModalComponent,
-    PwdUndoStatusToNotModalComponent
+    PwdUndoStatusToNotModalComponent,
+    PwdReprtConfirmModalComponent
   ],
   exports: [
     MainInsComponent

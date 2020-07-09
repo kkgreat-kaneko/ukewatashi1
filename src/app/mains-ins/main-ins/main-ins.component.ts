@@ -19,6 +19,7 @@ import { DataCheckModalComponent } from '../data-check-modal/data-check-modal.co
 import { PwdPrtConfirmModalComponent } from '../pwd-prt-confirm-modal/pwd-prt-confirm-modal.component';
 import { PwdUndoStatusToOkModalComponent } from '../pwd-undo-status-to-ok-modal/pwd-undo-status-to-ok-modal.component';
 import { PwdUndoStatusToNotModalComponent } from '../pwd-undo-status-to-not-modal/pwd-undo-status-to-not-modal.component';
+import { PwdReprtConfirmModalComponent } from '../pwd-reprt-confirm-modal/pwd-reprt-confirm-modal.component';
 
 
 @Component({
@@ -118,6 +119,7 @@ export class MainInsComponent implements OnInit {
       this.setShinseishaAndKubun(this.kanriList);                     // 検索用申請者、区分のセレクトOption値をセット
       this.shinseisha.reset('all');                                   // 検索用申請者の選択状態をリセット--->すべて
       this.kubun.reset('all');                                        // 検索用区分の選択状態をリセット--->すべて
+      this.selection.clear();                                         // 書類チェックボタン状態リセット
       if (this.status.value === String(Const.FRM_STATUS_DLVRY)        // 書類チェックボタンdisabled設定
            || this.status.value === String(Const.FRM_STATUS_END)) {
         this.shoruiCheckBtnDisabled = true;
@@ -434,7 +436,6 @@ export class MainInsComponent implements OnInit {
           requestDto.paramLongs = updateIds;
           this.kanriService.undoStatusToOk(requestDto)
           .then(res => {
-            this.selection.clear();
             this.getListByHokengaisha();                            // 書類一覧更新表示
           },
           error => {
@@ -482,12 +483,86 @@ export class MainInsComponent implements OnInit {
           requestDto.paramLongs = updateIds;
           this.kanriService.undoStatusToNot(requestDto)
           .then(res => {
-            this.selection.clear();
             this.getListByHokengaisha();                            // 書類一覧更新表示
           },
           error => {
             console.log('error undoStatusToOk');
           });
+        }
+      },
+      error => {
+        console.log('error');
+      }
+    );
+  }
+
+  /*
+  *  再印刷ボタン処理
+  *
+  */
+  public rePrintConfirm() {
+    if (this.status.value !== String(Const.FRM_STATUS_END)) {
+      let message = ['印刷済分を選択してください。'];
+      const msg = {
+        title: '',
+        message: message,
+      };
+      this.showAlert(msg);
+      return 0;
+    }
+
+    if (!this.selectedKanriList) {
+      let message = ['再印刷書類が選択されていません。'];
+      const msg = {
+        title: '',
+        message: message,
+      };
+      this.showAlert(msg);
+      return 0;
+    }
+    
+    if (this.selectedKanriList.length > 1) {
+      let message = ['複数選択はできません。'];
+      const msg = {
+        title: '',
+        message: message,
+      };
+      this.showAlert(msg);
+      return 0;
+    }
+
+        
+    
+    // 認証ダイアログ表示
+    const dialogRef = this.dialog.open(PwdReprtConfirmModalComponent, {
+      data: 1,                        // モーダルコンポーネントにInjectするデータ 戻り処理用として設定
+      disableClose: true,             // モーダル外クリック時画面を閉じる機能無効
+      restoreFocus: false,            // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
+      autoFocus: false,               // ダイアログ開いた時の自動フォーカス無効
+    });
+    // 認証ダイアログ終了後、認証OKなら(data戻りが1)再印刷処理実行
+    dialogRef.afterClosed()
+    .subscribe(
+      data => {
+        if (data) {
+          //再印刷処理開始
+          const kanri = this.selectedKanriList[0];
+          this.kanriService.rePrintHokenConfirm(kanri)
+          .then(res => {
+              const hokenConfirmPdf = new Blob([res], { type: 'application/pdf' } );
+              // ゲットしたBlobデータ(PDF)を別ウィンドウでダウンロードせず開く
+              const url1 = URL.createObjectURL(hokenConfirmPdf);
+              if (window.navigator.msSaveBlob) {
+                saveAs(hokenConfirmPdf, 'hokenConfirm.pdf');          // IEの時はBlobデータが開けないのでダウンロードする(IE未推奨)
+              } else {
+                window.open(url1);
+              }         
+              this.getListByHokengaisha();                            // 書類一覧更新表示
+            },
+            error => {
+              console.log('error print reprint confirmSheet');
+            }
+          );
         }
       },
       error => {
