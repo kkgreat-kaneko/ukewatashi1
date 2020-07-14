@@ -179,20 +179,20 @@
     <!------------------条件絞込み検索条件パネルEND   ボタンパネル START----------------------------------------------------------------------------->
     <div class="" fxLayout="row">
       <div class="buttons-panel">
-        <button type="button" mat-raised-button class="curd-button curd-btn-color" (click)="createKanri()" [disabled]="deletedKanriViewMode || bushoDataViewMode">新規</button>
+        <button type="button" mat-raised-button class="curd-button create-btn-color" (click)="createKanri()" [disabled]="deletedKanriViewMode || bushoDataViewMode">新規</button>
       </div>
       <div class="buttons-panel">
-        <button type="button" mat-raised-button class="curd-button curd-btn-color" (click)="editKanri()" [disabled]="deletedKanriViewMode || bushoDataViewMode">編集</button>
+        <button type="button" mat-raised-button class="curd-button edit-btn-color" (click)="editKanri()" [disabled]="deletedKanriViewMode || bushoDataViewMode">編集</button>
       </div>
       <div class="buttons-panel">
-        <button type="button" mat-raised-button class="curd-button curd-btn-color" (click)="deleteKanri()" [disabled]="deletedKanriViewMode || bushoDataViewMode">削除</button>
+        <button type="button" mat-raised-button class="curd-button delete-btn-color" (click)="deleteKanri()" [disabled]="deletedKanriViewMode || bushoDataViewMode">削除</button>
       </div>
       <div class="buttons-panel">
         <!--<button type="button" mat-raised-button class="curd-button " [color]="deletedKanriViewColor" (click)="showDeletedKanri()">削除データ閲覧</button>-->
         <button type="button" mat-raised-button class="curd-button " [ngClass]="btnColorClass" (click)="showDeletedKanri()">削除データ閲覧</button>
       </div>
       <div class="buttons-panel">
-        <button type="button" mat-raised-button class="curd-button curd-btn-color" [disabled]="deletedKanriViewMode" (click)="approveKanri()">承認</button>
+        <button type="button" mat-raised-button class="curd-button curd-btn-color" [disabled]="deletedKanriViewMode || !approveKanriViewMode" (click)="approveKanri()">承認</button>
       </div>
       <div class="print-section" fxLayout="row">
         <button type="button" mat-raised-button class="curd-button print-btn active-btn" [disabled]="deletedKanriViewMode || bushoDataViewMode" (click)="checkSheetPrint()">チェックシート印刷</button>

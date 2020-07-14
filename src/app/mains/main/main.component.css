@@ -246,6 +246,15 @@ mat-form-field {
 .curd-btn-color {
   background: #e0f2f1;
 }
+.create-btn-color {
+  background: #9575cd;
+}
+.edit-btn-color {
+  background: #ffab91;
+}
+.delete-btn-color {
+  background: #fff176;
+}
 /* 削除閲覧ボタンアクティブ時背景色　その他チェックシート印刷・確認書印刷・メンテナンスボタン・CSV出力背景色 */
 .active-btn {
 	background: #fff176;

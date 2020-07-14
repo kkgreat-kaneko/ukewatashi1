@@ -88,6 +88,11 @@ export class MainComponent implements OnInit {
   deletedKanriViewMode = false;
   btnColorClass: any;
 
+  /*
+  * 管理者・所属長承認権限用
+  */
+  approveKanriViewMode = true;
+
   checkSheetData: Kanri[];                   // チェックシート印刷データ用
 
   /*
@@ -153,10 +158,11 @@ export class MainComponent implements OnInit {
 
     this.loginUser = this.sessionService.setLoginUser();
     /*
-    * 一覧の複数選択と単一選択可能を権限別に設定、選択時changeイベント登録
+    * 一覧の複数選択と単一選択可能を権限別に設定、選択時changeイベント登録、承認権限(ボタンdisabled)設定
     */
     if (this.loginUser.kengen === Const.KENGEN_NORMAL) {
       this.selection = new SelectionModel<Kanri>(false, []);
+      this.approveKanriViewMode = false;
     } else {
       this.selection = new SelectionModel<Kanri>(true, []);
     }
