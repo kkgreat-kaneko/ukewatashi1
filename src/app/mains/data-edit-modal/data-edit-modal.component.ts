@@ -516,9 +516,15 @@ export class DataEditModalComponent implements OnInit {
       this.data.seiho = '';
     }
     this.data.dlvry = this.formGroup.value.dlvry;               // 受渡方法
+    /* 郵送ステータス-1の時でも編集更新した場合は、ステータス0に戻す(チェックシート再印刷可能とする)新仕様の為以下コメントアウト
     if (this.data.dlvry === Const.DLVRY_HANDING                 // 特殊処理 ステータス-1郵送書類の受渡方法が「郵送」から「受渡」に変更された場合
       && this.data.status === Const.STATUS_DLVRY) {
         this.data.status = Const.STATUS_NOT_CHECK;              // ステータス0(受渡し前未確認)に設定する
+    }
+    */
+    // 新仕様ステータス郵送-1のデータを編集更新した場合は、ステータス0(受渡し前未確認)に戻す
+    if (this.data.status === Const.STATUS_DLVRY) {
+      this.data.status = Const.STATUS_NOT_CHECK;                // ステータス0(受渡し前未確認)に設定する
     }
     this.data.shoukenbango = this.formGroup.value.shoukenbango; // 証券番号
     this.data.shoruiMaisu = this.formGroup.value.shoruiMaisu;   // 書類枚数
