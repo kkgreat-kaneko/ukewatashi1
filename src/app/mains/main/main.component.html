@@ -96,7 +96,7 @@
           </div>
           <div class="hidden-confirm-print" *ngIf="loginUser.kengen === normal"></div>
           <div class="">
-            <button type="button" mat-raised-button class="maintenance-btn active-btn" (click)="showMaintenance()">メンテナンス</button>
+            <button type="button" mat-raised-button class="maintenance-btn non-active-btn" (click)="showMaintenance()">メンテナンス</button>
           </div>
           <div class="">
             <button type="button" mat-raised-button class="logout-btn" (click)="logout()">ログアウト</button>
@@ -179,7 +179,7 @@
     <!------------------条件絞込み検索条件パネルEND   ボタンパネル START----------------------------------------------------------------------------->
     <div class="" fxLayout="row">
       <div class="buttons-panel">
-        <button type="button" mat-raised-button class="curd-button create-btn-color" (click)="createKanri()" [disabled]="deletedKanriViewMode || bushoDataViewMode">新規</button>
+        <button type="button" mat-raised-button class="curd-button curd-btn-color" (click)="createKanri()" [disabled]="deletedKanriViewMode || bushoDataViewMode">新規</button>
       </div>
       <div class="buttons-panel">
         <button type="button" mat-raised-button class="curd-button edit-btn-color" (click)="editKanri()" [disabled]="deletedKanriViewMode || bushoDataViewMode">編集</button>
