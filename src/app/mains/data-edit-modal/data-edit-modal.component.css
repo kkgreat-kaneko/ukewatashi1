@@ -1,7 +1,7 @@
 mat-dialog-content {
   min-width: 1000px;
   max-width: 1200px;
-  min-height: 450px;
+  min-height: 510px;
 }
 /*
 ::ng-deep #cdk-overlay-0 {
@@ -11,7 +11,7 @@ mat-dialog-content {
   max-width: 90vw;
 }
 */
-h3,h4 {
+h3,h4,h5 {
   margin: 1px;
 }
 .row1, .row3 {
@@ -70,8 +70,20 @@ h3,h4 {
 .hokenkaisha {
   width: 250px;
 }
+.hokenkaisha ::ng-deep .mat-form-field-label {
+  color: #880e4f;
+  font-weight: bold;
+}
+.kubun ::ng-deep .mat-form-field-label {
+  color: #880e4f;
+  font-weight: bold;
+}
 .kubun-input {
   margin-left: 20px;
+}
+.kubun-input ::ng-deep .mat-form-field-label {
+  color: #880e4f;
+  font-weight: bold;
 }
 .tenyuryoku {
   width: 180px;
@@ -84,13 +96,21 @@ h3,h4 {
 .keiyakusha {
   width: 250px;
 }
+.keiyakusha ::ng-deep .mat-form-field-label {
+  color: #880e4f;
+  font-weight: bold;
+}
 .dlvry {
-  width: 55px;
+  width: 70px;
   font-size: 14px;
 }
 .shoruiMaisu {
-  width: 55px;
-  font-size: 13px;
+  width: 70px;
+  font-size: 14px;
+}
+.shoruiMaisu ::ng-deep .mat-form-field-label {
+  color: #880e4f;
+  font-weight: bold;
 }
 .biko {
   width: 450px;
@@ -127,6 +147,9 @@ h3,h4 {
   border: 1px solid;
 
 }
+.header-th th {
+  color: #880e4f;
+}
 /* 書類有無*/
 .shorui-umu {
   padding-top: 10px;
@@ -149,4 +172,7 @@ tr.mat-footer-row, tr.mat-row {
 }
 .tr-row {
   background-color: #EDE7F6;
+}
+.notice-msg {
+  color: #880e4f;
 }

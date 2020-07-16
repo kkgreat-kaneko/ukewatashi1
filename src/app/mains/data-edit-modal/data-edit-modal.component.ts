@@ -62,7 +62,7 @@ export class DataEditModalComponent implements OnInit {
   seiho = new FormControl('');                              // 生保分フォーム
   shoukenbango = new FormControl('');                       // 証券番号フォーム
   dlvry = new FormControl(Const.DLVRY_HANDING);             // 受渡方法フォーム
-  shoruiMaisu = new FormControl('');                        // 受渡枚数フォーム
+  shoruiMaisu = new FormControl('', { validators: [Validators.required] });                               // 受渡枚数フォーム
   bikou = new FormControl('');                              // 備考フォーム
   shoruiUmu = new FormControl('');                          // 書類有無フォーム
   tenyuryoku = new FormControl({value: '', disabled: false});   // 添付書類手入力フォーム disabledプロパティセット
