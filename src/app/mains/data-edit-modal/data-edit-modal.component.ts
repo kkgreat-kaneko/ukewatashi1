@@ -525,6 +525,7 @@ export class DataEditModalComponent implements OnInit {
     // 新仕様ステータス郵送-1のデータを編集更新した場合は、ステータス0(受渡し前未確認)に戻す
     if (this.data.status === Const.STATUS_DLVRY) {
       this.data.status = Const.STATUS_NOT_CHECK;                // ステータス0(受渡し前未確認)に設定する
+      this.alertChangedStatusDlvry();                           // 警告MSG出力
     }
     this.data.shoukenbango = this.formGroup.value.shoukenbango; // 証券番号
     this.data.shoruiMaisu = this.formGroup.value.shoruiMaisu;   // 書類枚数
@@ -608,37 +609,38 @@ export class DataEditModalComponent implements OnInit {
       this.dialog.close();
     }
   }
+
   /*
   * 閉じるボタン時、データ変更した時閉じて良いか警告メッセージ出力
   * はい=閉じる、いいえ=閉じないで画面戻る
   */
- alertShoruiEdited() {
-  const message = ['変更がありますが、終了してよいですか？'];
-  const msg = {
-    title: '',
-    message: message
-  };
+  alertShoruiEdited() {
+    const message = ['変更がありますが、終了してよいですか？'];
+    const msg = {
+      title: '',
+      message: message
+    };
 
-  const dialogRef = this.popupAlertDialog.open(PopupAlertYesNoComponent, {
-    data: msg,
-    disableClose: true,
-  });
-  // ダイアログ終了後処理
-  dialogRef.afterClosed()
-  .subscribe(
-    data => {
-      // nullデータ戻りチェック必須（無いとプログラムエラー)
-      if (data) {
-        return 0;
-      } else {
-        this.dialog.close();
+    const dialogRef = this.popupAlertDialog.open(PopupAlertYesNoComponent, {
+      data: msg,
+      disableClose: true,
+    });
+    // ダイアログ終了後処理
+    dialogRef.afterClosed()
+    .subscribe(
+      data => {
+        // nullデータ戻りチェック必須（無いとプログラムエラー)
+        if (data) {
+          return 0;
+        } else {
+          this.dialog.close();
+        }
+      },
+      error => {
+        console.log('error');
       }
-    },
-    error => {
-      console.log('error');
-    }
-  );
-}
+    );
+  }
 
   /*
   * 申請者変更用ボタンより、ダイアログオープン処理
@@ -1025,6 +1027,39 @@ export class DataEditModalComponent implements OnInit {
       }
     }
     return shoruiList;
+  }
+
+  /*
+  * 郵送ステータスを更新実行時に警告MSG表示
+  * ステータス0に戻る旨とチェックシート再印刷をメッセージ
+  */
+  alertChangedStatusDlvry() {
+    const message = [
+      '郵送ステータス(-1)の再編集更新後は、書類受渡前ステータス(0)に戻ります。',
+      '更新後は、再度チェックシート印刷を行なってください。'
+    ];
+    const msg = {
+      title: '',
+      message: message
+    };
+
+    const dialogRef = this.popupAlertDialog.open(PopupAlertComponent, {
+      data: msg,
+      disableClose: true,
+    });
+    // ダイアログ終了後処理
+    dialogRef.afterClosed()
+    .subscribe(
+      data => {
+        // nullデータ戻りチェック必須（無いとプログラムエラー)
+        if (data) {
+        }
+        this.dialog.close();
+      },
+      error => {
+        console.log('error');
+      }
+    );
   }
 
 }
