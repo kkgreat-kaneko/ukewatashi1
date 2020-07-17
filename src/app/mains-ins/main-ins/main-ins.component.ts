@@ -49,6 +49,7 @@ export class MainInsComponent implements OnInit {
   limit = new FormControl('1000');                                    // 表示件数1000デフォルト値
   shinseisha = new FormControl('all');                                // 申請者選択
   kubun = new FormControl('all');                                     // 区分選択
+  kakuninbi = new FormControl('');                                    // 確認日選択
 
   frmShinseisha: string[];                                            // 申請者選択用データ
   frmKubun: string[];                                                 // 区分選択用データ
@@ -77,7 +78,8 @@ export class MainInsComponent implements OnInit {
       beforeKanriNo: this.beforeKanriNo,                              // 管理No
       limit: this.limit,                                              // 表示件数
       shinseisha: this.shinseisha,                                    // 申請者
-      kubun: this.kubun                                               // 区分
+      kubun: this.kubun,                                              // 区分
+      kakuninbi: this.kakuninbi                                       // 確認日検索
     });
     
     this.getListByHokengaisha();                                      // 書類一覧検索出力処理
@@ -119,6 +121,7 @@ export class MainInsComponent implements OnInit {
       this.setShinseishaAndKubun(this.kanriList);                     // 検索用申請者、区分のセレクトOption値をセット
       this.shinseisha.reset('all');                                   // 検索用申請者の選択状態をリセット--->すべて
       this.kubun.reset('all');                                        // 検索用区分の選択状態をリセット--->すべて
+      this.kakuninbi.reset('');                                       // 検索用確認日の選択状態をリセット--->ブランク
       this.selection.clear();                                         // 書類チェックボタン状態リセット
       if (this.status.value === String(Const.FRM_STATUS_DLVRY)        // 書類チェックボタンdisabled設定
            || this.status.value === String(Const.FRM_STATUS_END)) {
@@ -157,33 +160,59 @@ export class MainInsComponent implements OnInit {
   }
 
   /*
-  *  申請者、区分の検索選択時、処理
+  *  申請者、区分、最終確認日、検索選択時、処理  リスト上の確認日はsaishuKakuninbiなので要注意
   */
   public searchShinseiKubun() {
     let shinseisha = this.formGroup.value.shinseisha;
     let kubun = this.formGroup.value.kubun;
+    let kakuninbi = this.sessionService.formatDatePicker(this.kakuninbi.value);   // DatePicker日付を整形ゼロ埋めした年月日を返す
     this.kanriList = this.resetKanriList;
     this.searchedKanriList = [];
     
-    if (shinseisha === 'all' && kubun === 'all') {
+    if (shinseisha === 'all' && kubun === 'all' && !kakuninbi) {
       return;
     } else {
       this.kanriList.forEach(kanri => {
-        /* 申請者と区分を検索 */
-        if (shinseisha !== 'all' && kubun !== 'all') {
+        const dataKakuninbi = kanri.saishuKakuninbi.substr(0, 10);                // 作成日View用整形日付（時間を省略)
+        /* 申請者と区分と確認日を検索 */
+        if (shinseisha !== 'all' && kubun !== 'all' && kakuninbi ) {
+          if (kanri.shinseisha === shinseisha && kanri.kubun === kubun && dataKakuninbi === kakuninbi) {
+            this.searchedKanriList.push(kanri);
+          }
+        }
+        /* 申請者と区分を検索(確認日選択なし) */
+        if (shinseisha !== 'all' && kubun !== 'all' && !kakuninbi) {
           if (kanri.shinseisha === shinseisha && kanri.kubun === kubun) {
             this.searchedKanriList.push(kanri);
           }
         }
-        /* 申請者を検索 */
-        if (shinseisha !== 'all' && kubun === 'all') {
+        /* 申請者を検索(区分と確認日選択なし) */
+        if (shinseisha !== 'all' && kubun === 'all' && !kakuninbi) {
           if (kanri.shinseisha === shinseisha) {
             this.searchedKanriList.push(kanri);
           }
         }
-        /* 区分を検索 */
-        if (shinseisha === 'all' && kubun !== 'all') {
+        /* 申請者と確認日を検索(区分選択なし) */
+        if (shinseisha !== 'all' && kubun === 'all' && kakuninbi) {
+          if (kanri.shinseisha === shinseisha　&& dataKakuninbi === kakuninbi) {
+            this.searchedKanriList.push(kanri);
+          }
+        }
+        /* 区分を検索(申請者と確認日選択なし) */
+        if (shinseisha === 'all' && kubun !== 'all' && !kakuninbi) {
           if (kanri.kubun === kubun) {
+            this.searchedKanriList.push(kanri);
+          }
+        }
+        /* 区分と確認日を検索(申請者選択なし) */
+        if (shinseisha === 'all' && kubun !== 'all' && kakuninbi) {
+          if (kanri.kubun === kubun && dataKakuninbi === kakuninbi) {
+            this.searchedKanriList.push(kanri);
+          }
+        }
+        /* 確認日を検索(申請者と区分選択なし) */
+        if (shinseisha === 'all' && kubun === 'all' && kakuninbi) {
+          if (dataKakuninbi === kakuninbi) {
             this.searchedKanriList.push(kanri);
           }
         }

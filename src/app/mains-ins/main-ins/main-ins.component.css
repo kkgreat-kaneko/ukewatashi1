@@ -221,7 +221,8 @@ select {
     padding-top: 5px;
 }
 .select-panel2 {
-    width: 510px;
+    /*width: 510px;*/
+    width: 730px;
     height: 40px;
     /*background: #e0f2f1;*/
     background: #ffffff;
@@ -232,7 +233,7 @@ select {
     margin-left: 20px;
 }
 .kanri-kubun {
-    margin-left: 50px;
+    margin-left: 40px;
 }
 .kanri-shinseisha label,
 .kanri-kubun label
@@ -245,6 +246,62 @@ select {
     font-size: small;
 }
 .kanri-kubun label {
+    width: 40px;
+}
+.kanri-kakuninbi {
+    margin-left: 40px;
+}
+.kanri-kakuninbi input {
+    color: black;
+}
+.kanri-kakuninbi mat-form-field {
+    /*border-bottom: solid 1px;*/
+    height: 25px;
+    width: 130px;
+    font-size: normal;
+    padding-top: 5px;
+}
+/*.kanri-kakuninbi ::ng-deep .mat-form-field-label {
+    color: red;
+}*/
+.kanri-kakuninbi ::ng-deep .mat-form-field-infix {
+    border-top: 0;
+}
+/*カレンダー全体*/
+.kanri-kakuninbi ::ng-deep .mat-form-field-wrapper {
+    height: 28px;
+    padding-bottom: 0px;
+    bottom: 5px;
+}
+/*カレンダー内部全体*/
+.kanri-kakuninbi ::ng-deep .mat-form-field-flex {
+	padding-top: 0px;
+}
+/*カレンダー日付テキスト箇所*/
+.kanri-kakuninbi ::ng-deep .mat-form-field-infix {
+	padding-bottom: 0px;
+    margin-bottom: 0px;
+    padding-top: 0px;
+    bottom: 10px;
+}
+/*カレンダーアンダーラインの上下位置*/
+.kanri-kakuninbi ::ng-deep .mat-form-field-underline {
+    bottom: 0px;
+}
+/*カレンダーアイコンの上下位置*/
+.kanri-kakuninbi ::ng-deep .mat-form-field-suffix {
+    bottom:3px;
+}
+.kanri-kakuninbi label
+{
+    display: block;
+    float: left;
+    width: 50px;
+    padding-top: 10px;
+    text-align:left;
+    font-size: small;
+}
+.kanri-kakuninbi label {
     width: 40px;
 }
 .select-shinseisha {
@@ -267,7 +324,8 @@ select {
     bottom: 8px;
 }
 .section2-btns {
-    margin-left: 260px;
+    /*margin-left: 260px;*/
+    margin-left: 40px;
 }
 .section2-btns button {
     height: 35px;

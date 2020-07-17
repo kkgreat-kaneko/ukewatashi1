@@ -87,6 +87,14 @@
                       </select>
                     </mat-form-field>
                 </div>
+                <div class="kanri-kakuninbi" fxLayout="row">
+                    <label>確認日</label>
+                    <mat-form-field class="input-dibled" appearance="fill">
+                        <input matInput [matDatepicker]="searchKakuninbi" formControlName="kakuninbi" (dateChange)="searchShinseiKubun()">
+                        <mat-datepicker-toggle matSuffix [for]="searchKakuninbi"></mat-datepicker-toggle>
+                        <mat-datepicker #searchKakuninbi disabled="false"></mat-datepicker>
+                      </mat-form-field>
+                </div>
             </div>
 
             <div class="section2-btns" fxLayout="row">

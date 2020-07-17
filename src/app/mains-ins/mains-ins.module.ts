@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material';
+import { MatButtonModule, MatNativeDateModule } from '@angular/material';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -15,6 +15,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDialogModule } from '@angular/material';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { PopupModule } from '../popup/popup.module';
 import { MainInsComponent } from './main-ins/main-ins.component';
 import { DataCheckModalComponent } from './data-check-modal/data-check-modal.component';
@@ -44,6 +45,8 @@ import { PwdReprtConfirmModalComponent } from './pwd-reprt-confirm-modal/pwd-rep
     MatSortModule,
     MatPaginatorModule,
     MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     PopupModule,
   ],
   entryComponents: [

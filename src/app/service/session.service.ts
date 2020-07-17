@@ -78,6 +78,17 @@ export class SessionService {
   }
 
   /*
+  * DatePicker選択日付を文字列に整形して返す, 年月日yyyy/mm/dd形式を返す
+  */
+  public formatDatePicker(date: Date): string {
+    if (!date) {
+      return null;
+    }
+    const yyyymmdd = date.getFullYear() + '/' + this.toDoubleDigit(date.getMonth() + 1) + '/' + this.toDoubleDigit(date.getDate());
+    return yyyymmdd;
+  }
+
+  /*
   * 数字のゼロ詰め処理 日付時刻のゼロ詰めに使用
   */
   public toDoubleDigit(num: number): string {
