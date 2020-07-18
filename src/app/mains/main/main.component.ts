@@ -1056,9 +1056,12 @@ export class MainComponent implements OnInit {
   /*
   *  パスワード変更ボタン
   *  passwordChangeModalComponentを開く
+  *  ログイン時有効期限切れの場合は、引数tureで渡される。--->パスワード変更画面で閉じるボタンがdisabledになる仕組み
+  *  また引数pwdExpired=trueの時は、ログイン後処理--->ログイン初期MSG出力
+  *  falseの時は、メイン画面パスワード変更ボタンからの処理--->ログイン初期MSG不要
+  *  とする分岐フラグとなる。
   */
   public showPasswordChange(pwdExpired = false) {
-    //this.daialogTantousha = new Tantousha();
     const daialogTantousha = new Tantousha();
     if (pwdExpired) {
       daialogTantousha.passwordSetdate = 'expired';
@@ -1080,7 +1083,11 @@ export class MainComponent implements OnInit {
             title: '',
             message: message,
           };
-          this.showInitAlert(msg);
+          if (pwdExpired) {
+            this.showInitAlert(msg);
+          } else {
+            this.showAlert(msg);
+          }
         }
       },
       error => {
@@ -1091,7 +1098,7 @@ export class MainComponent implements OnInit {
 
   /*
   * パスワード有効期限切れメッセージ
-  * 削除ボタン(データ未選択時、Status0,3以外データ選択時)
+  * 
   */
   public showPwdAlert(msg: Msg) {
     const dialogRef = this.popupAlertDialog.open(PopupAlertComponent, {
