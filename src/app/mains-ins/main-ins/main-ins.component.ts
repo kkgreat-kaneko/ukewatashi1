@@ -549,7 +549,7 @@ export class MainInsComponent implements OnInit {
       this.showAlert(msg);
       return 0;
     }
-    
+    /* 複数選択可能とする
     if (this.selectedKanriList.length > 1) {
       let message = ['複数選択はできません。'];
       const msg = {
@@ -559,7 +559,7 @@ export class MainInsComponent implements OnInit {
       this.showAlert(msg);
       return 0;
     }
-
+    */
         
     
     // 認証ダイアログ表示
@@ -575,8 +575,15 @@ export class MainInsComponent implements OnInit {
       data => {
         if (data) {
           //再印刷処理開始
-          const kanri = this.selectedKanriList[0];
-          this.kanriService.rePrintHokenConfirm(kanri)
+          //const kanri = this.selectedKanriList[0];
+          const reprintIds = [];
+          this.selectedKanriList.forEach(kanri => {
+            reprintIds.push(kanri.id);
+          });
+          const requestDto = new RequestDto();
+          requestDto.paramLongs = reprintIds;
+          //this.kanriService.rePrintHokenConfirm(kanri)
+          this.kanriService.rePrintHokenConfirm(requestDto)
           .then(res => {
               const hokenConfirmPdf = new Blob([res], { type: 'application/pdf' } );
               // ゲットしたBlobデータ(PDF)を別ウィンドウでダウンロードせず開く
