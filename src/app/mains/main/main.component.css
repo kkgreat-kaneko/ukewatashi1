@@ -330,10 +330,11 @@ mat-form-field {
 table {
   width: 2800px;
 }
-th, td {
-  font-size: x-small;
+td {
+  font-size: 11px;
 }
 th {
+  font-size: 12px;
   font-weight: 900;
 }
 tr.mat-header-row {
@@ -353,7 +354,7 @@ tr.mat-footer-row, tr.mat-row {
   width: 30px;
 }
 .th-status-app {
-  width: 35px;
+  width: 40px;
 }
 .th-id {
   width: 50px;
