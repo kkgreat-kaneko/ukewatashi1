@@ -25,6 +25,11 @@ export class LoginComponent implements OnInit {
       userId: new FormControl('', { validators: [Validators.required] }),
       password: new FormControl('', { validators: [Validators.required] }),
     });
+    // ユーザー画面解像度高さの条件よりブラウザズームを縮小
+    const windowHeight = window.screen.height;
+    if (windowHeight < 950) {
+      document.body.style.zoom = "98.5%";
+    }
   }
 
   /*
