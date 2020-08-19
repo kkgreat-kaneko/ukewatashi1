@@ -4,18 +4,20 @@
         <h4>担当者データ</h4>
         <!------横列１段目----------------------->
         <div class="" fxLayout="row">
-            <div class="">
-                <mat-form-field class="user-id" appearance="legacy">
+            <div class="" fxLayout="column">
+                <mat-form-field class="user-id all-form" appearance="legacy">
                   <mat-label>ユーザーID(英数記)</mat-label>
-                  <input type="text" matInput placeholder="" formControlName="userId" (input)="chkIdText($event)">
+                  <input type="text" matInput placeholder="" id="userId" formControlName="userId" (input)="chkIdText($event)" (keydown)="chkIme($event)">
                 </mat-form-field>
+                <span class="inputErrorUserId">{{errorUserIdMsg}}</span>
             </div>
             <div class="">
                 <mat-form-field class="password all-form" appearance="legacy">
                   <mat-label>パスワード(英数記号)</mat-label>
-                  <input type="text" #password matInput placeholder="" formControlName="password" (input)="chkPwdText($event)">
+                  <input type="text" #password matInput placeholder="" formControlName="password" (input)="chkPwdText($event)" (keydown)="chkIme($event)">
                   <!--span class="form-varidation" *ngIf="password.dirty && password.errors != null && password.errors.required">*入力必須です</span-->
                 </mat-form-field>
+                <span class="inputError">{{errorPasswordMsg}}</span>
             </div>
             <div class="">
                 <mat-form-field class="password-setdate all-form" appearance="legacy">

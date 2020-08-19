@@ -141,3 +141,13 @@ tr.mat-footer-row, tr.mat-row {
 .kubun {
     width: 40px;
 }
+.inputErrorUserId {
+    margin-left: 15px;
+    font-size: 7px;
+    color: brown;
+}
+.inputError {
+    margin-left: 20px;
+    font-size: 7px;
+    color: brown;
+}

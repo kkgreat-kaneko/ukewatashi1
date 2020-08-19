@@ -18,17 +18,19 @@ import { PopupAlertComponent } from '../../popup/popup-alert/popup-alert.compone
   styleUrls: ['./mst-tantousha.component.css']
 })
 export class MstTantoushaComponent implements OnInit {
-  message: string;                                                    // エラーメッセージ
+  message: string;                                                    // システムエラーメッセージ
+  errorUserIdMsg: string;                                             // ユーザーIDフォーム警告用エラーメッセージ
+  errorPasswordMsg: string;                                           // パスワードフォーム警告用エラーメッセージ
   tantousha: Tantousha;                                               // 担当者更新用・一覧選択データ用
   updateUserId: string;
   kaishaSelect = [                                                    // 会社選択フォームOption値
     { label: Const.JLX_HOKEN, value: Const.JLX_HOKEN},
     { label: Const.JLX_HS_HOKEN, value: Const.JLX_HS_HOKEN}
   ];
-  kengenSelect = [                                                    // 権限選択フォームOption値
-    { label: Const.KENGEN_ALL_LABEL, value: Const.KENGEN_ALL},
+  kengenSelect = [                                                    // 権限選択フォームOption値Viewで使用
+    { label: Const.KENGEN_NORMAL_LABEL, value: Const.KENGEN_NORMAL},
     { label: Const.KENGEN_MANAGER_LABEL, value: Const.KENGEN_MANAGER},
-    { label: Const.KENGEN_NORMAL_LABEL, value: Const.KENGEN_NORMAL}
+    { label: Const.KENGEN_ALL_LABEL, value: Const.KENGEN_ALL}
   ];
   displayColumns = [                                                  // Tantoushaプロパティと紐付けた一覧表示する列を指定 *チェックボックス用select忘れずに
     'select', 'userId', 'password', 'passwordSetdate', 'kengen', 'shimei', 'kaisha',
@@ -47,14 +49,14 @@ export class MstTantoushaComponent implements OnInit {
   private cbEmmiter = this.selection.onChange.asObservable();
 
   formGroup: FormGroup;                                                               // フォームグループ、以下フォームコントロール初期化
-  userId = new FormControl('');                                                       // ユーザーID
+  userId = new FormControl('', [Validators.required]);                                // ユーザーID
   password = new FormControl('', [Validators.required]);                              // パスワード
   passwordSetdate = new FormControl('');                                              // パスワード設定日
-  kengen = new FormControl('', {                                                      // 権限
+  kengen = new FormControl(Const.KENGEN_NORMAL, {                                     // 権限
     validators: [Validators.pattern('^[0-2]$')] });
-  shimei = new FormControl('');                                                       // 氏名
-  kaisha = new FormControl(Const.JLX_HOKEN);                                                       // 会社名
-  busho = new FormControl('');                                                        // 部署名
+  shimei = new FormControl('', [Validators.required]);                                // 氏名
+  kaisha = new FormControl(Const.JLX_HOKEN);                                          // 会社名
+  busho = new FormControl('', [Validators.required]);                                 // 部署名
   kubun = new FormControl('');                                                        // 区分（組織略名)
   
 
@@ -98,6 +100,7 @@ export class MstTantoushaComponent implements OnInit {
         this.updateUserId = null;
         this.formGroup.reset();
         this.kaisha.reset(Const.JLX_HOKEN);
+        this.kengen.reset(Const.KENGEN_NORMAL);
       }
     });
   }
@@ -165,6 +168,28 @@ export class MstTantoushaComponent implements OnInit {
     }
     if (password.length < 8) {
       const message = ['パスワードは、8文字以上-16文字以内です。']                        // 新仕様--->ルール適用(16文字以上はフォームチェック処理済み)
+        const msg = {
+          title: '',
+          message: message,
+        };
+        this.showAlert(msg);
+        return 0;
+    }
+
+    let shimei = this.formGroup.value.shimei;                                 // 新仕様--->旧仕様空氏名可能変更
+    if (!shimei) {
+      const message = ['氏名は、必ず入力してください。']
+        const msg = {
+          title: '',
+          message: message,
+        };
+        this.showAlert(msg);
+        return 0;
+    }
+
+    let busho = this.formGroup.value.busho;                                 // 新仕様--->旧仕様空部署可能変更
+    if (!busho) {
+      const message = ['部署は、必ず入力してください。']
         const msg = {
           title: '',
           message: message,
@@ -291,6 +316,28 @@ export class MstTantoushaComponent implements OnInit {
         };
         this.showAlert(msg);
         return 0;
+      }
+
+      let shimei = this.formGroup.value.shimei;                                 // 新仕様--->旧仕様空氏名可能変更
+      if (!shimei) {
+        const message = ['氏名は、必ず入力してください。']
+          const msg = {
+            title: '',
+            message: message,
+          };
+          this.showAlert(msg);
+          return 0;
+      }
+
+      let busho = this.formGroup.value.busho;                                 // 新仕様--->旧仕様空部署可能変更
+      if (!busho) {
+        const message = ['部署は、必ず入力してください。']
+          const msg = {
+            title: '',
+            message: message,
+          };
+          this.showAlert(msg);
+          return 0;
       }
 
       // 更新フォーム値セット
@@ -450,6 +497,7 @@ export class MstTantoushaComponent implements OnInit {
     this.updateUserId = null;
     this.formGroup.reset();
     this.kaisha.reset(Const.JLX_HOKEN);
+    this.kengen.reset(Const.KENGEN_NORMAL);
     this.selection.clear();
     this.getTantoushaList();
   }
@@ -546,6 +594,28 @@ export class MstTantoushaComponent implements OnInit {
       num = "0" + num;
     }
     return num;
+  }
+
+  /*
+  *  ユーザーID・パスワード入力時、IMEモード警告用　Keydownイベントにて発火
+  *  Mac向けの仕様、WindowsはInputタイプPasswordだと自動で入力キーが半角英数のみとなる。
+  */
+  public chkIme(event: any) {
+    this.errorUserIdMsg = '';
+    this.errorPasswordMsg = '';
+    if (event.which === 229 || event.which === 0) {
+      const target = event.target;
+      const idAttr = target.attributes.id;
+      const value = idAttr.nodeValue;
+      if (value === 'userId') {
+        this.errorUserIdMsg = '日本語入力です。';
+      } else {
+        this.errorPasswordMsg = '日本語入力です。';
+      }
+    } else {
+      
+    }
+    event.stopPropagation();
   }
 
 }
