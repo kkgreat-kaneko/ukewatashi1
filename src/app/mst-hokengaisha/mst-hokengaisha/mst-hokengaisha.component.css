@@ -158,3 +158,13 @@ tr.mat-footer-row, tr.mat-row {
 .yomi {
     width: 140px;
 }
+.inputErrorUserId {
+    margin-left: 15px;
+    font-size: 7px;
+    color: brown;
+}
+.inputError {
+    margin-left: 20px;
+    font-size: 7px;
+    color: brown;
+}

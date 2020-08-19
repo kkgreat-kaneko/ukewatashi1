@@ -4,17 +4,19 @@
         <h4>保険会社データ</h4>
         <!------横列１段目----------------------->
         <div class="" fxLayout="row">
-            <div class="">
+            <div class="" fxLayout="column">
                 <mat-form-field class="user-id line1-form" appearance="legacy">
                   <mat-label>ユーザーID(英数記)</mat-label>
-                  <input type="text" matInput placeholder="" formControlName="userId" (input)="chkIdText($event)">
+                  <input type="text" matInput placeholder="" id="userId" formControlName="userId" (input)="chkIdText($event)" (keydown)="chkIme($event)">
                 </mat-form-field>
+                <span class="inputErrorUserId">{{errorUserIdMsg}}</span>
             </div>
-            <div class="">
+            <div class="" fxLayout="column">
                 <mat-form-field class="password line1-form" appearance="legacy">
                   <mat-label>パスワード(英数記号)</mat-label>
-                  <input type="text" #password matInput placeholder="" formControlName="password" (input)="chkPwdText($event)">
+                  <input type="text" #password matInput placeholder="" formControlName="password" (input)="chkPwdText($event)" (keydown)="chkIme($event)">
                 </mat-form-field>
+                <span class="inputError">{{errorPasswordMsg}}</span>
             </div>
             <div class="">
                 <mat-form-field class="password-setdate line1-form" appearance="legacy">

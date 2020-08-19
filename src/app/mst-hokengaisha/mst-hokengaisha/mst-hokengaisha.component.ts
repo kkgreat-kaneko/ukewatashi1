@@ -19,7 +19,9 @@ import { HokengaishaListService } from '../../service/hokengaisha-list.service';
   styleUrls: ['./mst-hokengaisha.component.css']
 })
 export class MstHokengaishaComponent implements OnInit {
-  message: string;                                                      // エラーメッセージ
+  message: string;                                                      // システムエラーメッセージ
+  errorUserIdMsg: string;                                               // ユーザーIDフォーム警告メッセージ
+  errorPasswordMsg: string;                                             // パスワードフォーム警告メッセージ
   selectedHokengaisha: Hokengaisha;                                     // 一覧選択データ用
   updateUserId: string;                                                 // 編集削除時ユーザーID変更入力したか判別用
   hokengaishaList: HokengaishaList[];                                   // 保険会社選択セレクトフォーム用
@@ -157,24 +159,24 @@ export class MstHokengaishaComponent implements OnInit {
     let userId = this.formGroup.value.userId;
     if (!userId) {
       const message = ['ユーザーIDは、必ず入力してください。']
-        const msg = {
-          title: '',
-          message: message,
-        };
-        this.showAlert(msg);
-        return 0;
+      const msg = {
+        title: '',
+        message: message,
+      };
+      this.showAlert(msg);
+      return 0;
     }
 
     let hokengaisha = this.formGroup.value.hokengaisha;                                         // 保険会社必須項目
-      if (!hokengaisha) {
-        const message = ['会社名を選択してください。']
-          const msg = {
-            title: '',
-            message: message,
-          };
-          this.showAlert(msg);
-          return 0;
-      }
+    if (!hokengaisha) {
+      const message = ['会社名を選択してください。']
+      const msg = {
+        title: '',
+        message: message,
+      };
+      this.showAlert(msg);
+      return 0;
+    }
 
     // DB検索処理 user_idの重複チェック--->OKならDB登録処理
     this.hokengaishaService.getByID(userId)
@@ -509,6 +511,28 @@ export class MstHokengaishaComponent implements OnInit {
       num = "0" + num;
     }
     return num;
+  }
+
+  /*
+  *  ユーザーID・パスワード入力時、IMEモード警告用　Keydownイベントにて発火
+  *  Mac向けの仕様、WindowsはInputタイプPasswordだと自動で入力キーが半角英数のみとなる。
+  */
+  public chkIme(event: any) {
+    this.errorUserIdMsg = '';
+    this.errorPasswordMsg = '';
+    if (event.which === 229 || event.which === 0) {
+      const target = event.target;
+      const idAttr = target.attributes.id;
+      const value = idAttr.nodeValue;
+      if (value === 'userId') {
+        this.errorUserIdMsg = '日本語入力です。';
+      } else {
+        this.errorPasswordMsg = '日本語入力です。';
+      }
+    } else {
+      
+    }
+    event.stopPropagation();
   }
 }
 
