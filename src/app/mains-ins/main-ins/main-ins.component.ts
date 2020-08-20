@@ -46,7 +46,7 @@ export class MainInsComponent implements OnInit {
   formGroup: FormGroup;
   status = new FormControl(String(this.frmStatusNot));                // status絞込み
   beforeKanriNo = new FormControl('');                                // 管理No.以前
-  limit = new FormControl('1000');                                    // 表示件数1000デフォルト値
+  limit = new FormControl('100');                                    // 表示件数1000デフォルト値
   shinseisha = new FormControl('all');                                // 申請者選択
   kubun = new FormControl('all');                                     // 区分選択
   kakuninbi = new FormControl('');                                    // 確認日選択
@@ -173,7 +173,11 @@ export class MainInsComponent implements OnInit {
       return;
     } else {
       this.kanriList.forEach(kanri => {
-        const dataKakuninbi = kanri.saishuKakuninbi.substr(0, 10);                // 作成日View用整形日付（時間を省略)
+        /* 作成日View用整形日付（時間を省略) */
+        let dataKakuninbi = '';
+        if (kanri.saishuKakuninbi) {
+          dataKakuninbi = kanri.saishuKakuninbi.substr(0, 10);
+        }
         /* 申請者と区分と確認日を検索 */
         if (shinseisha !== 'all' && kubun !== 'all' && kakuninbi ) {
           if (kanri.shinseisha === shinseisha && kanri.kubun === kubun && dataKakuninbi === kakuninbi) {
