@@ -46,7 +46,7 @@ export class MainInsComponent implements OnInit {
   formGroup: FormGroup;
   status = new FormControl(String(this.frmStatusNot));                // status絞込み
   beforeKanriNo = new FormControl('');                                // 管理No.以前
-  limit = new FormControl('100');                                    // 表示件数1000デフォルト値
+  limit = new FormControl('300');                                    // 表示件数1000デフォルト値
   shinseisha = new FormControl('all');                                // 申請者選択
   kubun = new FormControl('all');                                     // 区分選択
   kakuninbi = new FormControl('');                                    // 確認日選択
