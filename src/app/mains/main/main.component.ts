@@ -488,7 +488,7 @@ export class MainComponent implements OnInit {
 
   /*
   * 削除ボタン処理
-  * 削除画面開く条件：書類選択必須として、status0、3の書類選択のみ可能
+  * 削除画面開く条件：書類選択必須として、status0、3の書類、「未承認」の書類選択のみ可能
   */
   public deleteKanri() {
     const selectedAll = this.kanriTableService.getSelectedAll();
@@ -515,6 +515,16 @@ export class MainComponent implements OnInit {
         this.showAlert(msg);
         return 0;
       }
+      if (selected.statusApp === Const.APP_STATUS_OK) {
+        let message = ['削除が可能な対象は「未承認」の案件です。'];
+        const msg = {
+          title: '',
+          message: message,
+        };
+        this.showAlert(msg);
+        return 0;
+      }
+      
       this.dialogKanri = new Kanri();
       const dialogRef = this.dialog.open(DataDeleteModalComponent, {
         data: this.dialogKanri,         // モーダルコンポーネントにInjectするデータ 戻り処理ないがインスタンス渡し必要
