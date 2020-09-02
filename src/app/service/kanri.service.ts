@@ -44,7 +44,6 @@ export class KanriService {
   */
   public async getInitList(kanri: Kanri): Promise<Kanri[]> {
     const headers = this.session.setTkHeaders();
-    //this.res = await this.http.post('http://192.168.1.11:8080/Ukewatashi/ws/kanri/getinitlist', kanri, {headers: headers})
     this.res = await this.http.post( Const.WWW_ROOT + 'kanri/getinitlist', kanri, {headers: headers})
     .toPromise();
     return this.res;
@@ -55,7 +54,6 @@ export class KanriService {
   */
   public async getList(kanri: Kanri): Promise<Kanri[]> {
     const headers = this.session.setTkHeaders();
-    //this.res = await this.http.post('http://192.168.1.11:8080/Ukewatashi/ws/kanri/getlist', kanri, {headers: headers})
     this.res = await this.http.post( Const.WWW_ROOT + 'kanri/getlist', kanri, {headers: headers})
     .toPromise();
     return this.res;
@@ -66,7 +64,6 @@ export class KanriService {
   */
   public async createKanri(kanri: Kanri): Promise<Kanri> {
     const headers = this.session.setTkHeaders();
-    //this.res = await this.http.post('http://192.168.1.11:8080/Ukewatashi/ws/kanri/createkanri', kanri, {headers: headers})
     this.res = await this.http.post( Const.WWW_ROOT + 'kanri/createkanri', kanri, {headers: headers})
     .toPromise();
     return this.res;
@@ -77,7 +74,6 @@ export class KanriService {
   */
   public async updateKanri(kanri: Kanri): Promise<Kanri> {
     const headers = this.session.setTkHeaders();
-    //this.res = await this.http.post('http://192.168.1.11:8080/Ukewatashi/ws/kanri/updatekanri', kanri, {headers: headers})
     this.res = await this.http.post( Const.WWW_ROOT + 'kanri/updatekanri', kanri, {headers: headers})
     .toPromise();
     return this.res;
@@ -88,7 +84,6 @@ export class KanriService {
   */
   public async deleteKanri(kanri: Kanri): Promise<number> {
     const headers = this.session.setTkHeaders();
-    //this.res = await this.http.post('http://192.168.1.11:8080/Ukewatashi/ws/kanri/deletekanri', kanri, {headers: headers})
     this.res = await this.http.post( Const.WWW_ROOT + 'kanri/deletekanri', kanri, {headers: headers})
     .toPromise();
     return this.res;
@@ -99,7 +94,6 @@ export class KanriService {
   */
   public async approveKanries(dto: ApproveData): Promise<number> {
     const headers = this.session.setTkHeaders();
-    //this.res = await this.http.post('http://192.168.1.11:8080/Ukewatashi/ws/kanri/approvekanries', dto, {headers: headers})
     this.res = await this.http.post( Const.WWW_ROOT + 'kanri/approvekanries', dto, {headers: headers})
     .toPromise();
     return this.res;
@@ -110,7 +104,6 @@ export class KanriService {
   */
   public async approveKanri(kanri: Kanri): Promise<number> {
     const headers = this.session.setTkHeaders();
-    //this.res = await this.http.post('http://192.168.1.11:8080/Ukewatashi/ws/kanri/approvekanri', kanri, {headers: headers})
     this.res = await this.http.post( Const.WWW_ROOT + 'kanri/approvekanri', kanri, {headers: headers})
     .toPromise();
     return this.res;
@@ -194,7 +187,6 @@ export class KanriService {
   */
   public async checkSheetPrintInit(kanri: Kanri): Promise<Kanri[]>  {
     const headers = this.session.setTkHeaders();
-    //this.res = await this.http.post('http://192.168.1.11:8080/Ukewatashi/ws/kanri/getchecksheet', kanri, { headers: headers })
     this.res = await this.http.post( Const.WWW_ROOT + 'kanri/getchecksheet', kanri, { headers: headers })
     .toPromise();
     return this.res;
@@ -206,7 +198,6 @@ export class KanriService {
   */
   public checkSheetPrint(printList: Kanri[]) {
     const headers = this.session.setTkHeaders();
-    //this.http.post('http://192.168.1.11:8080/Ukewatashi/ws/kanri/printchecksheet', printList, { responseType: 'blob', headers: headers })
     this.http.post( Const.WWW_ROOT + 'kanri/printchecksheet', printList, { responseType: 'blob', headers: headers })
     .subscribe(
       response => {
