@@ -17,7 +17,6 @@ export class KanriDelService {
   */
   public async getList(kanri: Kanri): Promise<Kanri[]> {
     const headers = this.session.setTkHeaders();
-    //this.res = await this.http.post('http://192.168.1.11:8080/Ukewatashi/ws/kanridel/getlist', kanri, {headers: headers})
     this.res = await this.http.post( Const.WWW_ROOT + 'kanridel/getlist', kanri, {headers: headers})
     .toPromise();
     return this.res;
