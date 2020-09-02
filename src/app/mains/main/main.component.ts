@@ -150,11 +150,13 @@ export class MainComponent implements OnInit {
   *   
   */
   ngOnInit() {
-    /* ブラウザ戻るボタン禁止 */
-    history.pushState(null, null, location.href);
-    window.addEventListener('popstate', (e) => {
-      history.go(1);
-    });
+    /* ブラウザ戻るボタン--->現画面に戻る＝前画面に戻れない　例外パスワード期限切れ時戻るボタンでメイン画面に入れるのでその場合適用しない */
+    if (!this.sessionService.getPwdExpired()) {
+      history.pushState(null, null, location.href);
+      window.addEventListener('popstate', (e) => {
+        history.go(1);
+      });
+    }
 
     this.loginUser = this.sessionService.setLoginUser();
     /*
