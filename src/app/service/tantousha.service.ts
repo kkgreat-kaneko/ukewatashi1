@@ -17,7 +17,6 @@ export class TantoushaService {
   */
   public async findall(): Promise<Tantousha[]> {
     const headers = this.session.setTkHeaders();
-    //this.res = await this.http.get('http://192.168.1.11:8080/Ukewatashi/ws/tantousha', {headers: headers})
     this.res = await this.http.get( Const.WWW_ROOT + 'tantousha', {headers: headers})
     .toPromise();
     return this.res;
@@ -29,7 +28,6 @@ export class TantoushaService {
   */
   public async getListByKaisha(kaisha: string) {
     const headers = this.session.setTkHeaders();
-    //this.res = await this.http.get('http://192.168.1.11:8080/Ukewatashi/ws/tantousha/bykaisha/' + kaisha, {headers: headers})
     this.res = await this.http.get( Const.WWW_ROOT + 'tantousha/bykaisha/' + kaisha, {headers: headers})
     .toPromise();
     return this.res;
