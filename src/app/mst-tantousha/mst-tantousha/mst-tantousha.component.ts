@@ -290,7 +290,7 @@ export class MstTantoushaComponent implements OnInit {
       const chk = this.formGroup.value.passwordSetdate.match(pattern);
       if (!chk) {
         const message = [
-          'パスワード設定日書式に誤りがあります。', 
+          'パスワード設定日に誤りがあります。(書式、末日等)', 
           '書式は、「YYYY/MM/DD hh:mm:ss」 です。',
           '*日付と時間の間は半角スペース'
         ]
@@ -310,7 +310,7 @@ export class MstTantoushaComponent implements OnInit {
       const date = String(dateYMD.getDate());
       const chkYMD = year + "/" + this.toDoubleDigits(month) + "/" + this.toDoubleDigits(date);
       if (strYMD !== chkYMD) {
-        const message = ['パスワード設定日が有効日付ではありません。', '年月日を確認してください。'];
+        const message = ['パスワード設定日が有効日付ではありません。(末日等)', '年月日を確認してください。'];
         const msg = {
           title: '',
           message: message,
