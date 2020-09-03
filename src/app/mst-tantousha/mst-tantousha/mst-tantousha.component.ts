@@ -21,6 +21,7 @@ export class MstTantoushaComponent implements OnInit {
   message: string;                                                    // システムエラーメッセージ
   errorUserIdMsg: string;                                             // ユーザーIDフォーム警告用エラーメッセージ
   errorPasswordMsg: string;                                           // パスワードフォーム警告用エラーメッセージ
+  errorPwdSetDateMsg: string;                                         // パスワード設定日警告用エラーメッセージ
   tantousha: Tantousha;                                               // 担当者更新用・一覧選択データ用
   updateUserId: string;
   kaishaSelect = [                                                    // 会社選択フォームOption値
@@ -309,7 +310,7 @@ export class MstTantoushaComponent implements OnInit {
       const date = String(dateYMD.getDate());
       const chkYMD = year + "/" + this.toDoubleDigits(month) + "/" + this.toDoubleDigits(date);
       if (strYMD !== chkYMD) {
-        const message = ['有効日付ではありません。', '年月日を確認してください。'];
+        const message = ['パスワード設定日が有効日付ではありません。', '年月日を確認してください。'];
         const msg = {
           title: '',
           message: message,
@@ -554,6 +555,9 @@ export class MstTantoushaComponent implements OnInit {
   * ひとまず数字プラス/:のみ入力許可、update処理で書式と日付有効性を最終チェック
   */
   public chkPwdSetdateText(event: any) {
+    if (event.target.value.match(/[a-zA-Z]/g)) {
+      this.errorPwdSetDateMsg = 'YYYY/MM/DD 00:00:00形式';
+    }
     this.passwordSetdate.setValue( event.target.value.replace(/[^0-9:/ ]/g, "") );
     event.stopPropagation();
   }
@@ -615,6 +619,17 @@ export class MstTantoushaComponent implements OnInit {
     } else {
       
     }
+    event.stopPropagation();
+  }
+
+  /*
+  *  パスワード設定日入力時、IMEモード警告とYmd形式警告　Keydownイベントにて発火
+  */
+  public chkImeYmd(event: any) {
+    this.errorPwdSetDateMsg = '';
+      if (event.which === 229 || event.which === 0) {
+        this.errorPwdSetDateMsg = '日本語入力です。'; 
+      }
     event.stopPropagation();
   }
 
