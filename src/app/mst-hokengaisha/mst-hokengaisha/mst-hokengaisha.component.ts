@@ -472,7 +472,7 @@ export class MstHokengaishaComponent implements OnInit {
   * ひとまず数字プラス/:のみ入力許可、update処理で書式と日付有効性を最終チェック
   */
   public chkPwdSetdateText(event: any) {
-    if (event.target.value.match(/[a-zA-Z]/g)) {
+    if (event.target.value.match(/[a-zA-Z"¥!#$%&()=~|\-^\\'`\{@[\]+*};<>?,.]/g)) {
       this.errorPwdSetDateMsg = 'YYYY/MM/DD 00:00:00形式';
     }
     this.passwordSetdate.setValue( event.target.value.replace(/[^0-9:/ ]/g, "") );
