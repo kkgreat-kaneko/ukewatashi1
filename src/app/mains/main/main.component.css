@@ -1,7 +1,8 @@
 .container {
   width: auto;
   height: 100%;
-  min-height: 770px;
+  /*min-height: 770px; 横拡張前*/
+  min-height: 800px;
   margin-left: auto;
   margin-right: auto;
   /*background: -webkit-linear-gradient(to right, #4682b4, #3a7bd5);*/ /* Chrome 10-25, Safari 5.1-6 */
@@ -11,11 +12,11 @@
   padding: 10px;
 }
 .main {
-  width: 1120px;
+  /*width: 1120px; 横拡張前*/
+  width: 1320px;
   height: 100%;
-  min-height: 690px;
-  /*min-height: 580px;*/
-  /*max-height: 750px;*/
+  /*min-height: 690px; 横拡張前*/
+  max-height: 720px;
   margin-top: 0;
   margin-left: auto;
   margin-right: auto;
@@ -35,7 +36,9 @@
 .title H3 {
   margin-top: 10px;
   margin-bottom: 10px;
-  margin-right: 50px;
+  /*margin-right: 50px; 横拡張前*/
+  margin-right: 200px;
+  margin-left: 30px;
   color: #002f6c;
 }
 .title H4 {
@@ -80,7 +83,8 @@ mat-form-field {
   line-height: 1;
 }
 .set-panel {
-  width: 1100px;
+  /*width: 1100px; 横拡張前*/
+  width: 1300px;
   margin-top: 0px;
   margin-bottom: 5px;
   padding-left: 10px;
@@ -91,12 +95,26 @@ mat-form-field {
   border: solid 1px;
   border-radius: 5px 5px;
 }
+/*横拡張追加*/
+.status-panel {
+  width: 530px;
+}
+/*横拡張追加*/
+.search-buttons-panel {
+  width: 700px;
+  margin-left: 20px;
+}
 .status-select, .status-app-select, .select-details{
   margin: 5px;
-  padding: 5px;
+  /*padding: 5px; 横拡張前*/
+  padding: 10px;
   border: solid 2px;
   border-color: #e74c3c;
   border-radius: 5px 5px;
+}
+/*横拡張追加*/
+.status-select, .status-app-select {
+  margin-left: 30px;
 }
 .select-details {
   border-color: #673AB7;
@@ -120,7 +138,8 @@ mat-form-field {
 .radio-col { /*ラジオボタン並び縦 */
   display: flex;
   flex-direction: column;
-  margin-left:10px;
+  /*margin-left:10px; 横拡張前*/
+  margin-left:20px;
 }
 .radio-col label {
   font-size: small;
@@ -150,6 +169,10 @@ mat-form-field {
   margin-bottom: 1px;
   margin-right: 20px;
 }
+/*横拡張追加*/
+.status-app-radio {
+  margin-left: 25px;
+}
 /* 会社選択ボタン、確認書印刷ボタン、メンテナンスボタン、終了ボタン */
 .kaisha-select mat-button-toggle{
 	height: 35px;
@@ -162,10 +185,12 @@ mat-form-field {
   line-height: 1px;
 }
 .print-confirm-btn {
-  margin-left: 15px;
+  /*margin-left: 15px; 横拡張前*/
+  margin-left: 100px;
 }
 .maintenance-btn {
-  margin-left: 10px;
+  /*margin-left: 10px; 横拡張前*/
+  margin-left: 20px;
 }
 .logout-btn {
   width: 75px;
@@ -189,7 +214,7 @@ mat-form-field {
   height: 37px;
 }
 /* 検索条件を選択部 */
-.select-details h6 {
+.select-details h5 {
   margin: 0;
 }
 .select-detail label{
@@ -204,7 +229,8 @@ mat-form-field {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: 30px;
+  /*margin-left: 30px; 横拡張前*/
+  margin-left: 50px;
   margin-right: 10px;
 }
 /* 検索実行ボタン１つの時の中央寄せ
@@ -239,6 +265,10 @@ mat-form-field {
   padding-top: 1px;
   padding-bottom: 1px;
 }
+/*横拡張追加*/
+.button-group {
+  margin-left: 30px;
+}
 .curd-button {
   height: 30px;
   line-height: 1px;
@@ -255,6 +285,9 @@ mat-form-field {
 .delete-btn-color {
   background: #fff176;
 }
+.approve-btn-color {
+  background: #d39ddb;
+}
 /* 削除閲覧ボタンアクティブ時背景色　その他チェックシート印刷・確認書印刷・メンテナンスボタン・CSV出力背景色 */
 .active-btn {
 	background: #fff176;
@@ -265,7 +298,8 @@ mat-form-field {
 /* チェックシート印刷 大枠囲い込み部分 */
 .print-section {
   height: 40px;
-  margin-left: 20px;
+  /*margin-left: 20px; 横拡張前*/
+  margin-left: 40px;
   margin-top: 4px;
   margin-bottom: 0px;
   padding-top: 3px;
@@ -301,7 +335,8 @@ mat-form-field {
 	bottom: 8px;
 }
 .pwd-change-btn{
-  margin-left: 15px;
+  /*margin-left: 15px; 横拡張前*/
+  margin-left: 130px;
   margin-top: 10px;
   margin-bottom: 10px;
 }
@@ -322,9 +357,9 @@ mat-form-field {
 }
 .list {
   min-height: 355px;
-  /*max-height: 400px;*/
   max-height: 355px;
-  width: 1095px;
+  /*width: 1095px; 横拡張前*/
+  width: 1295px;
   overflow: auto;
 }
 table {
@@ -427,7 +462,8 @@ tr.mat-footer-row, tr.mat-row {
 }
 /* ページ送り・CSVボタン・フッター */
 .paginator {
-  width: 1095px;
+  /*width: 1095px; 横拡張前*/
+  width: 1295px;
   height: 55px;
   margin: 0px;
 }

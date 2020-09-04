@@ -23,7 +23,7 @@
     <form [formGroup]="statusFormGroup">
     <div class="set-panel" fxLayout="row">
       <!----------------Status絞込み選択部と承認Status選択部 縦組みSTART------------------------------------------------------------>
-      <div class="" fxLayout="column">
+      <div class="status-panel" fxLayout="column">
         <!----------------Status絞込み選択部START------------------------------------------------------------>
         <div class="status-select" fxLayout="row">
           <div class="">
@@ -66,7 +66,7 @@
         <!----------------Status絞込み選択部END 承認ステータス選択部START---------------------------------------->
         <div class="status-app-select" fxLayout="row">
           <h5> 承認ステータス絞込み </h5>
-          <mat-radio-group class="" name="statusApp" formControlName="statusApp" (change)="switchGetList()">
+          <mat-radio-group class="status-app-radio" name="statusApp" formControlName="statusApp" (change)="switchGetList()">
             <mat-radio-button class="" value="1">未承認</mat-radio-button>
             <mat-radio-button class="" value="2">承認済み</mat-radio-button>
             <mat-radio-button class="" value="3">すべて</mat-radio-button>
@@ -76,7 +76,7 @@
       <!----------------Status絞込み選択部と承認Status選択部 縦組みEND----------------------------------------------------------->
       <!----------------JLX JLXHS等ボタン選択部と検索条件項目部 縦組みSTART------------------------------------------------------->
       <!----------------権限レベルによりJLX/JLXHSボタン、確認印刷ボタン、所属員データの表示/非表示制御--------------------------------->
-      <div class="" fxLayout="column">
+      <div class="search-buttons-panel" fxLayout="column">
         <div class="kaisha-select" fxLayout="row">
           <mat-button-toggle-group *ngIf="loginUser.kengen === admin ; else hiddenJlxJlxhs" 
             formControlName="shinseishaKaisha" multiple="true" (change)="switchGetList()">
@@ -105,7 +105,7 @@
         <!--------------検索条件項目入力部--------------------------------------------------------------------->
         <div class="select-details" fxLayout="row">
           <div class="">
-            <h6> 検索条件を選択　</h6>
+            <h5> 検索条件を選択　</h5>
           </div>
           <div class="" fxLayout="column">
             <!---------検索項目１ ------>
@@ -178,21 +178,21 @@
     </div>
     <!------------------条件絞込み検索条件パネルEND   ボタンパネル START----------------------------------------------------------------------------->
     <div class="" fxLayout="row">
-      <div class="buttons-panel">
+      <div class="buttons-panel button-group">
         <button type="button" mat-raised-button class="curd-button curd-btn-color" (click)="createKanri()" [disabled]="deletedKanriViewMode || bushoDataViewMode">新規</button>
       </div>
       <div class="buttons-panel">
         <button type="button" mat-raised-button class="curd-button edit-btn-color" (click)="editKanri()" [disabled]="deletedKanriViewMode || bushoDataViewMode">編集</button>
       </div>
-      <div class="buttons-panel">
+      <div class="buttons-panel button-group">
         <button type="button" mat-raised-button class="curd-button delete-btn-color" (click)="deleteKanri()" [disabled]="deletedKanriViewMode || bushoDataViewMode">削除</button>
       </div>
       <div class="buttons-panel">
         <!--<button type="button" mat-raised-button class="curd-button " [color]="deletedKanriViewColor" (click)="showDeletedKanri()">削除データ閲覧</button>-->
         <button type="button" mat-raised-button class="curd-button " [ngClass]="btnColorClass" (click)="showDeletedKanri()">削除データ閲覧</button>
       </div>
-      <div class="buttons-panel">
-        <button type="button" mat-raised-button class="curd-button curd-btn-color" [disabled]="deletedKanriViewMode || !approveKanriViewMode" (click)="approveKanri()">承認</button>
+      <div class="buttons-panel  button-group">
+        <button type="button" mat-raised-button class="curd-button approve-btn-color" [disabled]="deletedKanriViewMode || !approveKanriViewMode" (click)="approveKanri()">承認</button>
       </div>
       <div class="print-section" fxLayout="row">
         <button type="button" mat-raised-button class="curd-button print-btn active-btn" [disabled]="deletedKanriViewMode || bushoDataViewMode" (click)="checkSheetPrint()">チェックシート印刷</button>
