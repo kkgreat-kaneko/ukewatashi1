@@ -210,7 +210,8 @@ mat-form-field {
 }
 .hidden-confirm-print {
   display: block;
-  width: 117px;
+  /*width: 117px; 幅拡張前*/
+  width: 217px;
   height: 37px;
 }
 /* 検索条件を選択部 */
