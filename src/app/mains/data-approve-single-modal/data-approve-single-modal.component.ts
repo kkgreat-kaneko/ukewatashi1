@@ -25,6 +25,8 @@ export class DataApproveSingleModalComponent implements OnInit {
             ) { }
 
   ngOnInit() {
+    this.dialog.updatePosition({ top: '5%' });                     // ダイアログ画面位置指定
+
     if (this.data.statusApp === Const.APP_STATUS_NOT) {
       this.btnAppStr = '承　　認';
       this.setApprove = true;
