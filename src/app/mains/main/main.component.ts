@@ -256,7 +256,7 @@ export class MainComponent implements OnInit {
       this.getInitList();                             // 管理データ初期化 担当者申請者のデータは初回固定条件 status絞込み 未確認すべてOR書類不備
     })
     .catch(err => {
-      console.log(`login fail: ${err}`);
+      console.log(`main.component initList error: ${err}`);
       this.message = 'データの取得に失敗しました。';
     })
     .then(() => {
@@ -266,7 +266,7 @@ export class MainComponent implements OnInit {
 
   /*
   *  イニシャライズ処理initList内で使用　ログイン後チェック処理
-  *  パスワード有効期限チェック、未確認受渡書類の有無　検索条件：入力担当者 = ログインID、status = 0、受渡方法 = 受渡
+  *  パスワード有効期限チェック、未確認受渡書類の有無　検索条件：入力担当者と申請者 = ログインID、status = 0、受渡方法 = 受渡
   *  非同期地獄の極み。。。
   */
   public getInitChkNotChk() {
@@ -278,7 +278,6 @@ export class MainComponent implements OnInit {
         /* 不備書類がなく、未確認書類データが有れば、メッセージをセット */
         if (res.paramLongs[0]) {
           if (this.status.value === '4') {
-            //this.initMsg = ['書類不備とされたケースはありません。', '保険会社側未確認分を表示します。'];
             this.initMsg.push('書類不備とされたケースはありません。');
             this.initMsg.push('保険会社側未確認分を表示します。');
           }
@@ -322,7 +321,7 @@ export class MainComponent implements OnInit {
       }
     })
     .catch(err => {
-      console.log(`login fail: ${err}`);
+      console.log(`main.component getInitChkNotChk error: ${err}`);
       this.message = 'データの取得に失敗しました。';
     })
     .then(() => {
@@ -342,7 +341,7 @@ export class MainComponent implements OnInit {
       this.dataSource.sort = this.sort;
     })
     .catch(err => {
-      console.log(`login fail: ${err}`);
+      console.log(`main.component getInitList error: ${err}`);
       this.message = 'データの取得に失敗しました。';
     })
     .then(() => {
@@ -371,7 +370,7 @@ export class MainComponent implements OnInit {
       this.dataSource.sort = this.sort;
     })
     .catch(err => {
-      console.log(`login fail: ${err}`);
+      console.log(`main.component getList error: ${err}`);
       this.message = 'データの取得に失敗しました。';
     })
     .then(() => {
@@ -416,7 +415,7 @@ export class MainComponent implements OnInit {
         }
       },
       error => {
-        console.log('error');
+        console.log('main.component createKanri error');
       }
     );
   }
@@ -482,7 +481,7 @@ export class MainComponent implements OnInit {
           }
       },
       error => {
-        console.log('error');
+        console.log('main.component editKanri error');
       }
     );
 
@@ -543,7 +542,7 @@ export class MainComponent implements OnInit {
           }
         },
         error => {
-          console.log('error');
+          console.log('main.component deleteKanri error');
         }
       );
     } else {                            // 一覧を未選択の時
@@ -578,7 +577,7 @@ export class MainComponent implements OnInit {
         }
       },
       error => {
-        console.log('error');
+        console.log('main.component showAlert error');
       }
     );
   }
@@ -632,7 +631,7 @@ export class MainComponent implements OnInit {
       this.dataSource.sort = this.sort;
     })
     .catch(err => {
-      console.log(`login fail: ${err}`);
+      console.log(`main.component getDeletedList error: ${err}`);
       this.message = 'データの取得に失敗しました。';
     })
     .then(() => {
@@ -711,7 +710,7 @@ export class MainComponent implements OnInit {
           }
         },
         error => {
-          console.log('error');
+          console.log('main.component approveKanri1 error');
         }
       );
       return;
@@ -736,7 +735,7 @@ export class MainComponent implements OnInit {
         }
       },
       error => {
-        console.log('error');
+        console.log('main.component approveKanri2 error');
       }
     );
   }
@@ -785,7 +784,7 @@ export class MainComponent implements OnInit {
               this.getList();                          // 書類一覧更新表示
           },
           error => {
-            console.log('error');
+            console.log('main.component checkSheetPrintInit dialog error');
           }
         );
       } else {
@@ -800,7 +799,7 @@ export class MainComponent implements OnInit {
 
     })
     .catch(err => {
-      console.log(`login fail: ${err}`);
+      console.log(`mainComponent checkSheetPrintInit error: ${err}`);
       this.message = 'データの取得に失敗しました。';
     })
     .then(() => {
@@ -1103,7 +1102,7 @@ export class MainComponent implements OnInit {
         }
       },
       error => {
-        console.log('error');
+        console.log('main.component showPasswordChange error');
       }
     );
   }
@@ -1130,7 +1129,7 @@ export class MainComponent implements OnInit {
         this.showPasswordChange(true);
       },
       error => {
-        console.log('error');
+        console.log('main.component showPwdAlert error');
       }
     );
   }
@@ -1167,7 +1166,7 @@ export class MainComponent implements OnInit {
         }
       },
       error => {
-        console.log('error');
+        console.log('main.component showInitAlert error');
       }
     );
   }
@@ -1204,7 +1203,7 @@ export class MainComponent implements OnInit {
         }
       },
       error => {
-        console.log('error');
+        console.log('main.component showPwdBeforeExpiredAlert error');
       }
     );
   }
@@ -1230,7 +1229,7 @@ export class MainComponent implements OnInit {
         this.getList();               // 書類一覧更新表示
       },
       error => {
-        console.log('error');
+        console.log('main.component showDataHokenPrint error');
       }
     );
   }
