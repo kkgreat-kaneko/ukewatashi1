@@ -242,12 +242,12 @@ export class MainComponent implements OnInit {
 
   /*
   *  イニシャライズチェック処理 ---> 書類一覧データ生成処理
-  *  不備書類検索　あれば一覧status絞込みを不備書類にして出力処理に変更
-  *  書類不備検索 条件：入力担当者＝ログインID
+  *  書類不備検索(メッセージ出力目的)　あれば一覧status絞込みを不備書類にして出力処理に変更
+  *  書類不備検索 条件：申請者＝ログインID (入力担当者は条件に含まない ＊一覧データ出力検索条件と異なる)
   */
   public initList() {
     this.setKanri();
-    this.kanriService.getInitChkFubi(this.kanri)      // ログインID = 入力担当者に不備書類があるか検索
+    this.kanriService.getInitChkFubi(this.kanri)      // ログインID = 申請者に不備書類があるか検索
     .then(res => {
       if (res) {
         this.status.setValue('5');                    // status絞込みを不備書類にセット
@@ -266,7 +266,7 @@ export class MainComponent implements OnInit {
 
   /*
   *  イニシャライズ処理initList内で使用　ログイン後チェック処理
-  *  パスワード有効期限チェック、未確認受渡書類の有無　検索条件：入力担当者と申請者 = ログインID、status = 0、受渡方法 = 受渡
+  *  パスワード有効期限チェック、未確認受渡書類の有無　検索条件：申請者 = ログインID(書類不備検索と同じ)、status = 0、受渡方法 = 受渡
   *  非同期地獄の極み。。。
   */
   public getInitChkNotChk() {
