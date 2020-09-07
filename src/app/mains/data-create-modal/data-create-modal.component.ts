@@ -855,4 +855,13 @@ export class DataCreateModalComponent implements OnInit {
     return shoruiList;
   }
 
+  /*
+  *  受渡枚数 blurイベント処理
+  *  全角文字が入力される例外対応(Enter確定せずマウスでフォーカス外すと入力されてしまう)
+  */
+  chkShoruiMaisu() {
+    if (this.shoruiMaisu.value === null) {
+      this.shoruiMaisu.setValue('');
+    }
+  }
 }

@@ -141,7 +141,7 @@
           <mat-form-field class="shoruiMaisu" appearance="legacy" >
             <mat-label>*受渡枚数</mat-label>
             <input type="number" matInput placeholder="" value="" formControlName="shoruiMaisu"
-                    min="0" max="999"
+                    min="0" max="999" (blur)="chkShoruiMaisu()"
               >
           </mat-form-field>
         </div>
