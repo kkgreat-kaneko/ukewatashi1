@@ -431,7 +431,7 @@ export class MainComponent implements OnInit {
     const selectedAll = this.kanriTableService.getSelectedAll();
     if (selectedAll) {
       if (selectedAll.length > 1) {
-        let message = ['複数選択されています。一括編集はできません。'];
+        let message = ['複数選択されています。'];
           const msg = {
             title: '',
             message: message,
