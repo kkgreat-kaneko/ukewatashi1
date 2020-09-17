@@ -27,7 +27,11 @@ export class Const {
   static readonly JLX_HOKEN: string = '株式会社JALUX保険部';
   static readonly JLX_HS_HOKEN: string = '株式会社JALUX保険サービス';
 
-  // 担当部署名（JLX/JLXHS)
+  // 会社名メイン画面選択ボタン
+  static readonly JLX_HOKEN_SELECT: string = 'JLX';
+  static readonly JLX_HS_HOKEN_SELECT: string = 'JLXHS';
+
+  // 担当部署名（JLX/JLXHS) 確認書印刷管理者部署名表記用
   static readonly JLX_HOKEN_BUSHO: string = '株式会社JALUX保険部/業務チーム';
   static readonly JLX_HS_HOKEN_BUSHO: string = '株式会社JALUX保険サービス/業務チーム';
 

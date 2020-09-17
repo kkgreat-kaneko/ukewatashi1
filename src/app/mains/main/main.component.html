@@ -80,8 +80,8 @@
         <div class="kaisha-select" fxLayout="row">
           <mat-button-toggle-group *ngIf="loginUser.kengen === admin ; else hiddenJlxJlxhs" 
             formControlName="shinseishaKaisha" multiple="true" (change)="switchGetList()">
-            <mat-button-toggle [value]="jlx" aria-label="Text align center">JLX</mat-button-toggle>
-            <mat-button-toggle [value]="jlxhs" aria-label="Text align center">JLXHS</mat-button-toggle>
+            <mat-button-toggle [value]="jlx" aria-label="Text align center">{{jlxSelector}}</mat-button-toggle>
+            <mat-button-toggle [value]="jlxhs" aria-label="Text align center">{{jlxhsSelector}}</mat-button-toggle>
           </mat-button-toggle-group>
           <ng-template #hiddenJlxJlxhs>
             <div class="hidden-jlx-jlxhs"></div>

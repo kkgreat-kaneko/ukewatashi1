@@ -72,6 +72,8 @@ export class MainComponent implements OnInit {
   jlx = Const.JLX_HOKEN;
   jlxhs = Const.JLX_HS_HOKEN;
   selectDetails = Const.SELECT_DETAILS;
+  jlxSelector = Const.JLX_HOKEN_SELECT;
+  jlxhsSelector = Const.JLX_HS_HOKEN_SELECT;
   filterValues: any;                      // 書類検索条件用フィルター変数
 
   statusAppOk = Const.APP_STATUS_OK;      // HTML承認ステータス表示変換用 「済/未」表示変換
