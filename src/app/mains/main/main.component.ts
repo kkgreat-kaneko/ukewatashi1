@@ -428,6 +428,19 @@ export class MainComponent implements OnInit {
   *  書類ステータス(郵送-1,受渡前0,書類不備3)のみ編集可能
   */
   public editKanri() {
+    const selectedAll = this.kanriTableService.getSelectedAll();
+    if (selectedAll) {
+      if (selectedAll.length > 1) {
+        let message = ['複数選択されています。一括編集はできません。'];
+          const msg = {
+            title: '',
+            message: message,
+          };
+          this.showAlert(msg);
+          return 0;
+      }
+    }
+
     const selected = this.kanriTableService.getSelected();
     // 編集可能書類ステータス Array find処理がなぜか数値では使用できないので文字列に変換している
     const statuses = [Const.STATUS_DLVRY.toString(), Const.STATUS_NOT_CHECK.toString(), Const.STATUS_NG.toString()];
@@ -651,7 +664,7 @@ export class MainComponent implements OnInit {
   */
   public approveKanri() {
     const selecteds = this.kanriTableService.getSelectedAll();
-    // リスト未選択で編集ボタンクリック時
+    // リスト未選択で承認ボタンクリック時
     if (!selecteds) {
       let message = ['承認対象を選択してください。'];
       const msg = {
