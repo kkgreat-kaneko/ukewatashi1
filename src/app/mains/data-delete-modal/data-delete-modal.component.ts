@@ -70,7 +70,6 @@ export class DataDeleteModalComponent implements OnInit {
       this.dialog.close(this.data); // data返すが、mainComponentでは特にはdataの処理はしない。
     });
 
-    //this.dialog.close(this.data); // data返すが、mainComponentでは特にはdataの処理はしない。
   }
 
   /*

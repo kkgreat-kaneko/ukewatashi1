@@ -485,9 +485,9 @@ export class DataCreateModalComponent implements OnInit {
     })
     .then(() => {
       // anything finally method
+      this.dialog.close(this.data);
     });
 
-    this.dialog.close(this.data);
   }
 
   /*

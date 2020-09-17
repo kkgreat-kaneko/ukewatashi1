@@ -36,9 +36,10 @@ export class DataApproveMultiModalComponent implements OnInit {
     })
     .then(() => {
       // anything finally method
+      // ダイアログ閉じる処理を同期処理内で実行。実行しない場合先に戻ってしまい一覧表示が同期されなくなる。
+      this.dialog.close(this.data);
     });
 
-    this.dialog.close(this.data);
   }
 
   /*
