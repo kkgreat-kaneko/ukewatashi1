@@ -251,6 +251,8 @@ export class MainComponent implements OnInit {
     .then(res => {
       if (res) {
         this.status.setValue('5');                    // status絞込みを不備書類にセット
+        this.initMsg.push('書類不備とされたケースがあります。');
+        this.initMsg.push('書類不備分を表示します。');
       }
       this.getInitChkNotChk();                        // 書類不備がない場合、未確認受渡一覧を表示するメッセージ処理
       this.getInitList();                             // 管理データ初期化 担当者申請者のデータは初回固定条件 status絞込み 未確認すべてOR書類不備
@@ -279,14 +281,13 @@ export class MainComponent implements OnInit {
         if (res.paramLongs[0]) {
           if (this.status.value === '4') {
             this.initMsg.push('書類不備とされたケースはありません。');
-            this.initMsg.push('保険会社側未確認分を表示します。');
+            this.initMsg.push('未確認分を表示します。');
           }
         }
         /* 不備書類有無にかかわらず郵送ケースが一致有れば、メッセージをセット */
         if (res.paramLongs[1]) {
           this.initMsg.push('郵送ケースで Status 0 のままデータが残っていますが');
-          this.initMsg.push('チェックシート印刷を行えば Status -1 となり');
-          this.initMsg.push('次回からは出なくなります。');
+          this.initMsg.push('チェックシート印刷を行えば Status -1 となります。');
         }
       }
       /*
