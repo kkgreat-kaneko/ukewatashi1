@@ -215,9 +215,9 @@ export class DataCheckModalComponent implements OnInit {
     })
     .then(() => {
       // anything finally method
+      // 同期処理　最終処理ダイアログ閉じる
+      this.dialog.close(this.data);
     });
-
-    this.dialog.close(this.data);
 
   }
 
