@@ -273,6 +273,10 @@ export class MainInsComponent implements OnInit {
   *
   */
   public showCheckKanri(kanri: Kanri) {
+    let shinseisha = this.formGroup.value.shinseisha;
+    let kubun = this.formGroup.value.kubun;
+    let kakuninbi = this.kakuninbi.value;
+
     const dialogRef = this.dialog.open(DataCheckModalComponent, {
       data: kanri,                    // モーダルコンポーネントにInjectするデータ 戻り処理ないがインスタンス渡し必要(ダミー的な)
       disableClose: true,             // モーダル外クリック時画面を閉じる機能無効
@@ -286,13 +290,70 @@ export class MainInsComponent implements OnInit {
     .subscribe(
       data => {
         if (data) {
+          //this.getListByHokengaisha();               // 書類一覧更新表示
+          this.getListAfterCheckShorui(shinseisha, kubun, kakuninbi);     //一覧絞込み選択状態を保持して更新
         }
-        this.getListByHokengaisha();               // 書類一覧更新表示
+        // キャンセル閉じるの時、一覧更新しないそのまま表示
       },
       error => {
         console.log('error');
       }
     );
+  }
+
+  /*
+  *  書類チェック後、検索絞込み状態を保持した状態で書類一覧を出力する処理
+  *  getListByHokengaisha処理は、絞り込みフォーム(申請者、区分、確認日）を初期リセットするが、
+  *  リセットせず書類チェック前の絞込み状態を再セットする。
+  *  再セット後、searchShinseiKubunを実行し絞込み一覧状態を復元する。、
+  *  statusの選択値によって書類チェックボタンdisabled設定含む
+  */
+  public getListAfterCheckShorui(shinseisha: string, kubun: string, kakuninbi: string) {
+    /*
+    *  検索値セット　バックエンドへ渡す固定値(JLXorJLXHX、保険会社、*承認済statusバックエンド固定)と
+    *  フォーム選択値(管理No以前、表示件数、status)
+    */
+    const kanri = new Kanri();
+    kanri.sKaisha = [this.kaisha];
+    kanri.hokengaisha = this.loginUser.hokengaisha;
+    kanri.status = this.formGroup.value.status;
+    if (this.formGroup.value.beforeKanriNo) {
+      kanri.beforeId = this.formGroup.value.beforeKanriNo;
+    }
+    kanri.limit = this.formGroup.value.limit;
+
+    this.kanriService.getListByHokengaisha(kanri)
+    .then(res => {
+      this.kanriList = res;                                           // 一覧データセット
+      this.resetKanriList = res;                                      // 一覧データ復元用をセット（検索申請者、区分データから復元用)
+      this.setShinseishaAndKubun(this.kanriList);                     // 検索用申請者、区分のセレクトOption値をセット
+      if ( this.frmShinseisha.indexOf(shinseisha) === -1) {
+        this.shinseisha.reset('all');                                 // 絞込み申請者が一覧データなしになった場合は「すべて」にリセットする
+      } else {
+        this.shinseisha.reset(shinseisha);                            // 検索用申請者の選択状態を復元
+      }
+      if ( this.frmKubun.indexOf(kubun) === -1) {
+        this.kubun.reset('all');                                      // 絞込み区分が一覧データなしになった場合は「すべて」にリセットする
+      } else {
+        this.kubun.reset(kubun);                                      // 検索用区分の選択状態を復元
+      }
+      this.kakuninbi.reset(kakuninbi);                                // 検索用確認日の選択状態を復元
+      this.selection.clear();                                         // 書類チェックボタン状態リセット
+      if (this.status.value === String(Const.FRM_STATUS_DLVRY)        // 書類チェックボタンdisabled設定
+          || this.status.value === String(Const.FRM_STATUS_END)) {
+        this.shoruiCheckBtnDisabled = true;
+      } else {
+        this.shoruiCheckBtnDisabled = false;
+      }
+      this.searchShinseiKubun();                                      // 絞り込み選択検索実行
+    })
+    .catch(err => {
+      console.log(`login fail: ${err}`);
+      this.message = 'データの取得に失敗しました。';
+    })
+    .then(() => {
+      // anything finally method
+    });
   }
 
   /*
