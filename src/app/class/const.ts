@@ -12,6 +12,8 @@ export class Const {
   //検証機
   //static readonly WWW_ROOT: string = 'http://153.127.8.105:8080/Ukewatashi/ws/';
   //static readonly WWW_ROOT: string = 'https://kkgreat-help.com:8181/Ukewatashi/ws/';
+  //本番機
+  //static readonly WWW_ROOT: string = 'http://jws-hokenuke:8080/Ukewatashi/ws/';
   
 
   // 権限レベル
