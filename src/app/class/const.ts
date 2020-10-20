@@ -6,15 +6,16 @@
 export class Const {
   //バックエンド接続URL
   //開発機
-  static readonly WWW_ROOT: string = 'http://192.168.1.11:8080/Ukewatashi/ws/';
+  //static readonly WWW_ROOT: string = 'http://192.168.1.11:8080/Ukewatashi/ws/';
   //開発機kkgreat.testのhosts設定PCのみアクセス化
   //static readonly WWW_ROOT: string = 'https://kkgreat.test:8181/Ukewatashi/ws/'; 
   //検証機
-  //static readonly WWW_ROOT: string = 'http://153.127.8.105:8080/Ukewatashi/ws/';
   //static readonly WWW_ROOT: string = 'https://kkgreat-help.com:8181/Ukewatashi/ws/';
   //本番機
+  //HTTP通信に切替時URL
   //static readonly WWW_ROOT: string = 'http://jws-hokenuke:8080/Ukewatashi/ws/';
-  //static readonly WWW_ROOT: string = 'https://jws-hokenuke.jalux.net:8181/Ukewatashi/ws/';
+  //HTTPS SSL 通常URL
+  static readonly WWW_ROOT: string = 'https://jws-hokenuke.jalux.net:8181/Ukewatashi/ws/';
   
 
   // 権限レベル
