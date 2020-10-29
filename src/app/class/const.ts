@@ -12,9 +12,9 @@ export class Const {
   //検証機
   //static readonly WWW_ROOT: string = 'https://kkgreat-help.com:8181/Ukewatashi/ws/';
   //本番機
-  //HTTP通信に切替時URL
+  //HTTP通信URL(通常設定)
   //static readonly WWW_ROOT: string = 'http://jws-hokenuke.jalux.net:8080/Ukewatashi/ws/';
-  //HTTPS SSL 通常URL
+  //HTTPS SSL URL(使用なし)
   //static readonly WWW_ROOT: string = 'https://jws-hokenuke.jalux.net:8181/Ukewatashi/ws/';
   
 
