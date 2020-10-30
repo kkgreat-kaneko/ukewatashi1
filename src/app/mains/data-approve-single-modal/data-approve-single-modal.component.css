@@ -53,22 +53,29 @@ h4{
 /* 各データ部幅 */
 .vals1 {
   width: 20px;
+  word-wrap: break-word;
 }
 .vals2 {
   width: 100px;
+  word-wrap: break-word;
 }
 .vals3 {
   width: 250px;
+  word-wrap: break-word;
 }
 .vals4 {
   width: 200px;
+  word-wrap: break-word;
 }
 .vals5 {
   width: 50px;
+  word-wrap: break-word;
 }
 .vals6 {
   width: 500px;
+  word-wrap: break-word;
 }
 .vals7 {
   width: 350px;
+  word-wrap: break-word;
 }

@@ -34,6 +34,9 @@ th, td {
 .section1 table {
     width: 700px;
 }
+.section1 td {
+    word-break : break-all;
+}
 .id-label, .keiyakusha-label, .bikou-label, .hoken-bikou, .kubun-label {
     text-align: right;
     padding-right: 5px;

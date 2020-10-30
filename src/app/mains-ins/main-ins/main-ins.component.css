@@ -179,7 +179,6 @@ select {
     width: 600px;
     height: 55px;
     margin-top: 10px;
-    /*background: #ffffff;*/
     background: #e0f2f1;
     border: solid 3px #aaaaaa;
     border-radius: 10px 10px;
@@ -221,10 +220,8 @@ select {
     padding-top: 5px;
 }
 .select-panel2 {
-    /*width: 510px;*/
     width: 730px;
     height: 40px;
-    /*background: #e0f2f1;*/
     background: #ffffff;
     border: solid 3px #aaaaaa;
     border-radius: 10px 10px;
@@ -255,7 +252,6 @@ select {
     color: black;
 }
 .kanri-kakuninbi mat-form-field {
-    /*border-bottom: solid 1px;*/
     height: 25px;
     width: 130px;
     font-size: normal;
@@ -324,7 +320,6 @@ select {
     bottom: 8px;
 }
 .section2-btns {
-    /*margin-left: 260px;*/
     margin-left: 40px;
 }
 .section2-btns button {
@@ -349,7 +344,7 @@ select {
     margin-left: 5px;
 }
 .id-label {
-    margin-left: 19px;
+    margin-left: 12px;
 }
 .shoukenbango-label {
     margin-left: 70px;
@@ -358,23 +353,22 @@ select {
     margin-left: 60px;
 }
 .kubun-label {
-    margin-left: 125px;
+    margin-left: 150px;
 }
 .ok-shorui-label {
-    margin-left: 235px;
+    margin-left: 220px;
 }
 .fubi-shorui-label {
     margin-left: 68px;
 }
 .hoken-bikou-label {
-    margin-left: 56px;
+    margin-left: 60px;
 }
 .kakuninbi-label {
-    margin-left: 30px;
+    margin-left: 35px;
 }
 .kanri-list {
     width: 1170px;
-    /*height: 385px; 4行 */
     height: 455px;
     padding-left: 0px;
     overflow-y: auto;
@@ -382,6 +376,7 @@ select {
     background: white;
 }
 .kanri-list table {
+    table-layout: fixed;
     width: 1150px;
     margin-top: 3px;
     padding-left: 3px;
@@ -391,6 +386,7 @@ select {
 }
 td {
     font-size: small;
+    overflow-wrap : break-word;
 }
 .label-color {
     color: #000051;
@@ -417,16 +413,19 @@ td {
     border-radius: 2px 2px;
 }
 .keiyakusha {
-    width: 170px;
+    width: 200px;
     background: #eceff1;
     border: solid 1px #aaaaaa;
     border-radius: 2px 2px;
 }
+.td-saishuhenshubi {
+    width: 310px;
+}
 .seiho-label {
-    width: 35px;
+    padding-right: 5px;
 }
 .kubun {
-    width: 360px;
+    width: 240px;
     background: #eceff1;
     border: solid 1px #aaaaaa;
     border-radius: 2px 2px;
@@ -441,7 +440,7 @@ td {
     font-weight: bold;
 }
 .ok-shorui, .fubi-shorui, .hoken-bikou, .kakuninbi-maisu {
-    width: 105px;
+    width: 110px;
     background: #eceff1;
     border: solid 1px #aaaaaa;
     border-radius: 2px 2px;
@@ -458,17 +457,17 @@ td {
     border-radius: 2px 2px;
 }
 .chk-btn {
-    width: 115px;
+    padding-left: 5px;
 }
 .shorui-chk-btn {
     width: 110px;
     height: 50px;
-    /*background: #e0f2f1;*/
     font-size: small;
     line-height: 1px;
 }
 .chkbox {
     width: 15px;
+    padding-left: 5px;
 }
 .bikou {
     background: #eceff1;

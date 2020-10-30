@@ -368,6 +368,7 @@ table {
 }
 td {
   font-size: 11px;
+  word-break : break-all;
 }
 th {
   font-size: 12px;
@@ -408,7 +409,7 @@ tr.mat-footer-row, tr.mat-row {
   width: 40px;
 }
 .th-hokengaisha {
-  width: 120px;
+  width: 160px;
 }
 .th-seihobun {
   width: 50px;
@@ -429,10 +430,10 @@ tr.mat-footer-row, tr.mat-row {
   width: 60px;
 }
 .th-bikou {
-  width: 200px;
+  width: 180px;
 }
 .th-hokenbikou {
-  width: 200px;
+  width: 180px;
 }
 .th-saishu-henshubi {
   width: 70px;
@@ -459,7 +460,7 @@ tr.mat-footer-row, tr.mat-row {
   width: 90px;
 }
 .th-sakujyoriyu {
-  width: 200px;
+  width: 150px;
 }
 /* ページ送り・CSVボタン・フッター */
 .paginator {

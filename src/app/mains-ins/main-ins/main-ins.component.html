@@ -132,7 +132,7 @@
                     <td class="id">{{kanri.id}}</td>
                     <td class="shoukenbango">{{kanri.shoukenbango}}</td>
                     <td class="keiyakusha">{{kanri.keiyakusha}}</td>
-                    <td colspan="4" class="kubun">{{kanri.kubun}}</td>
+                    <td colspan="2" class="kubun">{{kanri.kubun}}</td>
                     <td rowspan="3" class="ok-shorui">{{kanri.okShoruiIchiran}}</td>
                     <td rowspan="3" class="fubi-shorui">{{kanri.fubiShoruiIchiran}}</td>
                     <td rowspan="3" class="hoken-bikou">{{kanri.hokenBikou}}</td>
@@ -153,12 +153,12 @@
                 <tr>
                     <td class="shinseisha-label label-color">申請者</td>
                     <td class="shinseisha">{{kanri.shinseisha}}</td>
-                    <td colspan="3">
+                    <td class="td-saishuhenshubi" colspan="2">
                         <label class="saishuhenshubi-label label-color">最終編集日</label>
                         <label class="saishuhenshubi">{{kanri.saishuHenshubi.substr(0,10)}}</label>
                     </td>
-                    <td class="seiho-label label-color">生保</td>
-                    <td class="seiho">
+                    <td>
+                        <label class="seiho-label label-color">生保</label>
                         <mat-checkbox disabled="true" [checked]="kanri.seiho">
                         </mat-checkbox>
                     </td>
@@ -169,7 +169,7 @@
                 </tr>
                 <tr>
                     <td class="bikou-label label-color">備考</td>
-                    <td colspan="6" class="bikou">{{kanri.bikou}}</td>
+                    <td colspan="4" class="bikou">{{kanri.bikou}}</td>
                 </tr>
                 </ng-container>
             </table>
