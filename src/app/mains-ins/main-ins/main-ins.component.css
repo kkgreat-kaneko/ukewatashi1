@@ -47,7 +47,7 @@ select {
     overflow-x: hidden;
 }
 .main {
-    width: 1200px;
+    width: 1250px;
     height: 770px;
     margin-top: 0;
     margin-left: auto;
@@ -192,7 +192,7 @@ select {
     width: 100px;
     height: 40px;
     margin-top: 20px;
-    margin-left: 80px;
+    margin-left: 130px;
     padding: 0 0 0 3px;
     background: #e0f2f1;
     font-size: medium;
@@ -202,7 +202,7 @@ select {
     width: 150px;
     height: 40px;
     margin-top: 5px;
-    margin-left: 30px;
+    margin-left: 80px;
     padding-left: 30px;
     padding-right: 30px;
     background: #ffab91;
@@ -211,7 +211,7 @@ select {
 }
 .btn-panel h5 {
     margin-top: 20px;
-    margin-left: 30px;
+    margin-left: 80px;
     line-height: 8px;
 }
 /*申請者・区分選択、再印刷、確認済みに戻す、未確認に戻すボタン*/
@@ -320,7 +320,7 @@ select {
     bottom: 8px;
 }
 .section2-btns {
-    margin-left: 40px;
+    margin-left: 90px;
 }
 .section2-btns button {
     height: 35px;
@@ -368,7 +368,7 @@ select {
     margin-left: 35px;
 }
 .kanri-list {
-    width: 1170px;
+    width: 1230px;
     height: 455px;
     padding-left: 0px;
     overflow-y: auto;
@@ -377,7 +377,7 @@ select {
 }
 .kanri-list table {
     table-layout: fixed;
-    width: 1150px;
+    width: 1200px;
     margin-top: 3px;
     padding-left: 3px;
     background: white;
