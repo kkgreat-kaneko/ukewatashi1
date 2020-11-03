@@ -11,12 +11,14 @@ export class Const {
   //static readonly WWW_ROOT: string = 'https://kkgreat.test:8181/Ukewatashi/ws/'; 
   //検証機
   //static readonly WWW_ROOT: string = 'https://kkgreat-help.com:8181/Ukewatashi/ws/';
+
   //本番機
   //HTTP通信URL(通常設定)
   //static readonly WWW_ROOT: string = 'http://jws-hokenuke.jalux.net:8080/Ukewatashi/ws/';
-  //HTTPS SSL URL(使用なし)
+  /****************************************************************************************
+  //HTTPS SSL URL(現在未使用 SSL設定時に使用)
   //static readonly WWW_ROOT: string = 'https://jws-hokenuke.jalux.net:8181/Ukewatashi/ws/';
-  
+  *****************************************************************************************/
 
   // 権限レベル
   static readonly KENGEN_ALL: number = 0;                     // 管理者
