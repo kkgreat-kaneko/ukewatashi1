@@ -44,6 +44,8 @@
               <label>表示件数</label>
               <mat-form-field class="limit">
                 <select matNativeControl formControlName="limit" (change)="switchGetList()">
+                  <option value="200">200</option>
+                  <option value="500">500</option>
                   <option value="1000">1000</option>
                   <option value="2000">2000</option>
                   <option value="5000">5000</option>
@@ -360,7 +362,7 @@
         <div class="csv-output">
           <button type="button" mat-raised-button class="active-btn" (click)="outputKanriCsv()">管理データCSV出力</button>
         </div>
-        <mat-paginator [pageSizeOptions]="[10,20,50,100,500,1000]" [pageSize]="100" showFirstLastButtons></mat-paginator>
+        <mat-paginator [pageSizeOptions]="[10,20,50,100,200,500,1000]" [pageSize]="200" showFirstLastButtons></mat-paginator>
       </div>
     </div>
     <div class="footer">

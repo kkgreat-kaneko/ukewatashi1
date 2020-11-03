@@ -103,7 +103,7 @@ export class MainComponent implements OnInit {
   */
   status = new FormControl('4');                    // status絞込み
   beforeKanriNo = new FormControl('');              // 管理No.以前
-  limit = new FormControl('1000');                  // 表示件数1000デフォルト値
+  limit = new FormControl('200');                  // 表示件数1000デフォルト値
   statusApp = new FormControl('3');                 // 承認ステータスデフォルトすべて
   shinseishaKaisha = new FormControl('');           // JLX/JLXHS　会社選択ボタン
 
