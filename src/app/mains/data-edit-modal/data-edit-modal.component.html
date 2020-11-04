@@ -40,7 +40,7 @@
         <!-- 申請者 -->
         <div class="header-margin" fxLayout="row">
           <div class="form-left">
-            <button type="button" mat-raised-button color="" class="shinseisha" (click)="selectShinseisha()">申請者</button>
+            <button type="button" mat-raised-button color="" class="shinseisha" tabindex="-1" (click)="selectShinseisha()">申請者</button>
           </div>
           <div class="id-label header-label">
             {{shinseishaData.shinseishaUserId}}
@@ -52,8 +52,9 @@
       </div>
       <!-- 転記＆閉じる -->
       <div mat-dialog-actions class="">
-        <button type="button" mat-raised-button color="warn" class="tenki" [disabled]="formGroup.invalid || shoruiListValid" (click)="update()">編集完了</button>
-        <button type="button" mat-raised-button color="accent" class="tojiru" (click)="cancel()">閉じる</button>
+        <button type="button" mat-raised-button color="warn" class="tenki" 
+          [disabled]="formGroup.invalid || shoruiListValid" tabindex="-1" (click)="update()">編集完了</button>
+        <button type="button" mat-raised-button color="accent" class="tojiru" tabindex="-1" (click)="cancel()">閉じる</button>
       </div>
     </div>
     <!---2段目作成日フォーム段落 --->
@@ -93,7 +94,7 @@
         <div class="form-left">
           <mat-form-field class="">
             <mat-label>生保分</mat-label>
-            <select matNativeControl formControlName="seiho" placeholder="生保分">
+            <select matNativeControl formControlName="seiho" placeholder="生保分" tabindex="-1">
               <option value="" selected></option>
               <option [value]="seiho.seiho" *ngFor="let seiho of seihoList">{{seiho.seiho}}</option>
             </select>
@@ -124,12 +125,12 @@
         <div class="tenyuryoku">
           <mat-form-field class="tenyuryoku" appearance="legacy">
             <mat-label>添付書類手入力</mat-label>
-            <input type="text" matInput placeholder="" value="" formControlName="tenyuryoku"
+            <input type="text" matInput placeholder="" value="" formControlName="tenyuryoku" tabindex="-1"
             [ngStyle]="shoruiUmeChecked && {'background-color': 'lightgrey'}">
           </mat-form-field>
         </div>
         <div class="">
-          <button type="button" mat-raised-button color="accent" class="tuika" (click)="addShoruiList()">追加</button>
+          <button type="button" mat-raised-button color="accent" class="tuika" tabindex="-1" (click)="addShoruiList()">追加</button>
         </div>
       </div>
     </div>
@@ -267,7 +268,7 @@
           </div>
         </div>
         <div class="shorui-umu">
-          <mat-checkbox class="" formControlName="shoruiUmu" (click)="checkShoruiUme()">添付書類なし</mat-checkbox>
+          <mat-checkbox class="" formControlName="shoruiUmu" tabindex="-1" (click)="checkShoruiUme()">添付書類なし</mat-checkbox>
         </div>
       </div>
 
