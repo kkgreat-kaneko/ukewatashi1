@@ -379,7 +379,7 @@ export class MainInsComponent implements OnInit {
           data: kanri,                    // モーダルコンポーネントにInjectするデータ 戻り処理ないがインスタンス渡し必要(ダミー的な)
           disableClose: true,             // モーダル外クリック時画面を閉じる機能無効
           restoreFocus: false,            // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
-          autoFocus: false,               // ダイアログ開いた時の自動フォーカス無効
+          //autoFocus: false,             // ダイアログ開いた時の自動フォーカス無効--> html indextabを使用してパスワード入力にフォーカス変更
         });
         // ダイアログ終了後処理 
         dialogRef.afterClosed()
@@ -515,7 +515,7 @@ export class MainInsComponent implements OnInit {
       data: 1,                        // モーダルコンポーネントにInjectするデータ 戻り処理用として設定
       disableClose: true,             // モーダル外クリック時画面を閉じる機能無効
       restoreFocus: false,            // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
-      autoFocus: false,               // ダイアログ開いた時の自動フォーカス無効
+      //autoFocus: false,               // ダイアログ開いた時の自動フォーカス無効--> html indextabを使用してパスワード入力にフォーカス変更
     });
     // ダイアログ終了後 Status:1確認済みに変更処理
     dialogRef.afterClosed()
@@ -562,7 +562,7 @@ export class MainInsComponent implements OnInit {
       data: 1,                        // モーダルコンポーネントにInjectするデータ 戻り処理用として設定
       disableClose: true,             // モーダル外クリック時画面を閉じる機能無効
       restoreFocus: false,            // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
-      autoFocus: false,               // ダイアログ開いた時の自動フォーカス無効
+      //autoFocus: false,               // ダイアログ開いた時の自動フォーカス無効--> html indextabを使用してパスワード入力にフォーカス変更
     });
     // ダイアログ終了後 未確認分に変更処理
     dialogRef.afterClosed()
@@ -632,7 +632,7 @@ export class MainInsComponent implements OnInit {
       data: 1,                        // モーダルコンポーネントにInjectするデータ 戻り処理用として設定
       disableClose: true,             // モーダル外クリック時画面を閉じる機能無効
       restoreFocus: false,            // ダイアログ閉じた後に呼び出し元ボタンへのフォーカス無効
-      autoFocus: false,               // ダイアログ開いた時の自動フォーカス無効
+      //autoFocus: false,             // ダイアログ開いた時の自動フォーカス無効--> html indextabを使用してパスワード入力にフォーカス変更
     });
     // 認証ダイアログ終了後、認証OKなら(data戻りが1)再印刷処理実行
     dialogRef.afterClosed()
